@@ -1,0 +1,26 @@
+# JavaScript / temporary dependencies
+node_modules/
+.npm/
+.cache/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Browser and test artifacts
+.playwright/
+playwright-report/
+test-results/
+coverage/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local runtime files
+*.log

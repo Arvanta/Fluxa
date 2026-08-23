@@ -1,0 +1,10 @@
+{
+  "description": "Selected local Fritzing Parts Library reference mappings used by Fluxa's SVG part-artwork adapter.",
+  "upstream": "https://github.com/fritzing/fritzing-parts",
+  "parts": {
+    "resistor": { "schematic": "resistor.svg", "type": "resistor" },
+    "capacitor": { "schematic": "capacitor.svg", "type": "capacitor" },
+    "diode": { "schematic": "diode.svg", "type": "diode" },
+    "led": { "schematic": "led.svg", "type": "led" }
+  }
+}
