@@ -2,9 +2,12 @@
 
 **Fluxa** is a browser-based workspace for drawing, arranging and exploring simple electronic circuits.
 
+<<<<<<< HEAD
 - Version: **1.1**
 - Repository: [github.com/Arvanta/Fluxa](https://github.com/Arvanta/Fluxa)
 
+=======
+>>>>>>> f46c34bbbe4bc7de36fd44eac9145240dd8d5010
 <p align="center">
   <img src="assets/screenshots/fluxa-schematic.png" alt="Fluxa schematic workspace in the dark theme" width="49%" />
   <img src="assets/screenshots/fluxa-light.png" alt="Fluxa Breadboard workspace in the light theme with a simple board background" width="49%" />
