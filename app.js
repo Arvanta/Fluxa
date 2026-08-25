@@ -28,6 +28,9 @@
     circuitStateChip: $('#circuitStateChip'),
     canvasHelp: $('#canvasHelp'),
     selectionQuickActions: $('#selectionQuickActions'),
+    quickMeasurePanel: $('#quickMeasurePanel'),
+    quickMeasureToggle: $('#quickMeasureToggle'),
+    wiringToggle: $('#wiringToggle'),
     inspectorContent: $('#inspectorContent'),
     labContent: $('#labContent'),
     labDrawer: $('#labDrawer'),
@@ -38,6 +41,8 @@
     exportMenu: $('#exportMenu'),
     jsonImportInput: $('#jsonImportInput'),
     newProjectBtn: $('#newProjectBtn'),
+    learnBtn: $('#learnBtn'),
+    lessonDock: $('#lessonDock'),
     themeToggleBtn: $('#themeToggleBtn'),
     themeLabel: $('#themeLabel'),
     aboutBtn: $('#aboutBtn'),
@@ -98,6 +103,10 @@
       title: 'Diode', subtitle: 'Rectifier / signal diode', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'D',
       defaults: { value: '1N4007', forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 1000 }, models: ['Generic diode', '1N4007', '1N4148']
     },
+    bridge: {
+      title: 'Bridge Rectifier', subtitle: 'Full-wave diode bridge', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'BR',
+      defaults: { value: 'KBP206', forwardVoltage: 1.4, maxCurrent: 2, reverseVoltage: 600 }, models: ['Generic bridge rectifier', 'KBP206', 'W04']
+    },
     zener: {
       title: 'Zener Diode', subtitle: 'Voltage reference', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'DZ',
       defaults: { value: '5.1 V', zenerVoltage: 5.1, powerRating: 1 }, models: ['Generic Zener', '1N4733A · 5.1 V', 'BZX55C12 · 12 V']
@@ -144,6 +153,9 @@
     'Generic diode': { detail: 'Constant 0.7 V forward model', params: { forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 100 } },
     '1N4007': { detail: '1 A rectifier · 1000 V repetitive reverse voltage', params: { value: '1N4007', forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 1000 } },
     '1N4148': { detail: '100 mA fast switching diode · 100 V', params: { value: '1N4148', forwardVoltage: 0.72, maxCurrent: 0.1, reverseVoltage: 100 } },
+    'Generic bridge rectifier': { detail: 'Full-wave bridge model with two diode drops in the conducting path', params: { value: 'Bridge rectifier', forwardVoltage: 1.4, maxCurrent: 1, reverseVoltage: 400 } },
+    'KBP206': { detail: 'Single-phase bridge rectifier · 2 A · 600 V', params: { value: 'KBP206', forwardVoltage: 1.4, maxCurrent: 2, reverseVoltage: 600 } },
+    'W04': { detail: 'Single-phase bridge rectifier · 1.5 A · 400 V', params: { value: 'W04', forwardVoltage: 1.4, maxCurrent: 1.5, reverseVoltage: 400 } },
     'Generic Zener': { detail: 'Ideal shunt voltage reference', params: { zenerVoltage: 5.1, powerRating: 1 } },
     '1N4733A · 5.1 V': { detail: '5.1 V Zener · 1 W axial package', params: { value: '1N4733A', zenerVoltage: 5.1, powerRating: 1 } },
     'BZX55C12 · 12 V': { detail: '12 V Zener · 0.5 W axial package', params: { value: 'BZX55C12', zenerVoltage: 12, powerRating: 0.5 } },
@@ -164,7 +176,123 @@
     'TL081': { detail: 'JFET-input op-amp · 3 MHz GBW', params: { value: 'TL081', supply: '±15 V', gain: 200000, bandwidth: '3 MHz' } }
   };
 
-  const typeOrder = ['source', 'acsource', 'ground', 'resistor', 'capacitor', 'inductor', 'transformer', 'potentiometer', 'switch', 'diode', 'zener', 'led', 'bjt', 'mosfet', 'timer555', 'opamp'];
+  const LESSONS = [
+    {
+      id: 'led-resistor', icon: '◉', title: 'LED + Resistor', level: 'Starter', duration: '5 min',
+      summary: 'Build a safe LED indicator and learn why a resistor matters.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Drag DC Supply from Sources & references onto the canvas.' },
+        { kind: 'place', type: 'resistor', text: 'Add a resistor to limit current.', hint: 'A resistor protects the LED from too much current.' },
+        { kind: 'place', type: 'led', text: 'Add a green LED.', hint: 'Place the LED to the right of the resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add a ground reference.', hint: 'Every simple DC circuit needs a return path to GND.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Wire the supply to the resistor.', hint: 'Click or drag from the positive source terminal to one resistor terminal.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Wire the resistor to the LED.', hint: 'Connect the free resistor terminal to the LED input.' },
+        { kind: 'wire', types: ['led', 'ground'], text: 'Wire the LED to ground.', hint: 'Connect the LED output terminal to GND.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the return path.', hint: 'Connect the negative source terminal to GND.' },
+        { kind: 'simulate', text: 'Run the circuit.', hint: 'Press Simulate to see current flow and LED brightness.' }
+      ]
+    },
+    {
+      id: 'voltage-divider', icon: '÷', title: 'Voltage Divider', level: 'Starter', duration: '6 min',
+      summary: 'Use two resistors to create a lower voltage at a midpoint.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Start with a DC Supply.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'The two resistors form the divider.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Ground defines the reference voltage.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect the source to the first resistor.', hint: 'Start from the positive source terminal.' },
+        { kind: 'wire', types: ['resistor', 'resistor'], text: 'Connect the two resistors together.', hint: 'Their shared point is the divider output.' },
+        { kind: 'wire', types: ['resistor', 'ground'], text: 'Connect the lower resistor to ground.', hint: 'This completes the divider path.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Connect source negative to ground.', hint: 'Close the DC return path.' },
+        { kind: 'simulate', text: 'Run the divider.', hint: 'Use the Probe tool later to inspect the midpoint.' }
+      ]
+    },
+    {
+      id: 'rc-filter', icon: '∿', title: 'RC Low-pass Filter', level: 'Starter', duration: '7 min',
+      summary: 'Combine a resistor and capacitor to smooth a changing signal.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a source.', hint: 'Use a DC Supply or replace it with an AC Source after the lesson.' },
+        { kind: 'place', type: 'resistor', text: 'Add a series resistor.', hint: 'The resistor controls how quickly the capacitor charges.' },
+        { kind: 'place', type: 'capacitor', text: 'Add a capacitor.', hint: 'The capacitor stores charge and smooths the output.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Use GND for the return path.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect source to resistor.', hint: 'Wire from the source output to the resistor.' },
+        { kind: 'wire', types: ['resistor', 'capacitor'], text: 'Connect resistor to capacitor.', hint: 'Their shared point is the filtered output.' },
+        { kind: 'wire', types: ['capacitor', 'ground'], text: 'Connect capacitor to ground.', hint: 'This lets the capacitor charge and discharge.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the return path.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the filter.', hint: 'Open Signal Lab to observe the source and output.' }
+      ]
+    },
+    {
+      id: 'button-led', icon: '⏻', title: 'Push-button LED', level: 'Starter', duration: '6 min',
+      summary: 'Put a switch in series with an LED indicator.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Use the DC Supply component.' },
+        { kind: 'place', type: 'switch', text: 'Add an SPST switch.', hint: 'The switch controls whether current can flow.' },
+        { kind: 'place', type: 'resistor', text: 'Add a current-limiting resistor.', hint: 'Keep the LED protected.' },
+        { kind: 'place', type: 'led', text: 'Add an LED.', hint: 'Place it after the resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Finish with a ground reference.' },
+        { kind: 'wire', types: ['source', 'switch'], text: 'Wire source to switch.', hint: 'Use the positive terminal of the source.' },
+        { kind: 'wire', types: ['switch', 'resistor'], text: 'Wire switch to resistor.', hint: 'The switch should sit before the resistor.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Wire resistor to LED.', hint: 'Connect the resistor output to the LED input.' },
+        { kind: 'wire', types: ['led', 'ground'], text: 'Wire LED to ground.', hint: 'Connect the LED output to GND.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Close the return path.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the circuit.', hint: 'Try changing the switch position in Properties.' }
+      ]
+    },
+    {
+      id: 'npn-switch', icon: 'Q', title: 'NPN Transistor Switch', level: 'Intermediate', duration: '10 min',
+      summary: 'Explore how an NPN transistor can control an LED load.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'This supplies the load and control path.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'One is for the LED load and one helps limit base current.' },
+        { kind: 'place', type: 'led', text: 'Add an LED load.', hint: 'Place the LED after the load resistor.' },
+        { kind: 'place', type: 'bjt', text: 'Add an NPN transistor.', hint: 'Select the 2N2222 model if you want a real example part.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'The emitter return connects to ground.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect supply to a resistor.', hint: 'One resistor can feed the LED load.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Connect resistor to LED.', hint: 'This is the load path.' },
+        { kind: 'wire', types: ['led', 'bjt'], text: 'Connect LED to the transistor.', hint: 'Use the collector-side terminal of the transistor.' },
+        { kind: 'wire', types: ['bjt', 'ground'], text: 'Connect transistor to ground.', hint: 'Use the emitter-side terminal as the return path.' },
+        { kind: 'wire', types: ['resistor', 'bjt'], text: 'Add a base-control connection.', hint: 'Use the second resistor between a control point and the base.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the source return.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the switch example.', hint: 'Use the Inspector to review the estimated operating point.' }
+      ]
+    },
+    {
+      id: 'timer-blinker', icon: '555', title: '555 Timer Blinker', level: 'Intermediate', duration: '12 min',
+      summary: 'Arrange a 555 timer with RC timing parts for a blinking concept.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'The 555 needs a supply and ground reference.' },
+        { kind: 'place', type: 'timer555', text: 'Add a 555 timer.', hint: 'Use the NE555P model for a familiar part.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two timing resistors.', hint: 'Together they help set the charge and discharge timing.' },
+        { kind: 'place', type: 'capacitor', text: 'Add a timing capacitor.', hint: 'The capacitor creates the timing interval.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Use GND for the timer return.' },
+        { kind: 'wire', types: ['source', 'timer555'], text: 'Connect power to the 555.', hint: 'Wire source positive to the timer supply terminal.' },
+        { kind: 'wire', types: ['timer555', 'ground'], text: 'Ground the timer.', hint: 'Wire the timer ground terminal to GND.' },
+        { kind: 'wire', types: ['resistor', 'timer555'], text: 'Connect a timing resistor to the timer.', hint: 'Use the timing-related pins on the 555 symbol.' },
+        { kind: 'wire', types: ['capacitor', 'timer555'], text: 'Connect the capacitor to the timer.', hint: 'The capacitor shares the timing node.' },
+        { kind: 'wire', types: ['capacitor', 'ground'], text: 'Ground the timing capacitor.', hint: 'This completes the RC branch.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the power return.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the timing example.', hint: 'Use Signal Lab to explore the generated signal concept.' }
+      ]
+    },
+    {
+      id: 'opamp-amplifier', icon: '△', title: 'Basic Op-Amp Amplifier', level: 'Intermediate', duration: '12 min',
+      summary: 'Arrange a simple feedback concept around an op-amp.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Use a source as a simple input/reference for this lesson.' },
+        { kind: 'place', type: 'opamp', text: 'Add an Op-Amp 741.', hint: 'The op-amp symbol has +, − and OUT terminals.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'One can represent an input resistor and one feedback resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Ground provides the common reference.' },
+        { kind: 'wire', types: ['source', 'opamp'], text: 'Connect a source to the op-amp.', hint: 'Use one of the input terminals.' },
+        { kind: 'wire', types: ['resistor', 'opamp'], text: 'Connect a resistor to an input.', hint: 'This creates the input/feedback concept.' },
+        { kind: 'wire', types: ['opamp', 'resistor'], text: 'Connect output through a resistor.', hint: 'Use the OUT terminal and the second resistor.' },
+        { kind: 'wire', types: ['resistor', 'ground'], text: 'Connect a resistor to ground.', hint: 'This gives the feedback path a reference.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Connect source negative to ground.', hint: 'Complete the source reference.' },
+        { kind: 'simulate', text: 'Run the amplifier concept.', hint: 'Inspect the model and discuss feedback with the glossary card.' }
+      ]
+    }
+  ];
+
+  const typeOrder = ['source', 'acsource', 'ground', 'resistor', 'capacitor', 'inductor', 'transformer', 'potentiometer', 'switch', 'diode', 'bridge', 'zener', 'led', 'bjt', 'mosfet', 'timer555', 'opamp'];
   const DEFAULT_COMPONENTS = [
     { id: 'c-v1', type: 'source', label: 'V1', x: 170, y: 365, rotation: 0, model: 'Bench DC supply', props: { value: '9 V', voltage: 9, waveform: 'DC', frequency: 1000 } },
     { id: 'c-r1', type: 'resistor', label: 'R1', x: 345, y: 319, rotation: 0, model: 'Generic resistor', props: { value: '470 Ω', resistance: 470, rating: 0.25, tolerance: '5%' } },
@@ -185,7 +313,7 @@
       components: clone(DEFAULT_COMPONENTS),
       wires: clone(DEFAULT_WIRES),
       view: 'schematic', tool: 'select', selectedId: null, selectedWireId: null,
-      heatmap: false, snap: true, breadboardTexture: true, theme: 'dark', running: false, labTab: 'scope', rightTab: 'properties',
+      heatmap: false, snap: true, breadboardTexture: false, theme: 'dark', quickMeasureVisible: true, wiringEnabled: true, running: false, labTab: 'scope', rightTab: 'properties',
       meterMode: 'voltage', probeTerminals: []
     };
   }
@@ -197,6 +325,8 @@
   let selectedCategory = 'all';
   let viewBox = { x: 0, y: 0, w: 1200, h: 690 };
   let dragState = null;
+  let panState = null;
+  let panFrame = null;
   let wireStart = null;
   let wirePointer = null;
   let liveTimer = null;
@@ -204,6 +334,12 @@
   let labResize = null;
   let miniMapStage = null;
   let miniMapLayer = null;
+  let activeLessonId = null;
+  let lessonStepIndex = 0;
+  let beginnerMode = true;
+  let lessonHintVisible = false;
+  let lessonCompletionAnnounced = false;
+  let quickMeasureTarget = null;
 
   function applyTheme(persist = false) {
     const light = state.theme === 'light';
@@ -269,7 +405,50 @@
   function getComponent(id) { return state.components.find(component => component.id === id); }
   function getWire(id) { return state.wires.find(wire => wire.id === id); }
   function componentMetric(id) { return simulation?.metrics?.[id] || { voltage: 0, current: 0, power: 0, temp: 25 }; }
-  function primaryValue(component) {
+  function getLesson(id = activeLessonId) { return LESSONS.find(lesson => lesson.id === id) || null; }
+  function getCurrentLessonStep() {
+    const lesson = getLesson();
+    return lesson?.steps[lessonStepIndex] || null;
+  }
+  function countLessonComponents(type) { return state.components.filter(component => component.type === type).length; }
+  function hasWireBetweenTypes(firstType, secondType) {
+    return state.wires.some(wire => {
+      const first = getComponent(wire.from.compId);
+      const second = getComponent(wire.to.compId);
+      if (!first || !second) return false;
+      return (first.type === firstType && second.type === secondType) || (first.type === secondType && second.type === firstType);
+    });
+  }
+  function isLessonStepComplete(step) {
+    if (!step) return false;
+    if (step.kind === 'place') return countLessonComponents(step.type) >= (step.count || 1);
+    if (step.kind === 'wire') return hasWireBetweenTypes(step.types[0], step.types[1]);
+    if (step.kind === 'simulate') return state.running;
+    return false;
+  }
+  function updateLessonProgress() {
+    const lesson = getLesson();
+    if (!lesson) { lessonStepIndex = 0; return; }
+    let index = 0;
+    while (index < lesson.steps.length && isLessonStepComplete(lesson.steps[index])) index++;
+    lessonStepIndex = index;
+    if (index === lesson.steps.length && !lessonCompletionAnnounced) {
+      lessonCompletionAnnounced = true;
+      showToast(`Lesson complete: ${lesson.title}. Great work!`);
+    }
+    if (index < lesson.steps.length) lessonCompletionAnnounced = false;
+  }
+  function getLessonTargetTypes() {
+    const step = getCurrentLessonStep();
+    if (!step || !beginnerMode) return [];
+    if (step.kind === 'place') return [step.type];
+    if (step.kind === 'wire') return step.types;
+    return [];
+  }
+  function isLessonComponentTarget(component) {
+    return Boolean(activeLessonId && beginnerMode && getLessonTargetTypes().includes(component.type));
+  }
+  function primaryValue(component) { 
     if (!component) return '';
     const p = component.props || {};
     if (component.type === 'resistor') return p.value || formatResistance(p.resistance);
@@ -292,6 +471,7 @@
       case 'opamp': return [{ dx: -52, dy: -19, label: '−' }, { dx: -52, dy: 19, label: '+' }, { dx: 50, dy: 0, label: 'OUT' }, { dx: 0, dy: -43, label: 'V+' }, { dx: 0, dy: 43, label: 'V−' }];
       case 'potentiometer': return [{ dx: -58, dy: 0, label: '1' }, { dx: 58, dy: 0, label: '3' }, { dx: 0, dy: -42, label: 'W' }];
       case 'transformer': return [{ dx: -55, dy: -22, label: 'P1' }, { dx: -55, dy: 22, label: 'P2' }, { dx: 55, dy: -22, label: 'S1' }, { dx: 55, dy: 22, label: 'S2' }];
+      case 'bridge': return [{ dx: -48, dy: 0, label: '~1' }, { dx: 48, dy: 0, label: '~2' }, { dx: 0, dy: -48, label: '+' }, { dx: 0, dy: 48, label: '−' }];
       default: return [{ dx: -62, dy: 0, label: '1' }, { dx: 62, dy: 0, label: '2' }];
     }
   }
@@ -325,6 +505,7 @@
     if (component.type === 'timer555') return { x: -61, y: -42, w: 122, h: 84 };
     if (component.type === 'opamp') return { x: -56, y: -47, w: 112, h: 94 };
     if (component.type === 'transformer') return { x: -58, y: -43, w: 116, h: 86 };
+    if (component.type === 'bridge') return { x: -55, y: -55, w: 110, h: 110 };
     if (component.type === 'potentiometer') return { x: -67, y: -48, w: 134, h: 96 };
     return { x: -67, y: -37, w: 134, h: 74 };
   }
@@ -343,6 +524,7 @@
       potentiometer: '<path d="M2 16h8l3-7 5 14 5-14 5 14 3-7h8M22 3v12m0-12-4 4m4-4 4 4"/>',
       switch: '<path d="M4 20h8m20 0h8M12 20 30 9"/><circle cx="12" cy="20" r="1.5"/><circle cx="32" cy="20" r="1.5"/>',
       diode: '<path d="M2 15h12l10-8v16L14 15h-12m22-8v16m0-8h18"/>',
+      bridge: '<path d="M22 3 37 15 22 27 7 15Z"/><path d="M2 15h5m30 0h5M22 3v5m0 11v8M16 12h12M22 8v8"/>',
       zener: '<path d="M2 15h12l10-8v16L14 15h-12m22-8v4m0 4v4m0-4h18"/>',
       led: '<path d="M2 17h12l10-8v16l-10-8H2m22-8v16m0-8h18M28 7l5-4m-1 7 5-4"/>',
       bjt: '<circle cx="23" cy="15" r="8"/><path d="M3 15h12m8-5 10-6m-10 11 10 6m-4-4 4 0-2-3"/>',
@@ -363,6 +545,7 @@
     if (type === 'transformer') return '<path class="part-pin" d="M-55 -22H-38M-55 22H-38M38 -22H55M38 22H55"/><rect class="bread-transformer" x="-38" y="-31" width="76" height="62" rx="7"/><path class="bread-transformer-line" d="M-28 -16h16m-16 11h16m24-11h16m-16 11h16"/>';
     if (type === 'potentiometer') return '<path class="part-pin" d="M-58 0H-25M25 0H58M0 -42V-25"/><circle class="bread-pot" cx="0" cy="0" r="25"/><circle class="bread-pot-shaft" cx="0" cy="0" r="9"/><path class="bread-screen-line" d="M0 -42V-5"/>';
     if (type === 'switch') return '<path class="part-pin" d="M-62 0H-34M34 0H62"/><rect class="bread-switch" x="-34" y="-16" width="68" height="32" rx="6"/><rect class="bread-switch-lever" x="-6" y="-20" width="12" height="21" rx="4"/>';
+    if (type === 'bridge') return '<path class="part-pin" d="M-48 0H-27M27 0H48M0 -48V-27M0 27V48"/><rect class="bread-bridge" x="-29" y="-29" width="58" height="58" rx="8"/><path class="bread-bridge-mark" d="M0 -20v12m-6-6h12M-20 0h9m22 0h9M0 8v12"/><text class="bread-bridge-text" x="-14" y="4">~</text><text class="bread-bridge-text" x="14" y="4">~</text>';
     if (type === 'diode' || type === 'zener') return '<path class="part-pin" d="M-62 0H-32M32 0H62"/><rect class="bread-diode" x="-32" y="-9" width="64" height="18" rx="9"/><rect class="bread-band silver" x="16" y="-9" width="4" height="18"/>';
     if (type === 'led') return '<path class="part-pin" d="M-62 0H-19M19 0H62"/><path class="bread-led" d="M-19 8v-11a19 19 0 0 1 38 0V8Z"/><rect class="bread-led-base" x="-20" y="7" width="40" height="8" rx="2"/><path class="bread-led-glint" d="M-7 -11c5-4 9-3 12 0"/>';
     if (type === 'bjt' || type === 'mosfet') return `<path class="part-pin" d="M${type === 'bjt' ? '-41 0H-18M16 -17 33 -27M16 17 33 27' : '-45 0H-17M17 -17 35 -27M17 17 35 27'}"/><path class="bread-transistor" d="M-18 20V-2a18 18 0 0 1 36 0v22Z"/><path class="bread-transistor-line" d="M-9 -9h18M-9 -3h18"/>`;
@@ -389,6 +572,7 @@
     if (type === 'transformer') return '<path class="part-pin" d="M-55 -22H-37M-55 22H-37M37 -22H55M37 22H55"/><path class="part-stroke" d="M-37 -22c22 0 22 11 0 11 22 0 22 11 0 11M37 -22c-22 0-22 11 0 11-22 0-22 11 0 11M-5 -31V31M5 -31V31"/>';
     if (type === 'potentiometer') return '<path class="part-pin" d="M-62 0H-40M40 0H62M0 -42V-17"/><polyline class="part-stroke" points="-40,0 -33,-14 -23,14 -13,-14 -3,14 7,-14 17,14 27,-14 37,14 40,0"/><path class="part-accent" d="M0 -35V-6m0-29-7 8m7-8 7 8"/>';
     if (type === 'switch') return '<path class="part-pin" d="M-62 0H-29M29 0H62"/><circle class="part-fill" cx="-27" cy="0" r="3"/><circle class="part-fill" cx="28" cy="0" r="3"/><path class="part-stroke" d="M-25 -2 20 -23"/>';
+    if (type === 'bridge') return '<path class="part-pin" d="M-48 0H-30M30 0H48M0 -48V-30M0 30V48"/><path class="part-fill" d="M0 -30 30 0 0 30 -30 0Z"/><path class="part-stroke" d="M0 -21v14m-7-7h14M-21 0h10m22 0h10M0 7v14"/><text class="bridge-ac" x="-15" y="4">~</text><text class="bridge-ac" x="15" y="4">~</text>';
     if (type === 'diode' || type === 'zener' || type === 'led') {
       const zener = type === 'zener' ? '<path class="part-stroke" d="M17 -20v8M17 12v8"/>' : '';
       const arrows = type === 'led' ? '<path class="part-accent" d="M2 -29 10 -37M8 -22l8 -8"/><path class="part-accent" d="m8 -37 2 7m0-7-7 2M14 -30l2 7m0-7-7 2"/>' : '';
@@ -403,7 +587,7 @@
   }
 
   function terminalMarkup(component) {
-    const visibleRadius = state.tool === 'wire' ? 6.1 : 4.2;
+    const visibleRadius = wireStart ? 6.1 : 4.2;
     return getPins(component).map((pin, index) => `<g class="terminal-group" data-terminal-comp="${component.id}" data-terminal-pin="${index}"><circle class="terminal-hit" cx="${pin.dx}" cy="${pin.dy}" r="11"/><circle class="terminal" cx="${pin.dx}" cy="${pin.dy}" r="${visibleRadius}"/><text class="pin-label" x="${pin.dx}" y="${pin.dy - (pin.dy < 0 ? 8 : pin.dy > 0 ? -8 : 10)}">${escapeHTML(pin.label)}</text></g>`).join('');
   }
   function heatForComponent(component) {
@@ -416,10 +600,13 @@
     const selected = state.selectedId === component.id;
     const metric = componentMetric(component.id);
     const heat = heatForComponent(component);
+    const lessonTarget = isLessonComponentTarget(component);
+    const ledIntensity = component.type === 'led' && state.running ? Math.max(0, Math.min(1, metric.current / Math.max(.001, Number(component.props.maxCurrent || .02)))) : 0;
+    const ledGlow = 4 + ledIntensity * 17;
     const labelY = bounds.y - 10;
     const valueY = bounds.y + bounds.h + 14;
     const thermalSize = Math.max(bounds.w, bounds.h) * 0.88;
-    return `<g class="component ${selected ? 'selected' : ''}" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
+    return `<g class="component ${selected ? 'selected' : ''} ${lessonTarget ? 'lesson-target' : ''} ${ledIntensity > .02 ? 'led-lit' : ''}" style="--led-intensity:${ledIntensity.toFixed(3)};--led-glow:${ledGlow.toFixed(1)}px" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
       <circle class="thermal-halo" cx="0" cy="0" r="${thermalSize}" fill="${heat.fill}" opacity="${heat.opacity}"/>
       <rect class="component-hitbox" x="${bounds.x - 9}" y="${bounds.y - 9}" width="${bounds.w + 18}" height="${bounds.h + 18}" rx="10"/>
       <rect class="selection-box" x="${bounds.x - 6}" y="${bounds.y - 6}" width="${bounds.w + 12}" height="${bounds.h + 12}" rx="8"/>
@@ -430,26 +617,36 @@
     </g>`;
   }
 
-  function wirePath(wire) {
-    const from = getTerminalFromPoint(wire.from);
-    const to = getTerminalFromPoint(wire.to);
+  function routedWirePath(from, to) {
     if (!from || !to) return '';
     const dx = Math.abs(to.x - from.x), dy = Math.abs(to.y - from.y);
     if (dx < 25 || dy < 20) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
     const middle = Math.round(((from.x + to.x) / 2) / 20) * 20;
     return `M ${from.x} ${from.y} H ${middle} V ${to.y} H ${to.x}`;
   }
+  function wirePath(wire, reverse = false) {
+    const from = getTerminalFromPoint(reverse ? wire.to : wire.from);
+    const to = getTerminalFromPoint(reverse ? wire.from : wire.to);
+    return routedWirePath(from, to);
+  }
   function wireClass(wire) {
     const classes = ['wire'];
-    if (simulation?.shortCircuit) classes.push('warn');
-    else if (state.running) classes.push('active');
+    const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
+    if (isActive && simulation?.shortCircuit) classes.push('warn');
+    else if (isActive) classes.push('active');
     if (state.selectedWireId === wire.id) classes.push('selected');
     return classes.join(' ');
   }
   function renderWires() {
     const endpointCounts = new Map();
     state.wires.forEach(wire => [wire.from, wire.to].forEach(point => endpointCounts.set(pinKey(point), (endpointCounts.get(pinKey(point)) || 0) + 1)));
-    const paths = state.wires.map(wire => { const path = wirePath(wire); return `<path class="wire-hit" data-wire-id="${wire.id}" d="${path}"/><path class="${wireClass(wire)}" data-wire-id="${wire.id}" d="${path}"/>`; }).join('');
+    const paths = state.wires.map(wire => {
+      const path = wirePath(wire);
+      const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
+      const direction = simulation?.wireDirections?.[wire.id];
+      const flow = isActive ? `<path class="wire-flow" marker-end="url(#flowArrow)" d="${wirePath(wire, direction === 'reverse')}"/>` : '';
+      return `<path class="wire-hit" data-wire-id="${wire.id}" d="${path}"/><path class="${wireClass(wire)}" data-wire-id="${wire.id}" d="${path}"/>${flow}`;
+    }).join('');
     const junctions = [...endpointCounts.entries()].filter(([, count]) => count > 1).map(([key]) => {
       const [compId, pin] = key.split(':');
       const point = getTerminalFromPoint({ compId, pin: Number(pin) });
@@ -500,6 +697,25 @@
     }
     return null;
   }
+  function componentOverlayBounds(component) {
+    const bounds = getBounds(component);
+    const corners = [
+      { x: bounds.x, y: bounds.y },
+      { x: bounds.x + bounds.w, y: bounds.y },
+      { x: bounds.x + bounds.w, y: bounds.y + bounds.h },
+      { x: bounds.x, y: bounds.y + bounds.h }
+    ].map(corner => {
+      const rotated = rotatePoint(corner.x, corner.y, component.rotation || 0);
+      return svgPointToCanvasOverlay({ x: component.x + rotated.x, y: component.y + rotated.y });
+    });
+    if (corners.some(point => !point)) return null;
+    return {
+      left: Math.min(...corners.map(point => point.x)),
+      right: Math.max(...corners.map(point => point.x)),
+      top: Math.min(...corners.map(point => point.y)),
+      bottom: Math.max(...corners.map(point => point.y))
+    };
+  }
   function svgPointToCanvasOverlay(point) {
     try {
       const ctm = dom.canvas.getScreenCTM?.();
@@ -528,19 +744,95 @@
       : `${quickActionButton('rewire', 'Reconnect wire')}${quickActionButton('delete', 'Remove wire', true)}`;
     toolbar.innerHTML = `<span class="selection-action-label">${escapeHTML(label)}</span>${actions}`;
     toolbar.classList.remove('hidden');
-    const anchor = selectedItemAnchor();
-    const overlayPoint = anchor && svgPointToCanvasOverlay(anchor);
-    if (!overlayPoint) {
-      toolbar.classList.add('hidden');
-      return;
-    }
     const wrap = dom.canvasWrap.getBoundingClientRect();
+    const toolbarHeight = Math.max(36, toolbar.offsetHeight);
     const halfWidth = Math.max(75, toolbar.offsetWidth / 2);
-    const below = overlayPoint.y < 72;
-    const x = Math.max(halfWidth + 8, Math.min(wrap.width - halfWidth - 8, overlayPoint.x));
+    let anchorX = 0;
+    let top = 0;
+    let below = false;
+    if (component) {
+      const bounds = componentOverlayBounds(component);
+      if (!bounds) { toolbar.classList.add('hidden'); return; }
+      anchorX = (bounds.left + bounds.right) / 2;
+      const aboveAnchor = bounds.top - 25;
+      const belowAnchor = bounds.bottom + 27;
+      const fitsAbove = aboveAnchor - toolbarHeight >= 8;
+      const fitsBelow = belowAnchor + toolbarHeight <= wrap.height - 8;
+      below = !fitsAbove && fitsBelow;
+      top = below ? belowAnchor : Math.max(toolbarHeight + 8, aboveAnchor);
+    } else {
+      const anchor = selectedItemAnchor();
+      const point = anchor && svgPointToCanvasOverlay(anchor);
+      if (!point) { toolbar.classList.add('hidden'); return; }
+      anchorX = point.x;
+      const fitsAbove = point.y - 14 - toolbarHeight >= 8;
+      const fitsBelow = point.y + 14 + toolbarHeight <= wrap.height - 8;
+      below = !fitsAbove && fitsBelow;
+      top = below ? point.y + 14 : Math.max(toolbarHeight + 8, point.y - 14);
+    }
+    const x = Math.max(halfWidth + 8, Math.min(wrap.width - halfWidth - 8, anchorX));
     toolbar.classList.toggle('below', below);
     toolbar.style.left = `${x}px`;
-    toolbar.style.top = `${below ? overlayPoint.y + 18 : overlayPoint.y - 12}px`;
+    toolbar.style.top = `${top}px`;
+  }
+  function quickMeasureNodeVoltage(target, sim) {
+    const component = getComponent(target.compId);
+    if (!component) return null;
+    if (component.type === 'ground') return 0;
+    if (component.id === sim.source?.id) return target.pin === 0 ? sim.sourceVoltage : 0;
+    const value = sim.nodeVoltages?.get(`${target.compId}:${target.pin}`);
+    return Number.isFinite(value) ? value : null;
+  }
+  function quickMeasureRow(label, value, subtle = '') {
+    return `<div class="quick-measure-row"><span>${escapeHTML(label)}</span><b>${escapeHTML(value)}</b>${subtle ? `<small>${escapeHTML(subtle)}</small>` : ''}</div>`;
+  }
+  function renderQuickMeasurePanel() {
+    const panel = dom.quickMeasurePanel;
+    if (!panel) return;
+    if (!state.quickMeasureVisible) {
+      panel.classList.add('hidden');
+      return;
+    }
+    panel.classList.remove('hidden');
+    const sim = simulation || calculateSimulation();
+    let content = '';
+    let hasTarget = false;
+    if (quickMeasureTarget?.kind === 'terminal') {
+      const component = getComponent(quickMeasureTarget.compId);
+      const pin = component && getPins(component)[quickMeasureTarget.pin];
+      if (component && pin) {
+        hasTarget = true;
+        const voltage = quickMeasureNodeVoltage(quickMeasureTarget, sim);
+        const connected = sim.hasActivePath && sim.topology.reachableFromPositive.has(`${component.id}:${quickMeasureTarget.pin}`);
+        content = `<div class="quick-measure-kicker">Node readout</div><h4>${escapeHTML(component.label)} · ${escapeHTML(pin.label)}</h4><div class="quick-measure-value">${voltage === null ? '—' : formatVoltage(voltage)}</div><p>${voltage === null ? 'No estimated voltage is available because this node is outside a complete conducting path.' : connected ? 'Estimated relative to GND on the active path.' : 'Reference measurement relative to GND.'}</p>${quickMeasureRow('Reference', 'GND')}`;
+      }
+    } else if (quickMeasureTarget?.kind === 'wire') {
+      const wire = getWire(quickMeasureTarget.wireId);
+      if (wire) {
+        hasTarget = true;
+        const active = sim.activeWireIds?.has(wire.id);
+        const reversed = sim.wireDirections?.[wire.id] === 'reverse';
+        const start = reversed ? wire.to : wire.from;
+        const end = reversed ? wire.from : wire.to;
+        content = `<div class="quick-measure-kicker">Branch readout</div><h4>Wire current</h4><div class="quick-measure-value">${active ? formatCurrent(sim.current) : '0 A'}</div><p>${active ? `${escapeHTML(terminalDescription(start))} → ${escapeHTML(terminalDescription(end))}` : 'This wire is not on a complete conducting path.'}</p>${quickMeasureRow('Direction', active ? 'Active path' : 'No current')}`;
+      }
+    } else if (quickMeasureTarget?.kind === 'component') {
+      const component = getComponent(quickMeasureTarget.compId);
+      if (component) {
+        hasTarget = true;
+        const metric = sim.metrics?.[component.id] || { voltage: 0, current: 0, power: 0 };
+        const active = sim.activeComponentIds?.has(component.id);
+        content = `<div class="quick-measure-kicker">Component readout</div><h4>${escapeHTML(component.label)} · ${escapeHTML(partData(component.type).title)}</h4><div class="quick-measure-grid">${quickMeasureRow('Voltage drop', active ? formatVoltage(metric.voltage) : '—')}${quickMeasureRow('Current', active ? formatCurrent(metric.current) : '0 A')}${quickMeasureRow('Power', active ? formatPower(metric.power) : '0 W')}</div><p>${active ? 'Estimated values for this component on the active path.' : 'This component is outside the current conducting path.'}</p>`;
+      }
+    }
+    if (!hasTarget) {
+      content = `<div class="quick-measure-kicker">Circuit overview</div><h4>Quick Measure</h4><div class="quick-measure-grid">${quickMeasureRow('Parts', String(state.components.length))}${quickMeasureRow('Wires', String(state.wires.length))}${quickMeasureRow('Input', sim.source ? formatVoltage(sim.sourceVoltage) : '—')}${quickMeasureRow('Active current', sim.hasActivePath ? formatCurrent(sim.current) : '—')}</div><p>${sim.hasActivePath ? 'Click a node, wire or component with Quick Measure to inspect it.' : 'Run or complete a circuit, then click a node, wire or component to inspect it.'}</p>`;
+    }
+    panel.innerHTML = `<div class="quick-measure-head"><span><i>⌁</i>Quick Measure</span>${hasTarget ? '<button data-quick-measure-action="clear" title="Clear readout" aria-label="Clear readout">×</button>' : ''}</div>${content}`;
+  }
+  function setQuickMeasureTarget(target) {
+    quickMeasureTarget = target;
+    renderQuickMeasurePanel();
   }
   function renderBreadboardBackground() {
     if (state.view !== 'breadboard' || !state.breadboardTexture) return '';
@@ -551,61 +843,221 @@
       <rect x="-2000" y="330" width="6000" height="20" fill="#b9b19e" opacity=".75"/>`;
   }
 
-  function calculateSimulation() {
+  function conductiveTopology(source) {
+    const forwardEdges = new Map();
+    const reverseEdges = new Map();
+    const key = (compId, pin) => `${compId}:${pin}`;
+    const addDirected = (from, to) => {
+      if (!forwardEdges.has(from)) forwardEdges.set(from, []);
+      if (!reverseEdges.has(to)) reverseEdges.set(to, []);
+      forwardEdges.get(from).push(to);
+      reverseEdges.get(to).push(from);
+    };
+    const addBidirectional = (a, b) => { addDirected(a, b); addDirected(b, a); };
+    const pin = (component, index) => key(component.id, index);
+
+    state.wires.forEach(wire => addBidirectional(key(wire.from.compId, wire.from.pin), key(wire.to.compId, wire.to.pin)));
+    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
+    state.components.forEach(component => {
+      const pins = getPins(component);
+      if (pins.length < 2) return;
+      const pair = (a = 0, b = 1) => addBidirectional(pin(component, a), pin(component, b));
+      if (['resistor', 'inductor'].includes(component.type)) pair();
+      else if (component.type === 'capacitor' && alternatingSource) pair();
+      else if (component.type === 'potentiometer') { addBidirectional(pin(component, 0), pin(component, 2)); addBidirectional(pin(component, 2), pin(component, 1)); }
+      else if (component.type === 'switch' && component.props?.position === 'Closed') pair();
+      else if (['diode', 'led', 'zener'].includes(component.type)) addDirected(pin(component, 0), pin(component, 1));
+      else if (component.type === 'bridge') {
+        // Educational full-wave bridge approximation: AC terminals feed +, and − returns to either AC terminal.
+        addDirected(pin(component, 0), pin(component, 2));
+        addDirected(pin(component, 1), pin(component, 2));
+        addDirected(pin(component, 3), pin(component, 0));
+        addDirected(pin(component, 3), pin(component, 1));
+      } else if (component.type === 'bjt' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
+        addDirected(pin(component, 1), pin(component, 2));
+      } else if (component.type === 'mosfet' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
+        addDirected(pin(component, 1), pin(component, 2));
+      }
+    });
+
+    const grounds = state.components.filter(component => component.type === 'ground');
+    for (let index = 1; index < grounds.length; index++) addBidirectional(pin(grounds[0], 0), pin(grounds[index], 0));
+    if (!source) return { hasActivePath: false, activeWireIds: new Set(), wireDirections: {}, reachableFromPositive: new Set(), reachesNegative: new Set() };
+
+    const walk = (start, edges) => {
+      const visited = new Set([start]);
+      const queue = [start];
+      while (queue.length) {
+        const current = queue.shift();
+        (edges.get(current) || []).forEach(next => { if (!visited.has(next)) { visited.add(next); queue.push(next); } });
+      }
+      return visited;
+    };
+    const start = pin(source, 0);
+    const target = pin(source, 1);
+    const reachableFromPositive = walk(start, forwardEdges);
+    const reachesNegative = walk(target, reverseEdges);
+    const hasActivePath = reachableFromPositive.has(target);
+    const activeWireIds = new Set();
+    const wireDirections = {};
+    if (hasActivePath) {
+      state.wires.forEach(wire => {
+        const from = key(wire.from.compId, wire.from.pin);
+        const to = key(wire.to.compId, wire.to.pin);
+        if (reachableFromPositive.has(from) && reachesNegative.has(to)) {
+          activeWireIds.add(wire.id);
+          wireDirections[wire.id] = 'forward';
+        } else if (reachableFromPositive.has(to) && reachesNegative.has(from)) {
+          activeWireIds.add(wire.id);
+          wireDirections[wire.id] = 'reverse';
+        }
+      });
+    }
+    return { hasActivePath, activeWireIds, wireDirections, reachableFromPositive, reachesNegative };
+  }
+  function componentOnActivePath(component, topology, source) {
+    if (!topology.hasActivePath) return false;
+    const forward = topology.reachableFromPositive;
+    const reverse = topology.reachesNegative;
+    const node = index => `${component.id}:${index}`;
+    const pair = (a = 0, b = 1, directed = false) => (forward.has(node(a)) && reverse.has(node(b))) || (!directed && forward.has(node(b)) && reverse.has(node(a)));
+    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
+    if (['resistor', 'inductor'].includes(component.type)) return pair();
+    if (component.type === 'capacitor') return alternatingSource && pair();
+    if (component.type === 'potentiometer') return pair(0, 2) || pair(2, 1);
+    if (component.type === 'switch') return component.props?.position === 'Closed' && pair();
+    if (['diode', 'led', 'zener'].includes(component.type)) return pair(0, 1, true);
+    if (component.type === 'bridge') return pair(0, 2, true) || pair(1, 2, true) || pair(3, 0, true) || pair(3, 1, true);
+    if (['bjt', 'mosfet'].includes(component.type)) return pair(1, 2, true);
+    if (component.type === 'ground') return forward.has(node(0)) && reverse.has(node(0));
+    return false;
+  }
+  function estimateNodeVoltages(sim) {
+    const values = new Map();
+    if (!sim?.source || !sim.hasActivePath) return values;
+    const edges = new Map();
+    const addEdge = (from, to, drop = 0) => {
+      if (!edges.has(from)) edges.set(from, []);
+      edges.get(from).push({ to, drop });
+    };
+    const node = (component, pin) => `${component.id}:${pin}`;
+    const topology = sim.topology;
+    const forward = topology.reachableFromPositive;
+    const reverse = topology.reachesNegative;
+    const activePair = (component, a = 0, b = 1, directed = false) => {
+      const first = node(component, a), second = node(component, b);
+      if (forward.has(first) && reverse.has(second)) return { from: a, to: b };
+      if (!directed && forward.has(second) && reverse.has(first)) return { from: b, to: a };
+      return null;
+    };
+    state.wires.forEach(wire => {
+      if (!sim.activeWireIds.has(wire.id)) return;
+      const reverseDirection = sim.wireDirections[wire.id] === 'reverse';
+      const from = reverseDirection ? `${wire.to.compId}:${wire.to.pin}` : `${wire.from.compId}:${wire.from.pin}`;
+      const to = reverseDirection ? `${wire.from.compId}:${wire.from.pin}` : `${wire.to.compId}:${wire.to.pin}`;
+      addEdge(from, to, 0);
+    });
+    state.components.forEach(component => {
+      if (!sim.activeComponentIds.has(component.id) || component.id === sim.source.id) return;
+      const resistorDrop = Math.abs(sim.current * parseNumber(component.props?.resistance ?? component.props?.value, 0));
+      const addPair = (a, b, drop, directed = false) => {
+        const active = activePair(component, a, b, directed);
+        if (active) addEdge(node(component, active.from), node(component, active.to), drop);
+      };
+      if (component.type === 'resistor') addPair(0, 1, resistorDrop);
+      else if (component.type === 'potentiometer') { addPair(0, 2, resistorDrop / 2); addPair(2, 1, resistorDrop / 2); }
+      else if (['inductor', 'switch', 'capacitor'].includes(component.type)) addPair(0, 1, 0);
+      else if (component.type === 'diode') addPair(0, 1, Number(component.props?.forwardVoltage || .7), true);
+      else if (component.type === 'led') addPair(0, 1, Number(component.props?.forwardVoltage || 2.1), true);
+      else if (component.type === 'zener') addPair(0, 1, Number(component.props?.zenerVoltage || 5.1), true);
+      else if (component.type === 'bridge') {
+        addPair(0, 2, Number(component.props?.forwardVoltage || 1.4), true);
+        addPair(1, 2, Number(component.props?.forwardVoltage || 1.4), true);
+        addPair(3, 0, 0, true);
+        addPair(3, 1, 0, true);
+      } else if (['bjt', 'mosfet'].includes(component.type)) addPair(1, 2, .2, true);
+    });
+    const start = node(sim.source, 0);
+    values.set(start, sim.sourceVoltage);
+    const queue = [start];
+    while (queue.length) {
+      const current = queue.shift();
+      const voltage = values.get(current);
+      (edges.get(current) || []).forEach(edge => {
+        const nextVoltage = voltage - edge.drop;
+        if (!values.has(edge.to)) { values.set(edge.to, nextVoltage); queue.push(edge.to); }
+      });
+    }
+    values.set(node(sim.source, 1), 0);
+    state.components.filter(component => component.type === 'ground').forEach(component => values.set(node(component, 0), 0));
+    return values;
+  }
+  function calculateSimulation() { 
     const components = state.components;
     const source = components.find(c => c.type === 'source' || c.type === 'acsource');
     const sourceVoltage = source ? parseNumber(source.props.voltage ?? source.props.value, 0) : 0;
-    const resistors = components.filter(c => c.type === 'resistor' || c.type === 'potentiometer');
+    const topology = conductiveTopology(source);
+    const activeComponentIds = new Set();
+    components.forEach(component => {
+      if (component.id === source?.id || componentOnActivePath(component, topology, source)) activeComponentIds.add(component.id);
+    });
+    const resistors = components.filter(component => (component.type === 'resistor' || component.type === 'potentiometer') && activeComponentIds.has(component.id));
     const totalResistance = resistors.reduce((sum, resistor) => sum + Math.max(0, parseNumber(resistor.props.resistance ?? resistor.props.value, 0)), 0);
-    const diodes = components.filter(c => ['diode', 'led', 'zener'].includes(c.type));
+    const diodes = components.filter(component => ['diode', 'bridge', 'led', 'zener'].includes(component.type) && activeComponentIds.has(component.id));
     const forwardDrop = diodes.reduce((sum, component) => {
       if (component.type === 'led') return sum + Number(component.props.forwardVoltage || 2.1);
       if (component.type === 'zener') return sum + Number(component.props.zenerVoltage || 5.1);
+      if (component.type === 'bridge') return sum + Number(component.props.forwardVoltage || 1.4);
       return sum + Number(component.props.forwardVoltage || .7);
     }, 0);
-    const enoughWiring = state.wires.length >= Math.max(2, components.length - 1);
-    const noResistance = source && totalResistance < .5 && enoughWiring;
+    const enoughWiring = topology.hasActivePath;
+    const noResistance = source && totalResistance < .5 && topology.hasActivePath;
     let current = 0;
-    if (source && totalResistance > 0 && enoughWiring) current = Math.max(0, (sourceVoltage - forwardDrop) / totalResistance);
+    if (source && totalResistance > 0 && topology.hasActivePath) current = Math.max(0, (sourceVoltage - forwardDrop) / totalResistance);
     if (noResistance) current = Math.min(2, sourceVoltage * 2.5);
     const metrics = {};
     components.forEach(component => {
-      let voltage = 0, power = 0, componentCurrent = current;
+      const isActive = activeComponentIds.has(component.id);
+      let voltage = 0, power = 0, componentCurrent = isActive ? current : 0;
       if (component.type === 'source' || component.type === 'acsource') { voltage = sourceVoltage; power = sourceVoltage * current; }
       else if (component.type === 'resistor' || component.type === 'potentiometer') { const r = Math.max(0, parseNumber(component.props.resistance ?? component.props.value)); voltage = current * r; power = current * current * r; }
       else if (component.type === 'led') { voltage = Number(component.props.forwardVoltage || 2.1); power = voltage * current; }
       else if (component.type === 'diode') { voltage = Number(component.props.forwardVoltage || .7); power = voltage * current; }
+      else if (component.type === 'bridge') { voltage = Number(component.props.forwardVoltage || 1.4); power = voltage * current; }
       else if (component.type === 'zener') { voltage = Number(component.props.zenerVoltage || 5.1); power = voltage * current; }
       else if (component.type === 'capacitor') { voltage = sourceVoltage; componentCurrent = 0; }
-      else if (component.type === 'ground') { voltage = 0; componentCurrent = current; }
+      else if (component.type === 'ground') { voltage = 0; componentCurrent = isActive ? current : 0; }
       const temp = 25 + Math.min(65, power * 245);
       metrics[component.id] = { voltage, current: componentCurrent, power, temp };
     });
     const hasGround = components.some(c => c.type === 'ground');
     const outputVoltage = diodes.length ? forwardDrop : Math.max(0, sourceVoltage - (current * totalResistance));
-    return { source, sourceVoltage, totalResistance, forwardDrop, current, metrics, outputVoltage, hasGround, enoughWiring, shortCircuit: noResistance };
+    const result = { source, sourceVoltage, totalResistance, forwardDrop, current, metrics, outputVoltage, hasGround, enoughWiring, shortCircuit: noResistance, hasActivePath: topology.hasActivePath, activeWireIds: topology.activeWireIds, wireDirections: topology.wireDirections, activeComponentIds, topology };
+    result.nodeVoltages = estimateNodeVoltages(result);
+    return result;
   }
   function analyzeCircuit() {
     const sim = simulation || calculateSimulation();
     const issues = [];
     let health = 100;
-    if (!sim.source) { issues.push({ type: 'error', title: 'No source connected', text: 'Add a DC or AC source to drive this circuit.' }); health -= 50; }
-    if (!sim.hasGround) { issues.push({ type: 'error', title: 'Missing reference ground', text: 'SPICE-style analysis needs one GND node to resolve voltages.' }); health -= 30; }
-    if (state.wires.length < Math.max(2, state.components.length - 1)) { issues.push({ type: 'info', title: 'Circuit is still being wired', text: 'Connect the remaining terminals to complete the signal path.' }); health -= 8; }
-    if (sim.shortCircuit) { issues.push({ type: 'error', title: 'Potential short circuit', text: 'A source is connected with less than 0.5 Ω of series resistance.' }); health -= 55; }
+    if (!sim.source) { issues.push({ type: 'error', title: 'Your circuit needs power', text: 'Add a DC or AC source so the circuit has something to drive it.' }); health -= 50; }
+    if (!sim.hasGround) { issues.push({ type: 'error', title: 'Add a ground reference', text: 'Place GND and connect it to the return side of your circuit so voltages have a shared reference.' }); health -= 30; }
+    if (state.wires.length < Math.max(2, state.components.length - 1)) { issues.push({ type: 'info', title: 'Keep wiring the circuit', text: 'Connect the remaining terminals to complete a path from the source through the load and back to ground.' }); health -= 8; }
+    if (sim.source && sim.hasGround && state.wires.length >= Math.max(2, state.components.length - 1) && !sim.hasActivePath) { issues.push({ type: 'warn', title: 'No complete conducting path yet', text: 'Fluxa cannot find a path from source positive back to source negative. Check open switches, diode direction and disconnected wires.' }); health -= 18; }
+    if (sim.shortCircuit) { issues.push({ type: 'error', title: 'This may be a short circuit', text: 'Power is reaching the loop without enough resistance. Add a resistor before running the circuit again.' }); health -= 55; }
     state.components.filter(c => c.type === 'resistor').forEach(component => {
       const metric = componentMetric(component.id);
       const rating = Number(component.props.rating || .25);
-      if (metric.power > rating) { issues.push({ type: 'warn', title: `${component.label} exceeds its power rating`, text: `${formatPower(metric.power)} estimated versus ${rating} W rated. Choose a higher-wattage part.` }); health -= 22; }
+      if (metric.power > rating) { issues.push({ type: 'warn', title: `${component.label} may get too hot`, text: `Too much current is passing through it: about ${formatPower(metric.power)} for a ${rating} W part. Try increasing the resistance or using a higher-wattage resistor.` }); health -= 22; }
     });
     state.components.filter(c => c.type === 'led').forEach(component => {
       const metric = componentMetric(component.id);
       const max = Number(component.props.maxCurrent || .02);
-      if (metric.current > max) { issues.push({ type: 'warn', title: `${component.label} current is high`, text: `${formatCurrent(metric.current)} exceeds the ${formatCurrent(max)} model limit.` }); health -= 16; }
+      if (metric.current > max) { issues.push({ type: 'warn', title: `${component.label} needs more current limiting`, text: `The estimated current is ${formatCurrent(metric.current)}, above this LED model's ${formatCurrent(max)} limit. Increase the series resistor value.` }); health -= 16; }
     });
     if (!issues.some(issue => issue.type === 'error' || issue.type === 'warn') && sim.source && sim.hasGround && sim.enoughWiring) {
-      issues.unshift({ type: 'success', title: 'Bias and thermal load look healthy', text: `${formatCurrent(sim.current)} through the active path; no component model is over its nominal limit.` });
-      issues.push({ type: 'info', title: 'Model confidence: high', text: 'Local library parameters are applied to the selected market parts.' });
+      issues.unshift({ type: 'success', title: 'Nice work — this path looks safe', text: `${formatCurrent(sim.current)} is estimated through the active path, and the connected part models are within their basic limits.` });
+      issues.push({ type: 'info', title: 'Learning note', text: 'These values are educational estimates based on the selected parts and the simple circuit path.' });
     }
     return { issues: issues.slice(0, 4), health: Math.max(0, Math.min(100, health)) };
   }
@@ -702,10 +1154,11 @@
     state.view = payload.view === 'breadboard' ? 'breadboard' : 'schematic';
     state.heatmap = Boolean(payload.heatmap);
     state.snap = payload.snap !== false;
-    state.breadboardTexture = payload.breadboardTexture !== false;
+    state.breadboardTexture = payload.breadboardTexture === true;
     state.selectedId = null;
     state.selectedWireId = null;
     state.probeTerminals = [];
+    quickMeasureTarget = null;
     wireStart = null;
     wirePointer = null;
   }
@@ -766,18 +1219,32 @@
     });
     dom.componentList.innerHTML = types.length ? [...groups.entries()].map(([group, groupTypes]) => `<section class="component-group"><div class="component-group-title">${escapeHTML(group)} <span>${groupTypes.length}</span></div>${groupTypes.map(type => {
       const item = partData(type);
-      return `<div class="component-item" draggable="true" data-part-type="${type}" title="Drag ${escapeHTML(item.title)} onto the canvas">
+      const lessonSuggested = Boolean(activeLessonId && beginnerMode && getLessonTargetTypes().includes(type));
+      return `<div class="component-item ${lessonSuggested ? 'lesson-suggested' : ''}" draggable="true" data-part-type="${type}" title="${lessonSuggested ? `Lesson hint: add ${escapeHTML(item.title)}` : `Drag ${escapeHTML(item.title)} onto the canvas`}">
         <div class="part-icon ${item.iconClass}">${partIconSvg(type)}</div><div class="part-info"><b>${escapeHTML(item.title)}</b><span>${escapeHTML(item.subtitle)}</span></div><button class="part-add" data-add-type="${type}" aria-label="Add ${escapeHTML(item.title)}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></button></div>`;
     }).join('')}</section>`).join('') : '<div class="empty-library">No parts match that search.<br><br>Try a model name such as <b>2N2222</b>.</div>';
   }
 
+  function updateLabCollapseControl() {
+    const button = $('#collapseLabBtn');
+    if (!button) return;
+    const collapsed = dom.labDrawer.classList.contains('collapsed');
+    button.classList.toggle('collapsed', collapsed);
+    button.title = collapsed ? 'Expand lab' : 'Collapse lab';
+    button.setAttribute('aria-label', collapsed ? 'Expand Signal Lab' : 'Collapse Signal Lab');
+    button.setAttribute('aria-expanded', String(!collapsed));
+  }
   function renderToolbar() {
     applyTheme();
+    updateLabCollapseControl();
     dom.projectName.textContent = state.projectName;
-    $$('.tool-button').forEach(button => button.classList.toggle('active', button.dataset.tool === state.tool));
+    dom.learnBtn.classList.toggle('active', Boolean(activeLessonId));
+    $$('.tool-button[data-tool]').forEach(button => button.classList.toggle('active', button.dataset.tool === state.tool));
     $$('.view-switch button').forEach(button => button.classList.toggle('active', button.dataset.view === state.view));
     dom.boardTextureToggleWrap.classList.toggle('hidden', state.view !== 'breadboard');
     dom.boardTextureToggle.checked = state.breadboardTexture;
+    dom.quickMeasureToggle.checked = state.quickMeasureVisible;
+    dom.wiringToggle.checked = state.wiringEnabled;
     $$('.inspector-tabs button').forEach(button => button.classList.toggle('active', button.dataset.righttab === state.rightTab));
     $$('.lab-tabs button').forEach(button => button.classList.toggle('active', button.dataset.labtab === state.labTab));
     dom.thermalBtn.classList.toggle('active', state.heatmap);
@@ -788,7 +1255,7 @@
     dom.circuitStateChip.classList.toggle('running', state.running);
     const analysis = analyzeCircuit();
     dom.circuitStateChip.querySelector('span').textContent = state.running ? `Live simulation · ${formatCurrent(simulation.current)}` : analysis.health > 75 ? 'Ready to simulate' : 'Review circuit alerts';
-    const helper = state.tool === 'wire' ? (wireStart ? 'Drag to a glowing terminal, or click one to finish' : 'Drag between glowing terminals to wire parts') : state.tool === 'probe' ? 'Click two terminals to measure between them' : 'Drag parts to move · press W to wire pins';
+    const helper = wireStart ? 'Drag to a glowing terminal, or click one to finish the wire' : state.tool === 'probe' ? 'Click two terminals to measure between them' : state.wiringEnabled ? 'Drag parts to move · drag empty space to pan · drag from a terminal to wire' : 'Wiring is paused · click a node, wire or component to update Quick Measure';
     dom.canvasHelp.innerHTML = helper.replace(/(W)/, '<kbd>$1</kbd>');
   }
   // Konva maintains the miniature spatial overview while the SVG layer renders the detailed Fritzing-compatible parts.
@@ -823,7 +1290,10 @@
   function renderCanvas() {
     simulation = calculateSimulation();
     dom.canvas.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
-    dom.canvas.classList.toggle('wire-mode', state.tool === 'wire');
+    dom.canvas.classList.toggle('wire-mode', Boolean(wireStart));
+    dom.canvas.classList.toggle('simulating', state.running);
+    dom.canvas.classList.toggle('heatmap-on', state.running && state.heatmap);
+    dom.canvas.classList.toggle('lesson-active', Boolean(activeLessonId && beginnerMode));
     dom.canvas.classList.toggle('breadboard-view', state.view === 'breadboard');
     dom.canvasWrap.classList.toggle('breadboard-canvas', state.view === 'breadboard');
     dom.background.setAttribute('fill', state.view === 'breadboard' ? '#d8d1bd' : state.theme === 'light' ? 'url(#lightGridPattern)' : 'url(#gridPattern)');
@@ -860,6 +1330,7 @@
     else if (component.type === 'potentiometer') fields += input('Total resistance', 'resistance', p.resistance || p.value) + input('Wiper position', 'position', `${p.position || 50}%`);
     else if (component.type === 'switch') fields += select('Position', 'position', p.position || 'Open', ['Open', 'Closed'], true);
     else if (component.type === 'diode') fields += input('Forward voltage', 'forwardVoltage', `${p.forwardVoltage || .7} V`) + input('Max current', 'maxCurrent', `${p.maxCurrent || 1} A`) + input('Reverse voltage', 'reverseVoltage', `${p.reverseVoltage || 100} V`, true);
+    else if (component.type === 'bridge') fields += input('Bridge voltage drop', 'forwardVoltage', `${p.forwardVoltage || 1.4} V`) + input('Max current', 'maxCurrent', `${p.maxCurrent || 2} A`) + input('Reverse voltage', 'reverseVoltage', `${p.reverseVoltage || 600} V`, true);
     else if (component.type === 'zener') fields += input('Zener voltage', 'zenerVoltage', `${p.zenerVoltage || 5.1} V`) + input('Power rating', 'powerRating', `${p.powerRating || 1} W`);
     else if (component.type === 'led') fields += input('Forward voltage', 'forwardVoltage', `${p.forwardVoltage || 2.1} V`) + input('Max current', 'maxCurrent', `${(p.maxCurrent || .02) * 1000} mA`) + select('Lens colour', 'color', p.color || 'Green', ['Green', 'Red', 'Blue', 'Amber'], true);
     else if (component.type === 'bjt') fields += select('Polarity', 'polarity', p.polarity || 'NPN', ['NPN', 'PNP']) + input('DC gain hFE', 'hfe', p.hfe || 100) + input('Collector current', 'maxCurrent', `${p.maxCurrent || .6} A`, true);
@@ -868,14 +1339,39 @@
     else if (component.type === 'opamp') fields += input('Supply range', 'supply', p.supply || '±15 V') + input('Open-loop gain', 'gain', p.gain || 100000) + input('Bandwidth', 'bandwidth', p.bandwidth || '1 MHz', true);
     return `<div class="field-grid">${fields}</div>`;
   }
-  function renderSelectedProperties(component) {
+  function glossaryEntry(type) {
+    const entries = {
+      source: ['DC supply', 'Volt (V)', 'Provides electrical energy to a circuit.'],
+      acsource: ['AC source', 'Volt (V)', 'Produces a changing signal such as a sine or square wave.'],
+      ground: ['Ground', '0 V reference', 'Defines the reference point used to compare circuit voltages.'],
+      resistor: ['Resistor', 'Ohm (Ω)', 'Limits current and can divide voltage in a circuit.'],
+      capacitor: ['Capacitor', 'Farad (F)', 'Stores charge temporarily and can smooth or delay signals.'],
+      inductor: ['Inductor', 'Henry (H)', 'Stores energy in a magnetic field and resists rapid current changes.'],
+      transformer: ['Transformer', 'Turns ratio', 'Transfers energy between coils and can change voltage levels.'],
+      potentiometer: ['Potentiometer', 'Ohm (Ω)', 'An adjustable resistor often used as a control or voltage divider.'],
+      switch: ['Switch', 'Open / closed', 'Lets you intentionally allow or stop current flow.'],
+      diode: ['Diode', 'Forward voltage', 'Allows current mainly in one direction.'],
+      bridge: ['Bridge rectifier', 'Volt / Ampere', 'Uses four diodes to turn AC input into a single positive and negative DC output.'],
+      zener: ['Zener diode', 'Volt (V)', 'Uses reverse breakdown to provide a reference voltage.'],
+      led: ['LED', 'Forward current', 'A diode that emits light when current flows in the correct direction.'],
+      bjt: ['BJT transistor', 'Current gain hFE', 'A small base current can control a larger collector current.'],
+      mosfet: ['MOSFET', 'RDS(on)', 'A voltage at the gate controls current between drain and source.'],
+      timer555: ['555 timer', 'Time / frequency', 'A common IC used for delays, pulses and oscillators.'],
+      opamp: ['Operational amplifier', 'Voltage gain', 'An IC that compares two input voltages and drives an output.' ]
+    };
+    const [term, unit, description] = entries[type] || ['Electronic part', '—', 'A component used in an electronic circuit.'];
+    return { term, unit, description };
+  }
+  function renderSelectedProperties(component) { 
     const data = partData(component.type);
     const modelData = MODEL_DATA[component.model] || { detail: 'Generic simulation model', params: {} };
     const artworkNote = FRITZING_PARTS[component.type] ? ' · Fritzing SVG mapping ready' : '';
+    const glossary = glossaryEntry(component.type);
     const pins = getPins(component);
     return `<div class="inspector-section"><div class="selected-component-head"><div class="selected-icon">${partIconSvg(component.type)}</div><div><h3>${escapeHTML(data.title)}</h3><p>${escapeHTML(data.subtitle)}</p></div><span class="component-id-badge">${escapeHTML(component.label)}</span></div></div>
       <div class="inspector-section"><div class="section-label">Market model</div><div class="model-select-wrap"><label>Datasheet-linked part</label><select id="componentModel">${data.models.map(model => `<option ${model === component.model ? 'selected' : ''}>${escapeHTML(model)}</option>`).join('')}</select><div class="model-note">Technical parameters applied</div></div></div>
       <div class="inspector-section"><div class="section-label">Electrical properties</div>${propertyFields(component)}</div>
+      <div class="inspector-section"><div class="section-label">Quick glossary</div><div class="glossary-card"><div class="glossary-card-head"><b>${escapeHTML(glossary.term)}</b><span>${escapeHTML(glossary.unit)}</span></div><p>${escapeHTML(glossary.description)}</p></div></div>
       <div class="inspector-section"><div class="section-label">Terminals</div><div class="pin-list">${pins.map((pin, index) => `<div class="pin-item"><b>${index + 1}</b>${escapeHTML(pin.label)}</div>`).join('')}</div></div>
       <div class="inspector-section"><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></svg>Datasheet parameters active</div><p>${escapeHTML(modelData.detail)}${escapeHTML(artworkNote)}</p></div></div>
       <div class="inspector-section"><div class="property-actions"><button data-action="rotate">↻ Rotate 90°</button><button class="danger" data-action="delete">Delete part</button></div></div>`;
@@ -915,7 +1411,7 @@
   function renderAssistant() {
     const result = analyzeCircuit();
     const icon = { success: '✓', info: 'i', warn: '!', error: '×' };
-    dom.inspectorContent.innerHTML = `<div class="ai-hero"><div class="ai-hero-top"><div class="ai-avatar">✦</div><div><h3>Fluxa Circuit Inspector</h3><p>Live topology, bias and thermal checks</p></div></div><div class="health-meter"><i style="width:${result.health}%"></i></div><div class="health-row"><span>Circuit health</span><b>${result.health}/100</b></div></div><div class="issue-list">${result.issues.map(issue => `<div class="issue ${issue.type}"><div class="issue-icon">${icon[issue.type]}</div><div><b>${escapeHTML(issue.title)}</b><p>${escapeHTML(issue.text)}</p></div></div>`).join('')}</div><button class="ai-action" data-action="autotune">✦ Auto-tune this circuit</button><div class="inspector-section"><div class="section-label">How Fluxa checked it</div><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M5 12h4l2-6 4 12 2-6h2"/></svg>Local simulation snapshot</div><p>Node connectivity, model limits, estimated power loss and DC operating point were evaluated together.</p></div></div>`;
+    dom.inspectorContent.innerHTML = `<div class="ai-hero"><div class="ai-hero-top"><div class="ai-avatar">✦</div><div><h3>Smart Circuit Inspector</h3><p>Friendly topology, current and thermal checks</p></div></div><div class="health-meter"><i style="width:${result.health}%"></i></div><div class="health-row"><span>Circuit health</span><b>${result.health}/100</b></div></div><div class="issue-list">${result.issues.map(issue => `<div class="issue ${issue.type}"><div class="issue-icon">${icon[issue.type]}</div><div><b>${escapeHTML(issue.title)}</b><p>${escapeHTML(issue.text)}</p></div></div>`).join('')}</div><button class="ai-action" data-action="autotune">✦ Auto-tune this circuit</button><div class="inspector-section"><div class="section-label">How Fluxa checked it</div><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M5 12h4l2-6 4 12 2-6h2"/></svg>Educational circuit estimate</div><p>Fluxa checked basic connectivity, selected part limits and estimated DC power so you can learn what to adjust next.</p></div></div>`;
   }
   function renderInspector() {
     if (state.rightTab === 'measurements') renderMeasurements();
@@ -965,8 +1461,11 @@
   function updateLabDensity() {
     if (!dom.labDrawer) return;
     const height = dom.labDrawer.getBoundingClientRect().height;
-    const compact = !dom.labDrawer.classList.contains('collapsed') && height > 0 && height < 180;
-    const micro = compact && height < 140;
+    const active = !dom.labDrawer.classList.contains('collapsed') && height > 0;
+    const dense = active && height < 205;
+    const compact = active && height < 162;
+    const micro = active && height < 124;
+    dom.labDrawer.classList.toggle('dense', dense);
     dom.labDrawer.classList.toggle('compact', compact);
     dom.labDrawer.classList.toggle('micro', micro);
   }
@@ -975,7 +1474,32 @@
     if (dom.labDrawer.classList.contains('collapsed')) return;
     dom.labContent.innerHTML = state.labTab === 'spectrum' ? renderSpectrum() : state.labTab === 'thermal' ? renderThermal() : renderScope();
   }
-  function renderAll() { simulation = calculateSimulation(); renderLibrary(); renderToolbar(); renderCanvas(); renderInspector(); renderLab(); updateHistoryControls(); }
+  function renderLessonDock() {
+    const dock = dom.lessonDock;
+    const lesson = getLesson();
+    if (!dock || !lesson) {
+      dock?.classList.add('hidden');
+      if (dock) dock.innerHTML = '';
+      return;
+    }
+    const complete = lessonStepIndex >= lesson.steps.length;
+    const step = getCurrentLessonStep();
+    const progress = Math.round((Math.min(lessonStepIndex, lesson.steps.length) / lesson.steps.length) * 100);
+    dock.innerHTML = `<div class="lesson-dock-head"><div class="lesson-dock-icon">${escapeHTML(lesson.icon)}</div><div><b>${escapeHTML(lesson.title)}</b><small>${escapeHTML(lesson.level)} · ${escapeHTML(lesson.duration)}</small></div><button class="lesson-close" data-lesson-dock-action="exit" title="Exit lesson" aria-label="Exit lesson">×</button></div><div class="lesson-progress-label"><span>${complete ? 'Lesson complete' : `Step ${lessonStepIndex + 1} of ${lesson.steps.length}`}</span><b>${progress}%</b></div><div class="lesson-progress"><i style="width:${progress}%"></i></div><div class="lesson-step ${complete ? 'complete' : ''}"><span class="lesson-step-dot">${complete ? '✓' : lessonStepIndex + 1}</span><div><b>${complete ? 'Nice work!' : escapeHTML(step.text)}</b><p>${complete ? 'You completed every guided step. Explore the circuit or start another lesson.' : escapeHTML(lesson.summary)}</p></div></div>${!complete && lessonHintVisible ? `<div class="lesson-hint">${escapeHTML(step.hint)}</div>` : ''}<div class="lesson-dock-actions">${!complete ? `<button class="lesson-hint-button" data-lesson-dock-action="hint">${lessonHintVisible ? 'Hide hint' : 'Show hint'}</button>` : `<button class="lesson-hint-button" data-lesson-dock-action="lessons">More lessons</button>`}<label class="beginner-mode-toggle"><input type="checkbox" data-lesson-dock-action="beginner" ${beginnerMode ? 'checked' : ''}/><span></span>Beginner hints</label></div>`;
+    dock.classList.remove('hidden');
+  }
+  function renderAll() {
+    simulation = calculateSimulation();
+    updateLessonProgress();
+    renderLibrary();
+    renderToolbar();
+    renderCanvas();
+    renderQuickMeasurePanel();
+    renderInspector();
+    renderLab();
+    renderLessonDock();
+    updateHistoryControls();
+  }
 
   function toSvgPoint(event) {
     const point = dom.canvas.createSVGPoint();
@@ -984,21 +1508,31 @@
     return { x: transformed.x, y: transformed.y };
   }
   function snapCoordinate(value) { return state.snap ? Math.round(value / 20) * 20 : Math.round(value); }
+  function schedulePanRender() {
+    if (panFrame !== null) return;
+    panFrame = requestAnimationFrame(() => {
+      panFrame = null;
+      dom.canvas.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    });
+  }
   function selectComponent(id) {
     state.selectedId = id;
     state.selectedWireId = null;
     state.rightTab = 'properties';
+    quickMeasureTarget = { kind: 'component', compId: id };
     renderAll();
   }
   function selectWire(id) {
     state.selectedWireId = id;
     state.selectedId = null;
     state.rightTab = 'properties';
+    quickMeasureTarget = { kind: 'wire', wireId: id };
     renderAll();
   }
   function setTool(tool) {
-    state.tool = tool;
-    if (tool !== 'wire') { wireStart = null; wirePointer = null; }
+    const nextTool = tool === 'wire' ? 'select' : tool;
+    state.tool = nextTool;
+    if (wireStart) { wireStart = null; wirePointer = null; }
     renderAll();
   }
   function connectionExists(a, b) {
@@ -1034,7 +1568,7 @@
     state.wires = state.wires.filter(item => item.id !== wire.id);
     state.selectedWireId = null;
     state.selectedId = null;
-    state.tool = 'wire';
+    state.tool = 'select';
     wireStart = wire.from;
     wirePointer = getTerminalFromPoint(wire.from);
     recordHistory();
@@ -1042,13 +1576,7 @@
     showToast(`Endpoint B released from ${terminalDescription(wire.to)}. Choose a new terminal.`);
   }
   function handleTerminalClick(point) {
-    if (state.tool === 'wire') {
-      if (!wireStart) beginWire(point);
-      else if (pinKey(wireStart) === pinKey(point)) {
-        // Keep the active endpoint so a click followed by a drag remains natural.
-        renderCanvas();
-      } else completeWire(point);
-    } else if (state.tool === 'probe') {
+    if (state.tool === 'probe') {
       const key = pinKey(point);
       const existing = state.probeTerminals.findIndex(item => pinKey(item) === key);
       if (existing !== -1) state.probeTerminals.splice(existing, 1);
@@ -1057,9 +1585,17 @@
       state.rightTab = 'measurements';
       renderAll();
       showToast(state.probeTerminals.length === 2 ? 'Both probe points are set.' : 'Probe point A is set. Choose point B.');
-    } else {
-      selectComponent(point.compId);
+      return;
     }
+    if (!state.wiringEnabled) {
+      setQuickMeasureTarget({ kind: 'terminal', compId: point.compId, pin: point.pin });
+      return;
+    }
+    if (!wireStart) beginWire(point);
+    else if (pinKey(wireStart) === pinKey(point)) {
+      // Keep the active endpoint so a click followed by a drag remains natural.
+      renderCanvas();
+    } else completeWire(point);
   }
 
   function setViewBox(next) {
@@ -1078,6 +1614,23 @@
     setViewBox({ x: cx - width / 2, y: cy - height / 2, w: width, h: height });
   }
   function fitView() { viewBox = { x: 0, y: 0, w: 1200, h: 690 }; renderCanvas(); showToast('Circuit fitted to the workspace.'); }
+  function centerCircuitView() {
+    if (!state.components.length) { fitView(); return; }
+    const points = [];
+    state.components.forEach(component => {
+      const bounds = getBounds(component);
+      [[bounds.x, bounds.y], [bounds.x + bounds.w, bounds.y], [bounds.x + bounds.w, bounds.y + bounds.h], [bounds.x, bounds.y + bounds.h]].forEach(([x, y]) => {
+        const rotated = rotatePoint(x, y, component.rotation || 0);
+        points.push({ x: component.x + rotated.x, y: component.y + rotated.y });
+      });
+    });
+    const centerX = (Math.min(...points.map(point => point.x)) + Math.max(...points.map(point => point.x))) / 2;
+    const centerY = (Math.min(...points.map(point => point.y)) + Math.max(...points.map(point => point.y))) / 2;
+    viewBox.x = centerX - viewBox.w / 2;
+    viewBox.y = centerY - viewBox.h / 2;
+    renderCanvas();
+    showToast('Circuit centered in the workspace.');
+  }
 
   function getLabResizeBounds() {
     const studio = $('.studio');
@@ -1146,6 +1699,7 @@
   function runSimulation() {
     state.running = !state.running;
     if (state.running) {
+      state.heatmap = true;
       if (liveTimer) clearInterval(liveTimer);
       liveTimer = setInterval(() => { if (state.running && state.labTab === 'scope') renderLab(); }, 260);
       showToast('Live simulation is running.');
@@ -1213,10 +1767,66 @@
     openModal(`<div class="modal-head"><div class="modal-head-icon">✎</div><div><h2>Rename project</h2><p>Give this Fluxa circuit a memorable name.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="modal-field"><label>Project name</label><input id="renameInput" maxlength="48" value="${escapeHTML(state.projectName)}" /></div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Cancel</button><button class="button-primary" id="renameSave">Save name</button></div>`, modal => { const input = $('#renameInput', modal); setTimeout(() => { input.focus(); input.select(); }, 30); const save = () => { const value = input.value.trim(); if (value) { state.projectName = value; recordHistory(); renderAll(); } closeModal(); }; $('#renameSave', modal).addEventListener('click', save); input.addEventListener('keydown', event => { if (event.key === 'Enter') save(); }); });
   }
   function openAboutModal() {
-    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.0</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
+    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.1</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
+  }
+  function openLearnModal() {
+    const cards = LESSONS.map(lesson => `<article class="lesson-card"><div class="lesson-card-top"><span class="lesson-card-icon">${escapeHTML(lesson.icon)}</span><span class="lesson-level">${escapeHTML(lesson.level)}</span></div><h3>${escapeHTML(lesson.title)}</h3><p>${escapeHTML(lesson.summary)}</p><div class="lesson-card-meta"><span>${lesson.steps.length} steps</span><span>${escapeHTML(lesson.duration)}</span></div><button data-lesson-action="start" data-lesson-id="${lesson.id}">Start guided build <span>→</span></button></article>`).join('');
+    openModal(`<div class="modal-head"><div class="modal-head-icon">▣</div><div><h2>Learn circuits</h2><p>Choose a short guided build. Beginner hints will highlight the next useful part or connection.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="learn-modal-body"><div class="learn-intro"><b>Build at your pace.</b> Each lesson starts with an empty workspace and checks your progress as you add parts, wire them and run the circuit.</div><div class="lesson-card-grid">${cards}</div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => {
+      modal.classList.add('learn-modal');
+      modal.addEventListener('click', event => {
+        const button = event.target.closest('[data-lesson-action="start"]');
+        if (!button) return;
+        const lesson = getLesson(button.dataset.lessonId);
+        if (!lesson) return;
+        closeModal();
+        openLessonConfirmation(lesson);
+      });
+    });
+  }
+  function openLessonConfirmation(lesson) {
+    openModal(`<div class="modal-head"><div class="modal-head-icon">${escapeHTML(lesson.icon)}</div><div><h2>Start ${escapeHTML(lesson.title)}?</h2><p>This guided build starts with an empty workspace and replaces the current circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="modal-note"><b>What you will learn:</b><br>${escapeHTML(lesson.summary)}<br><br>${lesson.steps.length} guided steps · ${escapeHTML(lesson.duration)} · ${escapeHTML(lesson.level)}</div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Cancel</button><button class="button-primary" id="confirmLessonStart">Start lesson</button></div>`, modal => {
+      $('#confirmLessonStart', modal).addEventListener('click', () => { closeModal(); startGuidedLesson(lesson); });
+    });
+  }
+  function startGuidedLesson(lesson) {
+    if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+    const theme = state.theme;
+    state = initialState();
+    state.theme = theme;
+    state.projectName = lesson.title;
+    state.components = [];
+    state.wires = [];
+    state.running = false;
+    state.view = 'schematic';
+    state.rightTab = 'properties';
+    state.tool = 'select';
+    activeLessonId = lesson.id;
+    lessonStepIndex = 0;
+    beginnerMode = true;
+    lessonHintVisible = false;
+    lessonCompletionAnnounced = false;
+    selectedCategory = 'all';
+    dom.partSearch.value = '';
+    $$('#libraryTabs [data-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.category === 'all'));
+    wireStart = null;
+    wirePointer = null;
+    viewBox = { x: 0, y: 0, w: 1200, h: 690 };
+    try { window.history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (_) {}
+    history = []; historyIndex = -1;
+    recordHistory();
+    renderAll();
+    showToast(`Lesson started: ${lesson.title}.`);
+  }
+  function exitGuidedLesson() {
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
+    lessonCompletionAnnounced = false;
+    renderAll();
+    showToast('Guided lesson closed. Your circuit remains on the canvas.');
   }
   function openShortcutsModal() {
-    openModal(`<div class="modal-head"><div class="modal-head-icon">⌘</div><div><h2>Keyboard shortcuts</h2><p>Stay in the flow while building your circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="shortcut-list"><span>Select / move tool</span><kbd>V</kbd><span>Wire terminals</span><kbd>W</kbd><span>Measurement probe</span><kbd>M</kbd><span>Undo / redo</span><kbd>⌘ Z / ⇧⌘ Z</kbd><span>Delete selected part</span><kbd>Delete</kbd><span>Search library</span><kbd>⌘ K</kbd><span>Cancel active wire</span><kbd>Esc</kbd></div></div><div class="modal-foot"><button class="button-primary" data-modal-close>Got it</button></div>`);
+    openModal(`<div class="modal-head"><div class="modal-head-icon">⌘</div><div><h2>Keyboard shortcuts</h2><p>Stay in the flow while building your circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="shortcut-list"><span>Select, move and wire</span><kbd>V / W</kbd><span>Start a wire</span><kbd>Drag a terminal</kbd><span>Toggle Quick Measure panel</span><kbd>Q</kbd><span>Measurement probe</span><kbd>M</kbd><span>Undo / redo</span><kbd>⌘ Z / ⇧⌘ Z</kbd><span>Delete selected part</span><kbd>Delete</kbd><span>Search library</span><kbd>⌘ K</kbd><span>Cancel active wire</span><kbd>Esc</kbd></div></div><div class="modal-foot"><button class="button-primary" data-modal-close>Got it</button></div>`);
   }
 
   function showToast(message, type = 'success') {
@@ -1311,6 +1921,9 @@
         state.running = false;
         state.tool = 'select';
         state.rightTab = 'properties';
+        activeLessonId = null;
+        lessonStepIndex = 0;
+        lessonHintVisible = false;
         viewBox = { x: 0, y: 0, w: 1200, h: 690 };
         try { window.history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (_) {}
         history = []; historyIndex = -1;
@@ -1336,6 +1949,9 @@
     const theme = state.theme;
     state = initialState();
     state.theme = theme;
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
     viewBox = { x: 0, y: 0, w: 1200, h: 690 };
     history = []; historyIndex = -1; recordHistory(); renderAll(); showToast('LED example restored.');
   }
@@ -1344,6 +1960,9 @@
     const theme = state.theme;
     state = initialState();
     state.theme = theme;
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
     state.projectName = 'Untitled circuit';
     state.components = [];
     state.wires = [];
@@ -1396,16 +2015,22 @@
     dom.canvasWrap.addEventListener('dragover', event => { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; });
     dom.canvasWrap.addEventListener('drop', event => { event.preventDefault(); const type = event.dataTransfer.getData('text/fluxa-part'); if (!type) return; const point = toSvgPoint(event); addComponent(type, snapCoordinate(point.x), snapCoordinate(point.y)); });
 
-    $$('.tool-button').forEach(button => button.addEventListener('click', () => setTool(button.dataset.tool)));
+    $$('.tool-button[data-tool]').forEach(button => button.addEventListener('click', () => setTool(button.dataset.tool)));
     $$('.view-switch button').forEach(button => button.addEventListener('click', () => { state.view = button.dataset.view; recordHistory(); renderAll(); showToast(`${state.view === 'breadboard' ? 'Breadboard' : 'Schematic'} view enabled.`); }));
     dom.boardTextureToggle.addEventListener('change', event => { state.breadboardTexture = event.target.checked; recordHistory(); renderAll(); });
+    dom.quickMeasureToggle.addEventListener('change', event => { state.quickMeasureVisible = event.target.checked; renderAll(); });
+    dom.wiringToggle.addEventListener('change', event => {
+      state.wiringEnabled = event.target.checked;
+      if (!state.wiringEnabled) { wireStart = null; wirePointer = null; }
+      renderAll();
+    });
     $('#deleteToolBtn').addEventListener('click', deleteSelected);
-    $('#fitBtn').addEventListener('click', fitView);
+    $('#centerViewBtn').addEventListener('click', centerCircuitView);
     $('#zoomInBtn').addEventListener('click', () => zoomBy(.82));
     $('#zoomOutBtn').addEventListener('click', () => zoomBy(1.22));
     dom.thermalBtn.addEventListener('click', () => { state.heatmap = !state.heatmap; recordHistory(); renderAll(); showToast(state.heatmap ? 'Thermal heatmap enabled.' : 'Thermal heatmap hidden.'); });
     dom.snapBtn.addEventListener('click', () => { state.snap = !state.snap; recordHistory(); renderAll(); });
-    $('#collapseLabBtn').addEventListener('click', event => { const collapsed = dom.labDrawer.classList.toggle('collapsed'); event.currentTarget.title = collapsed ? 'Expand lab' : 'Collapse lab'; renderLab(); renderCanvas(); });
+    $('#collapseLabBtn').addEventListener('click', () => { dom.labDrawer.classList.toggle('collapsed'); updateLabCollapseControl(); renderLab(); renderCanvas(); });
     dom.labResizeHandle.addEventListener('pointerdown', beginLabResize);
     dom.labResizeHandle.addEventListener('pointermove', moveLabResize);
     dom.labResizeHandle.addEventListener('pointerup', endLabResize);
@@ -1432,6 +2057,17 @@
     $('#aiTopBtn').addEventListener('click', () => { state.rightTab = 'assistant'; renderAll(); });
     $('#shareBtn').addEventListener('click', openShareModal);
     dom.newProjectBtn.addEventListener('click', openNewProjectModal);
+    dom.learnBtn.addEventListener('click', openLearnModal);
+    dom.lessonDock.addEventListener('click', event => {
+      const action = event.target.closest('[data-lesson-dock-action]')?.dataset.lessonDockAction;
+      if (!action) return;
+      if (action === 'exit') exitGuidedLesson();
+      else if (action === 'hint') { lessonHintVisible = !lessonHintVisible; renderLessonDock(); }
+      else if (action === 'lessons') openLearnModal();
+    });
+    dom.lessonDock.addEventListener('change', event => {
+      if (event.target.matches('[data-lesson-dock-action="beginner"]')) { beginnerMode = event.target.checked; renderAll(); }
+    });
     dom.themeToggleBtn.addEventListener('click', toggleTheme);
     dom.aboutBtn.addEventListener('click', openAboutModal);
     $('#projectTitleBtn').addEventListener('click', openRenameModal);
@@ -1462,6 +2098,12 @@
       else if (action === 'rewire') rewireSelectedWire();
       else if (action === 'delete') deleteSelected();
     });
+    dom.quickMeasurePanel.addEventListener('click', event => {
+      if (event.target.closest('[data-quick-measure-action="clear"]')) {
+        quickMeasureTarget = null;
+        renderQuickMeasurePanel();
+      }
+    });
 
     dom.canvas.addEventListener('pointerdown', event => {
       const terminalPoint = terminalPointFromElement(event.target);
@@ -1473,10 +2115,12 @@
       }
       const wireElement = event.target.closest?.('[data-wire-id]');
       if (wireElement) {
+        event.preventDefault();
         if (state.tool === 'select') {
-          event.preventDefault();
           selectWire(wireElement.dataset.wireId);
           showToast('Wire selected. Press Delete to remove it, or use Reconnect in Properties.');
+        } else {
+          setQuickMeasureTarget({ kind: 'wire', wireId: wireElement.dataset.wireId });
         }
         return;
       }
@@ -1484,17 +2128,44 @@
       if (componentElement) {
         const id = componentElement.dataset.compId;
         if (state.tool === 'select') {
+          if (wireStart) {
+            wireStart = null;
+            wirePointer = null;
+            renderAll();
+            showToast('Wire cancelled. Start again from a terminal.', 'warn');
+            return;
+          }
           const component = getComponent(id); const point = toSvgPoint(event);
           state.selectedId = id; state.selectedWireId = null; state.rightTab = 'properties';
+          quickMeasureTarget = { kind: 'component', compId: id };
           dragState = { id, pointerId: event.pointerId, offsetX: point.x - component.x, offsetY: point.y - component.y, moved: false };
           dom.canvas.setPointerCapture?.(event.pointerId);
           renderAll();
         } else if (state.tool === 'probe') selectComponent(id);
-        else if (state.tool === 'wire') showToast('Choose one of the glowing connection terminals to wire this part.', 'warn');
         return;
       }
-      if (state.tool === 'select') { state.selectedId = null; state.selectedWireId = null; renderAll(); }
-      if (state.tool === 'wire' && wireStart) { wireStart = null; wirePointer = null; renderAll(); showToast('Wire cancelled.', 'warn'); }
+      if (state.tool === 'select') {
+        if (wireStart) {
+          wireStart = null;
+          wirePointer = null;
+          renderAll();
+          showToast('Wire cancelled.', 'warn');
+          return;
+        }
+        const ctm = dom.canvas.getScreenCTM?.();
+        const rect = dom.canvas.getBoundingClientRect();
+        const scaleX = ctm?.a ? 1 / ctm.a : viewBox.w / Math.max(1, rect.width);
+        const scaleY = ctm?.d ? 1 / ctm.d : viewBox.h / Math.max(1, rect.height);
+        state.selectedId = null;
+        state.selectedWireId = null;
+        quickMeasureTarget = null;
+        panState = { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, viewX: viewBox.x, viewY: viewBox.y, scaleX, scaleY, moved: false };
+        dom.canvas.setPointerCapture?.(event.pointerId);
+        renderAll();
+      } else if (state.quickMeasureVisible) {
+        quickMeasureTarget = null;
+        renderQuickMeasurePanel();
+      }
     });
     dom.canvas.addEventListener('pointermove', event => {
       if (dragState) {
@@ -1502,6 +2173,14 @@
         const point = toSvgPoint(event);
         component.x = snapCoordinate(point.x - dragState.offsetX); component.y = snapCoordinate(point.y - dragState.offsetY);
         dragState.moved = true; renderCanvas();
+      } else if (panState) {
+        const deltaX = (event.clientX - panState.clientX) * panState.scaleX;
+        const deltaY = (event.clientY - panState.clientY) * panState.scaleY;
+        viewBox.x = panState.viewX - deltaX;
+        viewBox.y = panState.viewY - deltaY;
+        panState.moved = Math.abs(deltaX) > .25 || Math.abs(deltaY) > .25;
+        dom.canvas.classList.add('panning');
+        schedulePanRender();
       } else if (wireStart) { wirePointer = toSvgPoint(event); renderCanvas(); }
     });
     const endPointer = event => {
@@ -1511,8 +2190,16 @@
         if (moved) { recordHistory(); renderAll(); }
         return;
       }
+      if (panState) {
+        panState = null;
+        if (panFrame !== null) { cancelAnimationFrame(panFrame); panFrame = null; }
+        dom.canvas.classList.remove('panning');
+        try { dom.canvas.releasePointerCapture?.(event.pointerId); } catch (_) {}
+        renderCanvas();
+        return;
+      }
       // Supports natural drag-to-wire in addition to the existing click-two-terminals workflow.
-      if (event.type === 'pointerup' && state.tool === 'wire' && wireStart) {
+      if (event.type === 'pointerup' && state.tool === 'select' && wireStart) {
         const target = terminalPointAtClient(event.clientX, event.clientY);
         if (target && pinKey(target) !== pinKey(wireStart)) completeWire(target);
       }
@@ -1561,11 +2248,12 @@
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); event.shiftKey ? redo() : undo(); return; }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); dom.partSearch.focus(); return; }
       if (editing) return;
-      if (event.key.toLowerCase() === 'w') { event.preventDefault(); setTool('wire'); }
+      if (event.key.toLowerCase() === 'w') { event.preventDefault(); setTool('select'); }
       else if (event.key.toLowerCase() === 'v') setTool('select');
+      else if (event.key.toLowerCase() === 'q') { state.quickMeasureVisible = !state.quickMeasureVisible; renderAll(); }
       else if (event.key.toLowerCase() === 'm') setTool('probe');
       else if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); deleteSelected(); }
-      else if (event.key === 'Escape') { wireStart = null; wirePointer = null; state.tool = 'select'; closeModal(); renderAll(); }
+      else if (event.key === 'Escape') { wireStart = null; wirePointer = null; panState = null; if (panFrame !== null) { cancelAnimationFrame(panFrame); panFrame = null; } dom.canvas.classList.remove('panning'); state.tool = 'select'; closeModal(); renderAll(); }
       else if (event.key === '+') zoomBy(.82);
       else if (event.key === '-') zoomBy(1.22);
     });

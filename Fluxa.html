@@ -64,11 +64,13 @@ svg { display: block; }
 .icon-button:hover:not(:disabled), .small-icon:hover, .icon-tool:hover { background: #1a2a43; color: #f3f7fe; }
 .icon-button:disabled { opacity: .3; cursor: not-allowed; }
 .icon-button svg, .small-icon svg, .icon-tool svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-.new-project-button, .theme-button, .about-button, .ai-top-button, .simulate-button, .share-button, .export-button { height: 34px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 12px; padding: 0 12px; transition: transform .16s ease, background .16s ease; }
-.new-project-button:hover, .theme-button:hover, .about-button:hover, .ai-top-button:hover, .simulate-button:hover, .share-button:hover, .export-button:hover { transform: translateY(-1px); }
+.new-project-button, .learn-top-button, .theme-button, .about-button, .ai-top-button, .simulate-button, .share-button, .export-button { height: 34px; border-radius: 8px; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; font-size: 12px; padding: 0 12px; transition: transform .16s ease, background .16s ease; }
+.new-project-button:hover, .learn-top-button:hover, .theme-button:hover, .about-button:hover, .ai-top-button:hover, .simulate-button:hover, .share-button:hover, .export-button:hover { transform: translateY(-1px); }
 .new-project-button { color: #cae0fa; background: #172943; border: 1px solid #2e496b; }
 .new-project-button:hover { color: #e5f4ff; background: #203957; border-color: #4b719e; }
-.new-project-button svg, .theme-button svg, .about-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.new-project-button svg, .learn-top-button svg, .theme-button svg, .about-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.learn-top-button { color: #aef4e7; background: linear-gradient(105deg, rgba(24, 153, 133, .25), rgba(50, 107, 173, .18)); border: 1px solid rgba(70, 183, 165, .34); }
+.learn-top-button:hover, .learn-top-button.active { color: #e4fff9; background: linear-gradient(105deg, rgba(22, 161, 140, .38), rgba(56, 121, 191, .28)); border-color: rgba(112, 235, 211, .58); }
 .theme-button { color: #efd394; background: rgba(215, 162, 66, .12); border: 1px solid rgba(229, 183, 91, .29); }
 .theme-button:hover { color: #fff0bd; background: rgba(215, 162, 66, .2); border-color: rgba(243, 204, 122, .48); }
 .about-button { color: #a9bdd8; background: transparent; border: 1px solid #2b405e; }
@@ -137,11 +139,11 @@ kbd { border: 1px solid #33445d; border-radius: 4px; background: #17243a; color:
 .tool-button svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.55; stroke-linecap: round; stroke-linejoin: round; }
 .tool-button:hover { background: #192943; color: #d7e4f4; }.tool-button.active { color: #aaf3e7; background: #173936; }
 .toolbar-divider { width: 1px; height: 21px; background: #2a3950; margin: 0 2px; }
-.icon-tool { width: 29px; height: 29px; }.icon-tool.small { width: 25px; height: 25px; }.icon-tool.small svg { width: 15px; height: 15px; }
+.icon-tool { width: 29px; height: 29px; }.icon-tool.small { width: 25px; height: 25px; }.icon-tool.small svg { width: 15px; height: 15px; }#collapseLabBtn svg { transition: transform .2s ease; }#collapseLabBtn.collapsed svg { transform: rotate(180deg); }
 .view-control-group { display: flex; align-items: center; gap: 7px; margin: 0 auto; }
 .view-switch { display: flex; align-items: center; background: #101d31; padding: 3px; border: 1px solid #283a56; border-radius: 7px; }
 .view-switch button { height: 24px; padding: 0 10px; background: transparent; border-radius: 4px; color: #788ca8; font-size: 10px; font-weight: 700; }.view-switch button.active { color: #e8f3fe; background: #263954; box-shadow: 0 1px 3px rgba(1, 8, 19, .35); }
-.board-texture-toggle { height: 28px; display: inline-flex; align-items: center; gap: 5px; color: #9eb1c9; font-size: 9.5px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; }.board-texture-toggle input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }.board-texture-check { width: 15px; height: 15px; display: grid; place-items: center; border-radius: 4px; border: 1px solid #49617e; background: #14243a; color: transparent; transition: background .14s ease, border-color .14s ease, color .14s ease; }.board-texture-check svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }.board-texture-toggle input:checked + .board-texture-check { color: #05221d; background: #74e2cd; border-color: #9af7e8; }.board-texture-toggle:hover { color: #d5e6f6; }.board-texture-toggle:focus-within .board-texture-check { outline: 2px solid var(--cyan); outline-offset: 2px; }
+.board-texture-toggle { height: 28px; display: inline-flex; align-items: center; gap: 5px; color: #9eb1c9; font-size: 9.5px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; }.board-texture-toggle input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }.board-texture-check { width: 15px; height: 15px; display: grid; place-items: center; border-radius: 4px; border: 1px solid #49617e; background: #14243a; color: transparent; transition: background .14s ease, border-color .14s ease, color .14s ease; }.board-texture-check svg { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }.board-texture-toggle input:checked + .board-texture-check { color: #05221d; background: #74e2cd; border-color: #9af7e8; }.board-texture-toggle:hover { color: #d5e6f6; }.board-texture-toggle:focus-within .board-texture-check { outline: 2px solid var(--cyan); outline-offset: 2px; }.toolbar-switch { height: 28px; display: inline-flex; align-items: center; gap: 5px; color: #9eb1c9; font-size: 9px; font-weight: 700; white-space: nowrap; cursor: pointer; user-select: none; }.toolbar-switch input { position: absolute; inline-size: 1px; block-size: 1px; opacity: 0; pointer-events: none; }.toolbar-switch-check { width: 14px; height: 14px; display: grid; place-items: center; border-radius: 4px; border: 1px solid #49617e; background: #14243a; color: transparent; transition: background .14s ease, border-color .14s ease, color .14s ease; }.toolbar-switch-check svg { width: 10px; height: 10px; fill: none; stroke: currentColor; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }.toolbar-switch input:checked + .toolbar-switch-check { color: #05221d; background: #74e2cd; border-color: #9af7e8; }.toolbar-switch:hover { color: #d5e6f6; }.toolbar-switch:focus-within .toolbar-switch-check { outline: 2px solid var(--cyan); outline-offset: 2px; }
 .zoom-controls { display: flex; gap: 1px; align-items: center; color: #7e91ad; font-size: 10px; }.zoom-controls button { height: 25px; width: 24px; background: transparent; border-radius: 5px; color: #adbfda; font-size: 17px; line-height: 20px; }.zoom-controls button:hover { background: #1e2e46; }.zoom-controls span { width: 38px; text-align: center; font-size: 9px; color: #71849f; }
 .canvas-wrap { position: relative; flex: 1 1 0; min-height: 0; overflow: hidden; background: #091422; }
 .circuit-canvas { width: 100%; height: 100%; touch-action: none; user-select: none; }
@@ -149,15 +151,17 @@ kbd { border: 1px solid #33445d; border-radius: 4px; background: #17243a; color:
 .status-chip { display: flex; align-items: center; gap: 6px; background: rgba(16, 31, 49, .9); border: 1px solid rgba(75, 105, 139, .6); backdrop-filter: blur(7px); color: #a8bacf; padding: 5px 8px; font-size: 9.5px; font-weight: 650; border-radius: 6px; box-shadow: 0 2px 9px rgba(0, 0, 0, .2); }.status-chip i { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); box-shadow: 0 0 8px rgba(246, 189, 94, .7); }.status-chip.running i { background: var(--green); box-shadow: 0 0 8px rgba(85, 214, 155, .8); }
 .canvas-help { color: #677b98; font-size: 10px; text-shadow: 0 1px 4px #07101d; }.canvas-help kbd { padding: 1px 4px; color: #9fb0c7; }.canvas-wrap.breadboard-canvas .canvas-help { color: #223b58; background: rgba(249, 246, 237, .88); border: 1px solid rgba(57, 79, 104, .42); border-radius: 6px; padding: 5px 8px; font-weight: 720; text-shadow: 0 1px 0 rgba(255,255,255,.82); box-shadow: 0 2px 8px rgba(65, 56, 35, .14); }.canvas-wrap.breadboard-canvas .canvas-help kbd { color: #1e3150; background: #e8ded0; border-color: #b4a992; }.canvas-wrap.breadboard-canvas .status-chip { color: #28445d; background: rgba(250, 247, 238, .93); border-color: rgba(57, 79, 104, .46); }.canvas-wrap.breadboard-canvas .status-chip.running { color: #1c5b4c; }
 .canvas-bottom-left { position: absolute; bottom: 11px; left: 13px; z-index: 3; display: flex; gap: 5px; }.canvas-toggle { height: 26px; padding: 0 8px; border-radius: 6px; color: #90a3bd; background: rgba(14, 28, 46, .89); border: 1px solid rgba(69, 96, 130, .55); font-size: 9.5px; display: flex; align-items: center; gap: 5px; }.canvas-toggle:hover, .canvas-toggle.active { background: #183445; color: #aef2e6; border-color: #317d75; }.snap-dot { width: 7px; height: 7px; border-radius: 2px; border: 1px solid #7e93b0; }.heat-dot { width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, #4cdaa2, #f7d36a, #ee5462); }.canvas-toggle b { color: #c0d1e8; font-size: 9px; }
-.selection-quick-actions { position: absolute; z-index: 7; display: flex; align-items: center; gap: 3px; min-height: 36px; padding: 4px; background: rgba(15, 29, 48, .94); border: 1px solid rgba(74, 111, 151, .78); border-radius: 10px; box-shadow: 0 9px 20px rgba(1, 8, 19, .38); backdrop-filter: blur(10px); transform: translate(-50%, -100%); transform-origin: center bottom; }.selection-quick-actions.below { transform: translate(-50%, 0); transform-origin: center top; }.selection-action-label { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 5px 0 4px; color: #c7d7e9; font-size: 9px; font-weight: 800; letter-spacing: .25px; }.selection-action-button { width: 29px; height: 28px; display: grid; place-items: center; padding: 0; color: #a9c0dd; background: #1d314c; border: 1px solid #2e4a6c; border-radius: 7px; transition: transform .14s ease, background .14s ease, color .14s ease; }.selection-action-button:hover { color: #dffff7; background: #24554f; border-color: #3d9b8e; transform: translateY(-1px); }.selection-action-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }.selection-action-button.danger { color: #f4a7af; background: #382636; border-color: #744153; }.selection-action-button.danger:hover { color: #ffe1e4; background: #6b3344; border-color: #d65c6e; }.canvas-wrap.breadboard-canvas .selection-quick-actions { background: rgba(255, 252, 245, .96); border-color: #9a7ab9; box-shadow: 0 8px 18px rgba(71, 43, 92, .25); }.canvas-wrap.breadboard-canvas .selection-action-label { color: #41275d; }.canvas-wrap.breadboard-canvas .selection-action-button { color: #55317a; background: #efe7f6; border-color: #bda3d8; }.canvas-wrap.breadboard-canvas .selection-action-button:hover { color: #fff; background: #6f2dbd; border-color: #55208f; }.canvas-wrap.breadboard-canvas .selection-action-button.danger { color: #9a2938; background: #fae9e8; border-color: #d99a9f; }.canvas-wrap.breadboard-canvas .selection-action-button.danger:hover { color: #fff; background: #b82f43; border-color: #902237; }.minimap { width: 119px; height: 68px; position: absolute; right: 13px; bottom: 12px; z-index: 2; overflow: hidden; background: rgba(10, 21, 36, .89); border: 1px solid rgba(70, 96, 129, .6); border-radius: 7px; opacity: .9; }.minimap-grid { inset: 0; position: absolute; background-image: radial-gradient(#2d4968 1px, transparent 1px); background-size: 7px 7px; }.minimap-grid span, .minimap-grid i, .minimap-grid b { position: absolute; height: 1px; background: #6a97b9; transform-origin: left center; opacity: .72; }.minimap-grid span { width: 53px; left: 24px; top: 27px; }.minimap-grid i { width: 32px; left: 68px; top: 37px; transform: rotate(33deg); }.minimap-grid b { width: 65px; left: 20px; top: 45px; }.konva-minimap { position: absolute; inset: 0; z-index: 1; pointer-events: none; }.konva-minimap canvas { display: block; }.minimap-viewport { position: absolute; inset: 8px 10px; z-index: 2; border: 1px solid rgba(112, 229, 207, .75); border-radius: 3px; }
+.selection-quick-actions { position: absolute; z-index: 7; display: flex; align-items: center; gap: 3px; min-height: 36px; padding: 4px; background: rgba(15, 29, 48, .94); border: 1px solid rgba(74, 111, 151, .78); border-radius: 10px; box-shadow: 0 9px 20px rgba(1, 8, 19, .38); backdrop-filter: blur(10px); transform: translate(-50%, -100%); transform-origin: center bottom; }.selection-quick-actions.below { transform: translate(-50%, 0); transform-origin: center top; }.selection-action-label { max-width: 72px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0 5px 0 4px; color: #c7d7e9; font-size: 9px; font-weight: 800; letter-spacing: .25px; }.selection-action-button { width: 29px; height: 28px; display: grid; place-items: center; padding: 0; color: #a9c0dd; background: #1d314c; border: 1px solid #2e4a6c; border-radius: 7px; transition: transform .14s ease, background .14s ease, color .14s ease; }.selection-action-button:hover { color: #dffff7; background: #24554f; border-color: #3d9b8e; transform: translateY(-1px); }.selection-action-button svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }.selection-action-button.danger { color: #f4a7af; background: #382636; border-color: #744153; }.selection-action-button.danger:hover { color: #ffe1e4; background: #6b3344; border-color: #d65c6e; }.canvas-wrap.breadboard-canvas .selection-quick-actions { background: rgba(255, 252, 245, .96); border-color: #9a7ab9; box-shadow: 0 8px 18px rgba(71, 43, 92, .25); }.canvas-wrap.breadboard-canvas .selection-action-label { color: #41275d; }.canvas-wrap.breadboard-canvas .selection-action-button { color: #55317a; background: #efe7f6; border-color: #bda3d8; }.canvas-wrap.breadboard-canvas .selection-action-button:hover { color: #fff; background: #6f2dbd; border-color: #55208f; }.canvas-wrap.breadboard-canvas .selection-action-button.danger { color: #9a2938; background: #fae9e8; border-color: #d99a9f; }.canvas-wrap.breadboard-canvas .selection-action-button.danger:hover { color: #fff; background: #b82f43; border-color: #902237; }.quick-measure-panel { position: absolute; z-index: 4; right: 13px; bottom: 12px; width: 222px; min-height: 105px; padding: 10px; color: #d7e6f5; background: rgba(12, 26, 43, .95); border: 1px solid rgba(70, 110, 149, .72); border-radius: 9px; box-shadow: 0 9px 24px rgba(1, 7, 16, .32); backdrop-filter: blur(10px); }.quick-measure-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; color: #a9c2dd; font-size: 9px; font-weight: 800; letter-spacing: .75px; text-transform: uppercase; }.quick-measure-head i { margin-right: 4px; color: #63e4d0; font-style: normal; font-size: 13px; }.quick-measure-head button { width: 20px; height: 20px; border-radius: 5px; color: #90a8c2; background: transparent; font-size: 16px; line-height: 16px; }.quick-measure-head button:hover { color: #eff8ff; background: #243b58; }.quick-measure-kicker { color: #69ddc9; font-size: 8px; font-weight: 800; letter-spacing: .85px; text-transform: uppercase; }.quick-measure-panel h4 { margin: 3px 0 0; color: #e7f2ff; font-size: 11px; }.quick-measure-value { margin: 5px 0 4px; color: #bffcf1; font-size: 22px; font-weight: 760; letter-spacing: -.6px; }.quick-measure-panel p { margin: 5px 0 0; color: #8ba1ba; font-size: 8.5px; line-height: 13px; }.quick-measure-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 8px; }.quick-measure-row { min-width: 0; padding: 5px 6px; background: #142640; border: 1px solid #263e5d; border-radius: 5px; }.quick-measure-row span { display: block; overflow: hidden; color: #7890aa; font-size: 7.5px; text-overflow: ellipsis; white-space: nowrap; }.quick-measure-row b { display: block; overflow: hidden; margin-top: 2px; color: #d9ecfb; font-size: 10px; text-overflow: ellipsis; white-space: nowrap; }.quick-measure-row small { display: block; color: #6ed7c3; font-size: 7px; margin-top: 2px; }.minimap { width: 119px; height: 68px; position: absolute; right: 13px; bottom: 12px; z-index: 2; overflow: hidden; background: rgba(10, 21, 36, .89); border: 1px solid rgba(70, 96, 129, .6); border-radius: 7px; opacity: .9; }.minimap-grid { inset: 0; position: absolute; background-image: radial-gradient(#2d4968 1px, transparent 1px); background-size: 7px 7px; }.minimap-grid span, .minimap-grid i, .minimap-grid b { position: absolute; height: 1px; background: #6a97b9; transform-origin: left center; opacity: .72; }.minimap-grid span { width: 53px; left: 24px; top: 27px; }.minimap-grid i { width: 32px; left: 68px; top: 37px; transform: rotate(33deg); }.minimap-grid b { width: 65px; left: 20px; top: 45px; }.konva-minimap { position: absolute; inset: 0; z-index: 1; pointer-events: none; }.konva-minimap canvas { display: block; }.minimap-viewport { position: absolute; inset: 8px 10px; z-index: 2; border: 1px solid rgba(112, 229, 207, .75); border-radius: 3px; }
 
 /* canvas objects */
-.circuit-canvas .wire-hit { fill: none; stroke: rgba(255,255,255,.001); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; }.circuit-canvas .wire { fill: none; stroke: #7190ae; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; transition: stroke .15s ease, stroke-width .15s ease; }.circuit-canvas .wire:hover { stroke: #a8e9df; stroke-width: 3.2; }.circuit-canvas .wire.active { stroke: #67d8c4; filter: url(#softGlow); }.circuit-canvas .wire.warn { stroke: #e5aa60; }.circuit-canvas .wire.selected { stroke: #b5fff3; stroke-width: 4.4; filter: url(#softGlow); }.circuit-canvas .wire-preview { fill: none; stroke: #62e2cd; stroke-width: 2.7; stroke-dasharray: 5 5; pointer-events: none; }.circuit-canvas .junction { fill: #90d8ce; stroke: #0d2630; stroke-width: 2; }.circuit-canvas .component { cursor: grab; }.circuit-canvas .component.dragging { cursor: grabbing; opacity: .86; }.circuit-canvas .component .part-stroke { fill: none; stroke: #b9cadf; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }.circuit-canvas .component .part-pin { fill: none; stroke: #6e819b; stroke-width: 2.2; stroke-linecap: round; }.circuit-canvas .component .part-fill { fill: #17243b; stroke: #b9cadf; stroke-width: 2; stroke-linejoin: round; }.circuit-canvas .component .part-accent { fill: none; stroke: #73dfc6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }.circuit-canvas .component .part-gold { fill: #d6a758; stroke: #e3c079; stroke-width: 1.3; }.circuit-canvas .component .part-ic { fill: #1b273c; stroke: #af9eff; stroke-width: 1.8; }.circuit-canvas .component .part-label { fill: #dce7f5; font-size: 11px; font-weight: 730; text-anchor: middle; paint-order: stroke; stroke: #0b1422; stroke-width: 3.3px; stroke-linejoin: round; }.circuit-canvas .component .part-value { fill: #7e91ad; font-size: 9px; text-anchor: middle; paint-order: stroke; stroke: #0b1422; stroke-width: 3px; stroke-linejoin: round; }.circuit-canvas .component .pin-label { fill: #6f859f; font-size: 7.5px; text-anchor: middle; }.circuit-canvas .component .ic-name { fill: #e5dfff; font-size: 14px; font-weight: 760; text-anchor: middle; }.circuit-canvas .component .ic-sub { fill: #a298b5; font-size: 7px; letter-spacing: 1.2px; text-anchor: middle; }.circuit-canvas .component .terminal-group { cursor: crosshair; }.circuit-canvas .component .terminal-hit { fill: #ffffff; opacity: .001; pointer-events: all; }.circuit-canvas .component .terminal { fill: #15253b; stroke: #869bb8; stroke-width: 1.45; pointer-events: none; transition: fill .15s ease, stroke .15s ease; }.circuit-canvas .component .terminal-group:hover .terminal, .circuit-canvas.wire-mode .terminal { fill: #70e2cf; stroke: #c0fff5; filter: drop-shadow(0 0 4px rgba(112, 226, 207, .8)); }.circuit-canvas.wire-mode .pin-label { fill: #aaf5e8; font-weight: 700; }.circuit-canvas .bread-source { fill: #4c5a68; stroke: #222c35; stroke-width: 2; }.circuit-canvas .bread-screen { fill: #8de8cf; stroke: #273842; stroke-width: 1.5; }.circuit-canvas .bread-screen-line { fill: none; stroke: #334b51; stroke-width: 2; stroke-linecap: round; }.circuit-canvas .bread-resistor { fill: #c79a63; stroke: #694a31; stroke-width: 1.6; }.circuit-canvas .bread-band { fill: #354353; }.circuit-canvas .bread-band.red { fill: #d55f50; }.circuit-canvas .bread-band.gold { fill: #e2c168; }.circuit-canvas .bread-cap { fill: #486a80; stroke: #213442; stroke-width: 1.4; }.circuit-canvas .bread-cap-top { fill: #7595a7; stroke: #213442; stroke-width: 1.2; }.circuit-canvas .bread-mark { fill: none; stroke: #eef4f7; stroke-width: 1.4; stroke-linecap: round; }.circuit-canvas .bread-coil { fill: none; stroke: #d0a76c; stroke-width: 7; stroke-linecap: round; }.circuit-canvas .bread-transformer { fill: #303a44; stroke: #141b23; stroke-width: 2; }.circuit-canvas .bread-transformer-line { fill: none; stroke: #c5a16e; stroke-width: 3; stroke-linecap: round; }.circuit-canvas .bread-pot { fill: #b5b9b8; stroke: #414b51; stroke-width: 2; }.circuit-canvas .bread-pot-shaft { fill: #535f68; stroke: #1e2930; stroke-width: 1.4; }.circuit-canvas .bread-switch { fill: #303c49; stroke: #17212a; stroke-width: 1.8; }.circuit-canvas .bread-switch-lever { fill: #c7d3d7; stroke: #4a5961; stroke-width: 1.5; }.circuit-canvas .bread-diode { fill: #242c35; stroke: #10161c; stroke-width: 1.5; }.circuit-canvas .bread-band.silver { fill: #d8d9d5; }.circuit-canvas .bread-led { fill: #42d98b; stroke: #0b6044; stroke-width: 1.4; }.circuit-canvas .bread-led-base { fill: #255943; stroke: #102a21; stroke-width: 1.2; }.circuit-canvas .bread-led-glint { fill: none; stroke: #b7ffe6; stroke-width: 2; stroke-linecap: round; opacity: .9; }.circuit-canvas .bread-transistor { fill: #252e38; stroke: #10161c; stroke-width: 1.7; }.circuit-canvas .bread-transistor-line { fill: none; stroke: #687584; stroke-width: 1.5; }.circuit-canvas .bread-chip { fill: #242d38; stroke: #111820; stroke-width: 2; }.circuit-canvas .bread-chip-notch { fill: #111820; stroke: #111820; }.circuit-canvas .bread-chip-text { fill: #cdd8d8; font-size: 9px; font-weight: 700; text-anchor: middle; }.circuit-canvas .component-hitbox { fill: #ffffff; opacity: .001; pointer-events: all; cursor: grab; }.circuit-canvas .component.selected .selection-box { display: block; }.circuit-canvas .selection-box { display: none; fill: none; stroke: #60ead3; stroke-width: 1.35; stroke-dasharray: 4 3; rx: 8; pointer-events: none; }.circuit-canvas .component.selected .part-stroke, .circuit-canvas .component.selected .part-fill { stroke: #86f4df; }.circuit-canvas .component.selected .part-label { fill: #e9fffb; }.component .thermal-halo { opacity: 0; pointer-events: none; }.heatmap-on .component .thermal-halo { opacity: .92; }.breadboard-view .component .part-stroke { stroke: #495d70; }.breadboard-view .component .part-pin { stroke: #a26c43; }.breadboard-view .component .part-label { fill: #1b2e45; stroke: none; paint-order: normal; font-weight: 800; }.breadboard-view .component .part-value { fill: #384b62; stroke: none; paint-order: normal; font-weight: 750; letter-spacing: .08px; }.breadboard-view .component .terminal { fill: #e4bf83; stroke: #4e3d27; }.breadboard-view.wire-mode .component .terminal { fill: #7c3aed; stroke: #2e1454; filter: drop-shadow(0 0 4px rgba(92, 42, 139, .64)); }.breadboard-view.wire-mode .pin-label { fill: #4d187b; stroke: none; }.breadboard-view .wire { stroke-width: 4.2; stroke: #e36559; }.breadboard-view .wire:nth-child(3n+2) { stroke: #459bd8; }.breadboard-view .wire.active { stroke: #f6a826; }.breadboard-view .wire:hover { stroke: #7136a3; }.breadboard-view .wire.selected { stroke: #6f2dbd; stroke-width: 5.2; filter: drop-shadow(0 0 3px rgba(82, 35, 137, .55)); }.breadboard-view .wire-preview { stroke: #6f2dbd; stroke-width: 4.2; filter: drop-shadow(0 0 2px rgba(82, 35, 137, .42)); }.breadboard-view .junction { fill: #6f2dbd; stroke: #fff9ee; stroke-width: 2.4; }.breadboard-view .component.selected .selection-box { display: block; fill: rgba(111, 45, 189, .06); stroke: #6f2dbd; stroke-width: 2.45; stroke-dasharray: 7 3; }.breadboard-view .component.selected .part-stroke, .breadboard-view .component.selected .part-fill { stroke: #6f2dbd; }.breadboard-view .component.selected .part-label { fill: #4c1978; stroke: none; }.breadboard-view .component .part-fill { fill: #303a46; stroke: #182129; }.breadboard-view .component .part-ic { fill: #242d38; stroke: #121820; }.breadboard-view .component .part-gold { fill: #c6a16c; }
+.circuit-canvas { cursor: grab; }
+.circuit-canvas.panning { cursor: grabbing; }
+.circuit-canvas .wire-hit { fill: none; stroke: rgba(255,255,255,.001); stroke-width: 15; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; }.circuit-canvas .wire { fill: none; stroke: #7190ae; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; cursor: pointer; transition: stroke .15s ease, stroke-width .15s ease; }.circuit-canvas .wire:hover { stroke: #a8e9df; stroke-width: 3.2; }.circuit-canvas.simulating .wire:not(.active):not(.warn):not(.selected) { opacity: .34; }.circuit-canvas .wire.active { stroke: #67d8c4; filter: url(#softGlow); }.circuit-canvas .wire.warn { stroke: #e5aa60; }.circuit-canvas .wire.selected { stroke: #b5fff3; stroke-width: 4.4; filter: url(#softGlow); }.circuit-canvas .wire-preview { fill: none; stroke: #62e2cd; stroke-width: 2.7; stroke-dasharray: 5 5; pointer-events: none; }.circuit-canvas .junction { fill: #90d8ce; stroke: #0d2630; stroke-width: 2; }.circuit-canvas .component { cursor: grab; }.circuit-canvas .component.dragging { cursor: grabbing; opacity: .86; }.circuit-canvas .component .part-stroke { fill: none; stroke: #b9cadf; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }.circuit-canvas .component .part-pin { fill: none; stroke: #6e819b; stroke-width: 2.2; stroke-linecap: round; }.circuit-canvas .component .part-fill { fill: #17243b; stroke: #b9cadf; stroke-width: 2; stroke-linejoin: round; }.circuit-canvas .component .part-accent { fill: none; stroke: #73dfc6; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }.circuit-canvas .component .part-gold { fill: #d6a758; stroke: #e3c079; stroke-width: 1.3; }.circuit-canvas .component .part-ic { fill: #1b273c; stroke: #af9eff; stroke-width: 1.8; }.circuit-canvas .component .part-label { fill: #dce7f5; font-size: 11px; font-weight: 730; text-anchor: middle; paint-order: stroke; stroke: #0b1422; stroke-width: 3.3px; stroke-linejoin: round; }.circuit-canvas .component .part-value { fill: #7e91ad; font-size: 9px; text-anchor: middle; paint-order: stroke; stroke: #0b1422; stroke-width: 3px; stroke-linejoin: round; }.circuit-canvas .component .pin-label { fill: #6f859f; font-size: 7.5px; text-anchor: middle; }.circuit-canvas .component .ic-name { fill: #e5dfff; font-size: 14px; font-weight: 760; text-anchor: middle; }.circuit-canvas .component .ic-sub { fill: #a298b5; font-size: 7px; letter-spacing: 1.2px; text-anchor: middle; }.circuit-canvas .component .bridge-ac { fill: #80a6c9; font-size: 11px; font-weight: 750; text-anchor: middle; }.circuit-canvas .component .terminal-group { cursor: crosshair; }.circuit-canvas .component .terminal-hit { fill: #ffffff; opacity: .001; pointer-events: all; }.circuit-canvas .component .terminal { fill: #15253b; stroke: #869bb8; stroke-width: 1.45; pointer-events: none; transition: fill .15s ease, stroke .15s ease; }.circuit-canvas .component .terminal-group:hover .terminal, .circuit-canvas.wire-mode .terminal { fill: #70e2cf; stroke: #c0fff5; filter: drop-shadow(0 0 4px rgba(112, 226, 207, .8)); }.circuit-canvas.wire-mode .pin-label { fill: #aaf5e8; font-weight: 700; }.circuit-canvas .bread-source { fill: #4c5a68; stroke: #222c35; stroke-width: 2; }.circuit-canvas .bread-screen { fill: #8de8cf; stroke: #273842; stroke-width: 1.5; }.circuit-canvas .bread-screen-line { fill: none; stroke: #334b51; stroke-width: 2; stroke-linecap: round; }.circuit-canvas .bread-resistor { fill: #c79a63; stroke: #694a31; stroke-width: 1.6; }.circuit-canvas .bread-band { fill: #354353; }.circuit-canvas .bread-band.red { fill: #d55f50; }.circuit-canvas .bread-band.gold { fill: #e2c168; }.circuit-canvas .bread-cap { fill: #486a80; stroke: #213442; stroke-width: 1.4; }.circuit-canvas .bread-cap-top { fill: #7595a7; stroke: #213442; stroke-width: 1.2; }.circuit-canvas .bread-mark { fill: none; stroke: #eef4f7; stroke-width: 1.4; stroke-linecap: round; }.circuit-canvas .bread-coil { fill: none; stroke: #d0a76c; stroke-width: 7; stroke-linecap: round; }.circuit-canvas .bread-transformer { fill: #303a44; stroke: #141b23; stroke-width: 2; }.circuit-canvas .bread-transformer-line { fill: none; stroke: #c5a16e; stroke-width: 3; stroke-linecap: round; }.circuit-canvas .bread-pot { fill: #b5b9b8; stroke: #414b51; stroke-width: 2; }.circuit-canvas .bread-pot-shaft { fill: #535f68; stroke: #1e2930; stroke-width: 1.4; }.circuit-canvas .bread-switch { fill: #303c49; stroke: #17212a; stroke-width: 1.8; }.circuit-canvas .bread-switch-lever { fill: #c7d3d7; stroke: #4a5961; stroke-width: 1.5; }.circuit-canvas .bread-diode { fill: #242c35; stroke: #10161c; stroke-width: 1.5; }.circuit-canvas .bread-bridge { fill: #273340; stroke: #101820; stroke-width: 1.8; }.circuit-canvas .bread-bridge-mark { fill: none; stroke: #d1e0e5; stroke-width: 1.8; stroke-linecap: round; }.circuit-canvas .bread-bridge-text { fill: #c9d6dd; font-size: 10px; font-weight: 700; text-anchor: middle; }.circuit-canvas .bread-band.silver { fill: #d8d9d5; }.circuit-canvas .bread-led { fill: #42d98b; stroke: #0b6044; stroke-width: 1.4; }.circuit-canvas .bread-led-base { fill: #255943; stroke: #102a21; stroke-width: 1.2; }.circuit-canvas .bread-led-glint { fill: none; stroke: #b7ffe6; stroke-width: 2; stroke-linecap: round; opacity: .9; }.circuit-canvas .bread-transistor { fill: #252e38; stroke: #10161c; stroke-width: 1.7; }.circuit-canvas .bread-transistor-line { fill: none; stroke: #687584; stroke-width: 1.5; }.circuit-canvas .bread-chip { fill: #242d38; stroke: #111820; stroke-width: 2; }.circuit-canvas .bread-chip-notch { fill: #111820; stroke: #111820; }.circuit-canvas .bread-chip-text { fill: #cdd8d8; font-size: 9px; font-weight: 700; text-anchor: middle; }.circuit-canvas .component-hitbox { fill: #ffffff; opacity: .001; pointer-events: all; cursor: grab; }.circuit-canvas .component.selected .selection-box { display: block; }.circuit-canvas .selection-box { display: none; fill: none; stroke: #60ead3; stroke-width: 1.35; stroke-dasharray: 4 3; rx: 8; pointer-events: none; }.circuit-canvas .component.selected .part-stroke, .circuit-canvas .component.selected .part-fill { stroke: #86f4df; }.circuit-canvas .component.selected .part-label { fill: #e9fffb; }.component .thermal-halo { opacity: 0; pointer-events: none; }.heatmap-on .component .thermal-halo { opacity: .92; }.breadboard-view .component .part-stroke { stroke: #495d70; }.breadboard-view .component .part-pin { stroke: #a26c43; }.breadboard-view .component .part-label { fill: #1b2e45; stroke: none; paint-order: normal; font-weight: 800; }.breadboard-view .component .part-value { fill: #384b62; stroke: none; paint-order: normal; font-weight: 750; letter-spacing: .08px; }.breadboard-view .component .terminal { fill: #e4bf83; stroke: #4e3d27; }.breadboard-view.wire-mode .component .terminal { fill: #7c3aed; stroke: #2e1454; filter: drop-shadow(0 0 4px rgba(92, 42, 139, .64)); }.breadboard-view.wire-mode .pin-label { fill: #4d187b; stroke: none; }.breadboard-view .wire { stroke-width: 4.2; stroke: #e36559; }.breadboard-view .wire:nth-child(3n+2) { stroke: #459bd8; }.breadboard-view .wire.active { stroke: #f6a826; }.breadboard-view .wire:hover { stroke: #7136a3; }.breadboard-view .wire.selected { stroke: #6f2dbd; stroke-width: 5.2; filter: drop-shadow(0 0 3px rgba(82, 35, 137, .55)); }.breadboard-view .wire-preview { stroke: #6f2dbd; stroke-width: 4.2; filter: drop-shadow(0 0 2px rgba(82, 35, 137, .42)); }.breadboard-view .junction { fill: #6f2dbd; stroke: #fff9ee; stroke-width: 2.4; }.breadboard-view .component.selected .selection-box { display: block; fill: rgba(111, 45, 189, .06); stroke: #6f2dbd; stroke-width: 2.45; stroke-dasharray: 7 3; }.breadboard-view .component.selected .part-stroke, .breadboard-view .component.selected .part-fill { stroke: #6f2dbd; }.breadboard-view .component.selected .part-label { fill: #4c1978; stroke: none; }.breadboard-view .component .part-fill { fill: #303a46; stroke: #182129; }.breadboard-view .component .part-ic { fill: #242d38; stroke: #121820; }.breadboard-view .component .part-gold { fill: #c6a16c; }
 
 .lab-drawer { position: relative; flex: 0 0 clamp(132px, 22vh, 188px); min-height: 0; max-height: 188px; overflow: hidden; background: #0b1524; border-top: 1px solid #293952; display: flex; flex-direction: column; transition: flex-basis .16s ease, height .16s ease; }.lab-drawer.user-sized { flex: 0 0 var(--lab-height); height: var(--lab-height); max-height: none; }.lab-drawer.collapsed { flex-basis: 39px; height: 39px; min-height: 39px; max-height: 39px; }.lab-drawer.user-sized.collapsed { flex-basis: 39px; height: 39px; min-height: 39px; max-height: 39px; }.lab-drawer.is-resizing { transition: none; }.lab-resize-handle { position: absolute; z-index: 12; top: 0; right: 0; left: 0; height: 10px; display: flex; align-items: center; justify-content: center; cursor: ns-resize; touch-action: none; }.lab-resize-handle span { width: 38px; height: 3px; border-radius: 99px; background: #385574; box-shadow: 0 1px 0 rgba(0,0,0,.35); transition: width .15s ease, background .15s ease; }.lab-resize-handle:hover span, .lab-resize-handle:focus-visible span, .lab-drawer.is-resizing .lab-resize-handle span { width: 66px; background: #64dfca; }.lab-resize-handle:focus-visible { outline: none; }.lab-drawer.collapsed .lab-resize-handle { display: none; } body.resizing-lab, body.resizing-lab * { cursor: ns-resize !important; user-select: none !important; }.lab-header { height: 39px; min-height: 39px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-bottom: 1px solid rgba(56, 79, 108, .55); }.lab-title { display: flex; gap: 7px; align-items: center; text-transform: uppercase; letter-spacing: .8px; color: #b4c4d8; font-size: 9.5px; font-weight: 800; min-width: 142px; }.scope-mark { width: 20px; height: 12px; display: flex; align-items: end; gap: 2px; }.scope-mark i { width: 4px; border-radius: 2px 2px 0 0; background: #59e0ca; display: block; }.scope-mark i:nth-child(1) { height: 5px; }.scope-mark i:nth-child(2) { height: 10px; }.scope-mark i:nth-child(3) { height: 7px; }.live-pill { color: #6ef1b2; background: rgba(84, 215, 155, .11); border: 1px solid rgba(84, 215, 155, .18); border-radius: 3px; padding: 2px 4px; font-size: 7px; letter-spacing: .75px; }.lab-tabs { align-self: stretch; display: flex; gap: 3px; }.lab-tabs button { height: 100%; color: #71849e; background: transparent; padding: 0 9px; border-bottom: 2px solid transparent; font-size: 10px; font-weight: 650; }.lab-tabs button:hover { color: #c6d6e8; }.lab-tabs button.active { color: #8cf0dd; border-bottom-color: #64e0cc; }.lab-actions { display: flex; align-items: center; gap: 5px; margin-left: auto; }.lab-actions > button:first-child { background: #172941; border: 1px solid #294364; border-radius: 5px; color: #a8c6e5; padding: 4px 8px; font-size: 9px; }.lab-actions > button:first-child:hover { background: #203754; }.lab-content { flex: 1 1 auto; min-height: 0; overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: #2b4665 transparent; }.lab-content::-webkit-scrollbar { width: 7px; height: 7px; }.lab-content::-webkit-scrollbar-thumb { background: #2b4665; border-radius: 8px; }.scope-layout, .spectrum-layout, .thermal-layout { min-height: 0; height: 100%; display: grid; }.scope-layout { grid-template-columns: 116px 1fr 164px; }.scope-sidebar { padding: 12px 10px; border-right: 1px solid rgba(54, 77, 105, .55); }.scope-control-title { color: #71839f; text-transform: uppercase; font-size: 8px; letter-spacing: .9px; font-weight: 800; margin-bottom: 8px; }.channel-row { padding: 7px 7px; display: flex; align-items: center; gap: 6px; border: 1px solid transparent; border-radius: 5px; color: #9eb0c9; font-size: 9.5px; }.channel-row.selected { background: #14263d; border-color: #264260; }.channel-color { width: 7px; height: 7px; border-radius: 50%; background: #63e4d0; box-shadow: 0 0 7px currentColor; }.channel-row:nth-child(3) .channel-color { background: #a897ff; }.channel-row small { color: #60748f; margin-left: auto; font-size: 8px; }.scope-graph-wrap { position: relative; padding: 10px 0 9px 9px; }.scope-graph { width: 100%; height: 100%; }.scope-grid { stroke: #24354d; stroke-width: 1; }.scope-axis-label { fill: #566984; font-size: 8px; }.scope-signal-a { fill: none; stroke: #58e5cf; stroke-width: 2; filter: drop-shadow(0 0 3px rgba(88, 229, 207, .35)); }.scope-signal-b { fill: none; stroke: #a995ff; stroke-width: 1.5; opacity: .88; }.scope-marker { stroke: #f5bd62; stroke-width: 1.2; stroke-dasharray: 3 3; }.scope-readout { padding: 11px 11px 10px; border-left: 1px solid rgba(54, 77, 105, .55); display: grid; align-content: center; gap: 8px; }.readout { padding: 7px 8px; background: #111f33; border: 1px solid #233953; border-radius: 5px; }.readout span { display: block; color: #6e829d; font-size: 8px; text-transform: uppercase; letter-spacing: .6px; }.readout b { display: block; font-size: 13px; color: #ddf9f3; letter-spacing: -.3px; margin-top: 2px; }.readout:nth-child(2) b { color: #dfd9ff; }.readout:nth-child(3) b { color: #f4cb83; }.spectrum-layout { grid-template-columns: 1fr 195px; }.spectrum-chart { padding: 11px 14px 9px; }.spectrum-chart svg { height: 100%; width: 100%; }.spectrum-bars rect { fill: url(#barGradient); }.spectrum-info { padding: 13px; border-left: 1px solid rgba(54, 77, 105, .55); }.spectrum-info h4, .thermal-layout h4 { color: #d5e2f0; font-size: 11px; margin: 0 0 10px; }.spectrum-info p { color: #7f92ad; font-size: 9.5px; line-height: 15px; margin: 0 0 10px; }.frequency-tag { display: inline-block; color: #68e3ce; background: rgba(74, 218, 194, .1); border: 1px solid rgba(74, 218, 194, .2); padding: 4px 6px; border-radius: 4px; font-size: 9px; }.thermal-layout { grid-template-columns: 1fr 230px; }.thermal-visual { padding: 9px 12px; display: flex; gap: 15px; align-items: center; }.thermal-scale { width: 12px; height: 105px; border-radius: 8px; background: linear-gradient(0deg, #45cf98, #e8dc60 52%, #f15c65); border: 1px solid rgba(255,255,255,.15); position: relative; }.thermal-scale::before, .thermal-scale::after { position: absolute; left: 19px; color: #71849f; font-size: 8px; white-space: nowrap; }.thermal-scale::before { content: 'Cool 25°C'; bottom: -1px; }.thermal-scale::after { content: 'Warm 52°C'; top: -1px; }.thermal-bars { flex: 1; display: flex; gap: 14px; align-items: end; height: 114px; padding: 0 20px; }.thermal-column { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: end; height: 100%; gap: 5px; }.thermal-column i { display: block; width: 32px; border-radius: 5px 5px 1px 1px; background: linear-gradient(0deg, #47d69b, #a7e26c); box-shadow: 0 0 10px rgba(88, 217, 151, .18); }.thermal-column.warn i { background: linear-gradient(0deg, #f4c45e, #ed8654); }.thermal-column span { font-size: 8px; color: #8092ab; }.thermal-insight { padding: 14px 15px; border-left: 1px solid rgba(54, 77, 105, .55); }.thermal-insight p { color: #8093ad; font-size: 9.5px; line-height: 14px; margin: 0; }.thermal-insight b { color: #d9e6f6; }.thermal-toggle-line { display: flex; margin-top: 11px; gap: 7px; align-items: center; color: #9ec8bf; font-size: 9px; }
 
 /* Signal Lab adapts its density to the height chosen with the resize handle. */
-.lab-drawer.compact .lab-header { height: 34px; min-height: 34px; padding: 0 9px; }
+.lab-drawer.dense .lab-header { height: 36px; min-height: 36px; padding: 0 10px; }.lab-drawer.dense .lab-title { min-width: 122px; font-size: 9px; }.lab-drawer.dense .live-pill { padding: 1px 3px; font-size: 6.5px; }.lab-drawer.dense .lab-tabs button { padding: 0 7px; font-size: 9.5px; }.lab-drawer.dense .lab-actions > button:first-child { padding: 3px 7px; font-size: 8.5px; }.lab-drawer.dense .scope-layout { grid-template-columns: 92px minmax(0, 1fr) 132px; }.lab-drawer.dense .scope-sidebar { padding: 7px 7px; }.lab-drawer.dense .scope-control-title { margin-bottom: 5px; }.lab-drawer.dense .channel-row { padding: 5px 6px; font-size: 8.8px; }.lab-drawer.dense .scope-readout { padding: 7px; gap: 5px; }.lab-drawer.dense .readout { padding: 5px 6px; }.lab-drawer.dense .readout b { font-size: 11px; }.lab-drawer.dense .scope-graph-wrap { padding: 6px 5px 4px; }.lab-drawer.dense .spectrum-layout { grid-template-columns: minmax(0, 1fr) 155px; }.lab-drawer.dense .spectrum-chart { padding: 6px 9px 4px; }.lab-drawer.dense .spectrum-info { padding: 8px 9px; }.lab-drawer.dense .spectrum-info h4 { margin-bottom: 5px; font-size: 10px; }.lab-drawer.dense .spectrum-info p { font-size: 8.5px; line-height: 12px; margin-bottom: 6px; }.lab-drawer.dense .thermal-layout { grid-template-columns: minmax(0, 1fr) 190px; }.lab-drawer.dense .thermal-visual { padding: 5px 9px; }.lab-drawer.dense .thermal-scale { height: 86px; }.lab-drawer.dense .thermal-bars { height: 92px; padding: 0 10px; }.lab-drawer.compact .lab-header { height: 34px; min-height: 34px; padding: 0 9px; }
 .lab-drawer.compact .lab-title { min-width: 112px; font-size: 9px; }
 .lab-drawer.compact .live-pill { display: none; }
 .lab-drawer.compact .lab-tabs button { padding: 0 7px; font-size: 9px; }
@@ -200,7 +204,7 @@ kbd { border: 1px solid #33445d; border-radius: 4px; background: #17243a; color:
 .lab-drawer.micro .thermal-scale::before, .lab-drawer.micro .thermal-scale::after { display: none; }
 .lab-drawer.micro .thermal-bars { height: 58px; gap: 6px; padding: 0 4px; }
 .lab-drawer.micro .thermal-column i { width: 21px; max-height: 48px; }
-.lab-drawer.micro .thermal-column span { display: none; }
+.lab-drawer.micro .thermal-column span { display: none; }.lab-drawer.dense .scope-layout, .lab-drawer.dense .spectrum-layout, .lab-drawer.dense .thermal-layout, .lab-drawer.dense .scope-sidebar, .lab-drawer.dense .scope-graph-wrap, .lab-drawer.dense .scope-readout, .lab-drawer.dense .spectrum-chart { min-height: 0; min-width: 0; overflow: hidden; }.lab-drawer.micro .scope-signal-b { stroke-width: 1.1; }.lab-drawer.micro .spectrum-chart text { display: none; }.lab-drawer.micro .spectrum-chart svg { min-height: 0; }
 
 .inspector-tabs { min-height: 51px; display: flex; padding: 0 13px; border-bottom: 1px solid var(--line); gap: 2px; }.inspector-tabs button { background: transparent; color: #7e91ad; border-bottom: 2px solid transparent; padding: 0 8px; font-size: 10.5px; font-weight: 700; }.inspector-tabs button:hover { color: #c4d3e7; }.inspector-tabs button.active { color: #dffefa; border-bottom-color: var(--cyan); }.tab-spark { font-size: 13px; margin-right: 2px; }.inspector-content { flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #2a3c58 transparent; }.inspector-section { padding: 15px; border-bottom: 1px solid rgba(54, 77, 105, .5); }.inspector-section:last-child { border-bottom: 0; }.section-label { color: #6f829e; font-size: 8.5px; font-weight: 800; letter-spacing: 1.05px; text-transform: uppercase; margin-bottom: 9px; }.selection-intro { padding: 28px 19px 23px; text-align: center; }.selection-orb { width: 45px; height: 45px; margin: 0 auto 12px; display: grid; place-items: center; border-radius: 14px; color: #78d8cb; background: linear-gradient(135deg, rgba(65, 218, 192, .16), rgba(96, 126, 244, .1)); border: 1px solid rgba(86, 217, 196, .2); }.selection-orb svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 1.5; }.selection-intro h3 { margin: 0 0 6px; font-size: 13px; }.selection-intro p { margin: 0; color: #7486a0; font-size: 10px; line-height: 15px; }.overview-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }.overview-stat { padding: 8px 5px; text-align: center; border: 1px solid #233651; background: #111f34; border-radius: 7px; }.overview-stat b { display: block; color: #d7e8f8; font-size: 14px; }.overview-stat span { color: #6e819e; font-size: 8px; }.quick-action { width: 100%; padding: 8px 9px; text-align: left; border-radius: 6px; color: #a9bfd8; background: #14243b; border: 1px solid #273f5f; font-size: 10px; font-weight: 650; margin-top: 7px; }.quick-action:hover { background: #1b314f; color: #d5e8fb; }.quick-action .action-icon { color: #8de6d7; font-size: 13px; margin-right: 6px; }.quick-action.danger-action:hover { color: #ffb3ba; background: #382331; border-color: #713b4d; }.wire-endpoint { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid rgba(59,83,111,.48); }.wire-endpoint:last-child { border-bottom: 0; }.endpoint-dot { width: 9px; height: 9px; flex: 0 0 auto; border-radius: 50%; box-shadow: 0 0 8px currentColor; }.endpoint-a { color: #63e4d0; background: #63e4d0; }.endpoint-b { color: #ad9dff; background: #ad9dff; }.wire-endpoint b { display: block; color: #d5e3f2; font-size: 10px; }.wire-endpoint small { display: block; color: #788ba6; font-size: 9px; margin-top: 2px; }.wire-hint { color: #7b90ab; font-size: 9px; line-height: 14px; margin-top: 11px; padding: 7px 8px; background: rgba(50,78,111,.15); border-left: 2px solid #5c81ac; }.wire-selected-icon { color: #92fff0; }.selected-component-head { display: flex; align-items: center; gap: 9px; }.selected-icon { width: 39px; height: 35px; border-radius: 8px; display: grid; place-items: center; color: #70ddc6; background: #112840; border: 1px solid #244762; }.selected-icon svg { width: 27px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }.selected-component-head h3 { margin: 0; font-size: 13px; }.selected-component-head p { margin: 2px 0 0; color: #7d91ac; font-size: 9px; }.component-id-badge { margin-left: auto; color: #8aa2bf; background: #192b44; border: 1px solid #2d476a; padding: 3px 5px; border-radius: 4px; font-size: 9px; font-weight: 750; }.model-select-wrap label, .field label { color: #798ca8; display: block; font-size: 9px; margin-bottom: 5px; }.model-select-wrap select, .field input, .field select { width: 100%; height: 31px; border-radius: 6px; color: #dbe9f6; background: #111f33; border: 1px solid #2a415f; padding: 0 8px; font-size: 10px; }.model-select-wrap select { color: #aaf0e3; border-color: #2d726b; }.model-note { color: #62d4b8; font-size: 8.5px; margin-top: 5px; display: flex; align-items: center; gap: 4px; }.model-note::before { content: '✓'; display: grid; place-items: center; font-size: 7px; color: #071b17; background: #6be4be; width: 11px; height: 11px; border-radius: 50%; }.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }.field.full { grid-column: 1/-1; }.property-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }.property-actions button { height: 28px; border-radius: 6px; color: #9cb1ca; background: #14233a; border: 1px solid #2b4260; font-size: 9.5px; }.property-actions button:hover { background: #1d3450; color: #e0ecfa; }.property-actions button.danger:hover { color: #ffacb4; background: #392333; border-color: #703949; }.pin-list { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }.pin-item { color: #9aacc5; background: #101d30; padding: 6px 7px; border: 1px solid #203650; border-radius: 5px; font-size: 9px; }.pin-item b { color: #5fd4c0; margin-right: 4px; }.datasheet-card { padding: 10px; border-radius: 7px; background: linear-gradient(130deg, rgba(38, 91, 94, .26), rgba(37, 54, 91, .18)); border: 1px solid rgba(75, 149, 153, .32); }.datasheet-card > div { display: flex; align-items: center; gap: 6px; color: #d6f7ef; font-size: 10px; font-weight: 700; }.datasheet-card svg { width: 14px; height: 14px; stroke: #77e4cf; fill: none; stroke-width: 1.6; }.datasheet-card p { margin: 5px 0 0; color: #8db6b3; font-size: 8.5px; line-height: 13px; }.measurement-card { padding: 10px; background: #111f34; border: 1px solid #243a58; border-radius: 8px; }.measurement-head { display: flex; align-items: center; justify-content: space-between; }.measurement-head b { font-size: 10px; }.measurement-head span { color: #62dfc5; font-size: 8px; font-weight: 750; }.measure-value { margin-top: 7px; color: #e4fbf7; font-size: 23px; letter-spacing: -.8px; font-weight: 720; }.measure-sub { color: #71849e; font-size: 9px; margin-top: 1px; }.meter-mode { margin: 10px 0; display: grid; grid-template-columns: repeat(3, 1fr); background: #0e1a2d; padding: 3px; border-radius: 6px; border: 1px solid #263a56; }.meter-mode button { color: #7488a3; font-size: 8.5px; padding: 5px 2px; border-radius: 4px; background: transparent; }.meter-mode button.active { color: #bbf8ed; background: #1a423f; }.probe-instruction { color: #8497b2; background: rgba(59, 88, 121, .12); border-left: 2px solid #58789e; padding: 7px 8px; line-height: 14px; font-size: 9px; }.probe-points { display: flex; gap: 5px; margin-top: 8px; }.probe-point { flex:1; color: #82a1bf; border: 1px dashed #3b5270; padding: 6px; border-radius: 4px; font-size: 8.5px; }.probe-point.set { border-style: solid; border-color: #328577; color: #9af1e1; background: rgba(47, 130, 117, .1); }.ai-hero { margin: 14px 14px 0; padding: 13px; border-radius: 9px; background: radial-gradient(circle at 85% 15%, rgba(155, 140, 255, .25), transparent 38%), linear-gradient(135deg,#172e48,#13233d); border: 1px solid #2e4b70; }.ai-hero-top { display: flex; gap: 8px; align-items: center; }.ai-avatar { width: 27px; height: 27px; border-radius: 8px; display: grid; place-items: center; color: #d6ceff; background: rgba(155, 140, 255, .22); font-size: 15px; }.ai-hero h3 { margin: 0; font-size: 11px; }.ai-hero p { margin: 2px 0 0; color: #8ca4bf; font-size: 9px; }.health-meter { height: 5px; border-radius: 3px; background: #1c2a42; overflow: hidden; margin: 11px 0 5px; }.health-meter i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#55d59a,#7be8c9); }.health-row { display: flex; justify-content: space-between; color: #86a0bc; font-size: 9px; }.health-row b { color: #a3efd9; }.issue-list { padding: 12px 14px; }.issue { display: flex; gap: 8px; padding: 9px 0; border-bottom: 1px solid rgba(60, 83, 111,.5); }.issue:last-child { border: 0; }.issue-icon { width: 18px; height: 18px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 5px; font-size: 10px; }.issue.success .issue-icon { background: rgba(84, 215, 155, .13); color: #65dda5; }.issue.info .issue-icon { background: rgba(103, 164, 255, .13); color: #83b3ff; }.issue.warn .issue-icon { background: rgba(241, 183, 92, .13); color: #f2be69; }.issue.error .issue-icon { background: rgba(240, 98, 111, .13); color: #ff8d97; }.issue b { display: block; font-size: 9.5px; color: #c8d7e9; }.issue p { margin: 2px 0 0; color: #71849f; font-size: 8.8px; line-height: 13px; }.ai-action { margin: 0 14px 15px; width: calc(100% - 28px); color: #d9d5ff; background: linear-gradient(100deg, rgba(138, 116, 255, .23), rgba(74, 151, 255, .16)); border: 1px solid rgba(143, 129, 255, .32); border-radius: 7px; padding: 8px; font-size: 10px; font-weight: 700; }.ai-action:hover { background: linear-gradient(100deg, rgba(138, 116, 255, .32), rgba(74, 151, 255, .25)); }
 
@@ -251,8 +255,26 @@ kbd { border: 1px solid #33445d; border-radius: 4px; background: #17243a; color:
 .modal-head { padding: 18px 19px 14px; display: flex; align-items: flex-start; gap: 10px; border-bottom: 1px solid rgba(61, 85, 117, .62); }.modal-head-icon { width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center; color: #bbaeff; background: rgba(155, 140, 255, .14); font-size: 17px; }.modal-head h2 { font-size: 15px; }.modal-head p { color: #8498b4; font-size: 10px; margin: 3px 0 0; line-height: 14px; }.modal-close { margin-left: auto; background: transparent; color: #8295af; width: 25px; height: 25px; font-size: 19px; border-radius: 5px; }.modal-close:hover { background: #293c58; color: #ecf4ff; }.modal-body { padding: 17px 19px; }.modal-field { margin-bottom: 12px; }.modal-field label { display: block; color: #91a5be; font-size: 10px; margin-bottom: 5px; }.modal-field input, .modal-field select { height: 35px; width: 100%; color: #e2edf9; background: #0f1b2d; border: 1px solid #2d4665; border-radius: 7px; padding: 0 10px; }.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }.modal-note { padding: 10px; border-radius: 7px; background: rgba(55, 93, 127,.14); border: 1px solid rgba(75, 122, 164,.24); color: #8ca8c5; font-size: 9.5px; line-height: 15px; }.tune-result { margin-top: 13px; padding: 11px; border-radius: 8px; background: linear-gradient(110deg,rgba(57, 183, 161,.15),rgba(58,113,174,.1)); border: 1px solid rgba(70, 196, 171,.3); }.tune-result .result-label { color: #74dcca; font-size: 8.5px; font-weight: 800; letter-spacing: .75px; text-transform: uppercase; }.tune-result b { display: block; color: #e1fbf5; font-size: 16px; margin: 3px 0; }.tune-result span { color: #93b8b3; font-size: 9px; }.modal-foot { padding: 13px 19px 18px; display: flex; justify-content: flex-end; gap: 8px; }.modal-foot button { height: 34px; padding: 0 12px; border-radius: 7px; font-size: 10px; font-weight: 700; }.button-secondary { color: #a8bbd2; background: #1a2b44; border: 1px solid #304862; }.button-secondary:hover { background: #223955; }.button-primary { color: #061b19; background: linear-gradient(105deg, #7cebd6, #46c8b2); }.button-primary:hover { filter: brightness(1.07); }.button-danger { color: #fff3f4; background: linear-gradient(105deg, #dc5d6d, #b7364c); border: 1px solid rgba(255, 177, 186, .22); }.button-danger:hover { filter: brightness(1.09); }.share-url { display: flex; gap: 6px; }.share-url input { flex: 1; min-width: 0; }.copy-button { padding: 0 11px; border-radius: 7px; color: #b7fff3; background: #1a4945; border: 1px solid #32766e; font-size: 9px; font-weight: 700; }.share-preview { display: flex; align-items: center; gap: 9px; margin-top: 15px; padding: 9px; background: #101d30; border: 1px solid #283d5b; border-radius: 7px; }.share-preview-icon { width: 26px; height: 26px; border-radius: 6px; color: #6ce5d0; display: grid; place-items: center; background: #183b3b; }.share-preview b { display: block; color: #dfeafa; font-size: 10px; }.share-preview span { display: block; color: #7386a1; font-size: 8.5px; margin-top: 2px; }.shortcut-list { display: grid; grid-template-columns: 1fr auto; gap: 9px 15px; align-items: center; }.shortcut-list span { color: #9cafc6; font-size: 10px; }.shortcut-list kbd { justify-self: end; color: #c5d7ec; background: #1d2d45; border-color: #344c6b; padding: 3px 6px; font-size: 9px; }
 .toast-region { position: fixed; z-index: 90; right: 17px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; }.toast { min-width: 210px; max-width: 330px; display: flex; align-items: center; gap: 8px; padding: 10px 11px; border-radius: 8px; color: #dbeafa; background: #17263d; border: 1px solid #314a6b; box-shadow: 0 12px 28px rgba(0,0,0,.34); animation: toast-in .22s ease-out; font-size: 10px; }.toast i { width: 17px; height: 17px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; color: #062017; background: #67ddb0; font-style: normal; font-size: 10px; font-weight: 800; }.toast.warn i { color: #2d1b00; background: #f3bd67; }.toast.error i { color: #310b13; background: #ff8792; }@keyframes toast-in { from { transform: translateY(7px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
+/* Educational feedback, guided lessons and current-flow animation */
+.circuit-canvas .wire-flow { display: none; fill: none; stroke: #d5fff8; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 2 9; pointer-events: none; filter: drop-shadow(0 0 2px rgba(100, 238, 216, .9)); }
+.circuit-canvas.simulating .wire-flow { display: block; animation: current-flow .72s linear infinite; }
+.circuit-canvas.breadboard-view .wire-flow { stroke: #fff5bd; stroke-width: 2.8; filter: drop-shadow(0 0 2px rgba(255, 197, 93, .9)); }
+@keyframes current-flow { to { stroke-dashoffset: -22; } }
+.circuit-canvas .component.led-lit .part-fill { fill: #42eda2; filter: drop-shadow(0 0 var(--led-glow) rgba(64, 242, 166, .92)); }
+.circuit-canvas .component.led-lit .bread-led, .circuit-canvas .component.led-lit .bread-led-base { filter: drop-shadow(0 0 var(--led-glow) rgba(54, 234, 145, .92)); }
+.circuit-canvas.lesson-active .component.lesson-target .part-stroke, .circuit-canvas.lesson-active .component.lesson-target .part-fill { stroke: #f6c95e; }
+.circuit-canvas.lesson-active .component.lesson-target .terminal { fill: #f6c95e; stroke: #fff7d6; filter: drop-shadow(0 0 5px rgba(246, 201, 94, .9)); }
+.circuit-canvas.lesson-active .component.lesson-target .part-label { fill: #fff0ab; }
+.circuit-canvas.breadboard-view.lesson-active .component.lesson-target .part-stroke, .circuit-canvas.breadboard-view.lesson-active .component.lesson-target .part-fill { stroke: #aa5c18; }
+.component-item.lesson-suggested { background: linear-gradient(90deg, rgba(48, 176, 153, .16), rgba(48, 176, 153, .04)); border-color: rgba(93, 221, 196, .48); box-shadow: inset 3px 0 0 #60dfc9; }
+.component-item.lesson-suggested .part-add { opacity: 1; color: #7cf0db; background: #1b4946; }
+.lesson-dock { position: absolute; z-index: 6; top: 47px; left: 14px; width: 266px; padding: 10px; background: rgba(14, 28, 46, .96); border: 1px solid rgba(75, 159, 151, .58); border-radius: 11px; box-shadow: 0 12px 30px rgba(2, 8, 18, .38); backdrop-filter: blur(12px); }
+.lesson-dock-head { display: flex; align-items: center; gap: 8px; }.lesson-dock-icon { width: 28px; height: 28px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 8px; color: #d5fff5; background: linear-gradient(135deg, #237c73, #284878); font-size: 13px; font-weight: 850; }.lesson-dock-head b { display: block; color: #e8f8fb; font-size: 11px; }.lesson-dock-head small { display: block; color: #8ba2bc; font-size: 8.5px; margin-top: 2px; }.lesson-close { width: 23px; height: 23px; margin-left: auto; border-radius: 6px; color: #8fa5bd; background: transparent; font-size: 17px; line-height: 18px; }.lesson-close:hover { color: #f3fbff; background: #263b56; }.lesson-progress-label { display: flex; justify-content: space-between; margin: 11px 1px 5px; color: #8aa2bd; font-size: 8.5px; }.lesson-progress-label b { color: #6ee6d0; }.lesson-progress { height: 5px; overflow: hidden; border-radius: 99px; background: #1d324b; }.lesson-progress i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, #53d5bf, #7bc7ff); transition: width .24s ease; }.lesson-step { display: flex; gap: 8px; margin-top: 11px; }.lesson-step-dot { width: 20px; height: 20px; display: grid; place-items: center; flex: 0 0 auto; border-radius: 50%; color: #07181b; background: #71e1ce; font-size: 9px; font-weight: 850; }.lesson-step.complete .lesson-step-dot { background: #71dd9e; }.lesson-step b { display: block; color: #e2edf8; font-size: 10px; line-height: 14px; }.lesson-step p { margin: 3px 0 0; color: #8ba0b7; font-size: 8.7px; line-height: 13px; }.lesson-hint { margin-top: 9px; padding: 7px 8px; color: #c5efe7; background: rgba(40, 122, 111, .18); border-left: 2px solid #62d6c2; border-radius: 0 5px 5px 0; font-size: 8.8px; line-height: 13px; }.lesson-dock-actions { display: flex; align-items: center; gap: 7px; margin-top: 10px; }.lesson-hint-button { height: 27px; padding: 0 8px; border-radius: 6px; color: #bffbf0; background: #1a4944; border: 1px solid #347c73; font-size: 8.8px; font-weight: 750; }.lesson-hint-button:hover { background: #245c56; }.beginner-mode-toggle { display: flex; align-items: center; gap: 5px; margin-left: auto; color: #9eb4cc; font-size: 8px; white-space: nowrap; cursor: pointer; }.beginner-mode-toggle input { position: absolute; opacity: 0; pointer-events: none; }.beginner-mode-toggle span { width: 13px; height: 13px; border-radius: 3px; border: 1px solid #55718e; background: #172943; }.beginner-mode-toggle input:checked + span { background: #67dcc7; border-color: #9cf7e8; box-shadow: inset 0 0 0 3px #173d3a; }
+.learn-modal { width: min(880px, calc(100vw - 32px)); }.learn-modal-body { padding: 16px 19px 18px; }.learn-intro { padding: 10px 11px; color: #8fa6bf; background: rgba(68, 105, 145, .13); border: 1px solid rgba(89, 134, 181, .22); border-radius: 8px; font-size: 10px; line-height: 15px; }.learn-intro b { color: #d8ebfb; }.lesson-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin-top: 12px; }.lesson-card { min-height: 184px; display: flex; flex-direction: column; padding: 11px; background: #112037; border: 1px solid #29435f; border-radius: 9px; }.lesson-card:hover { border-color: #4d9f96; box-shadow: 0 5px 16px rgba(1, 8, 18, .22); }.lesson-card-top { display: flex; align-items: center; }.lesson-card-icon { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 7px; color: #d4fff6; background: #1a4a48; font-size: 11px; font-weight: 850; }.lesson-level { margin-left: auto; color: #9a91ed; background: rgba(144, 127, 246, .12); border: 1px solid rgba(144, 127, 246, .2); border-radius: 4px; padding: 3px 5px; font-size: 7.5px; font-weight: 750; }.lesson-card h3 { margin: 9px 0 4px; color: #e2edf9; font-size: 11px; }.lesson-card p { flex: 1; margin: 0; color: #8196b1; font-size: 8.8px; line-height: 13px; }.lesson-card-meta { display: flex; gap: 7px; margin-top: 9px; color: #7188a4; font-size: 8px; }.lesson-card button { height: 29px; margin-top: 9px; border-radius: 6px; color: #bffcf1; background: #1b4a46; border: 1px solid #327d73; font-size: 8.8px; font-weight: 750; }.lesson-card button:hover { background: #246058; }.lesson-card button span { margin-left: 5px; font-size: 12px; }
+.glossary-card { padding: 10px; background: linear-gradient(135deg, rgba(39, 104, 104, .19), rgba(45, 67, 113, .16)); border: 1px solid rgba(69, 151, 145, .3); border-radius: 8px; }.glossary-card-head { display: flex; align-items: baseline; gap: 7px; }.glossary-card b { color: #d9fbf4; font-size: 10px; }.glossary-card span { color: #6fd7c1; font-size: 8px; font-weight: 750; }.glossary-card p { margin: 5px 0 0; color: #8fb7b3; font-size: 9px; line-height: 14px; }
+
 /* Light theme */
-body.light-theme { --bg: #f2f6fa; --bg-deep: #e8eef5; --panel: #ffffff; --panel-2: #f6f9fc; --panel-3: #eaf1f7; --line: #cbd8e6; --line-soft: rgba(69, 99, 132, .14); --text: #17283c; --muted: #526b86; --quiet: #71859d; --cyan: #148c81; --cyan-2: #0d766e; --blue: #397bcc; --violet: #725dce; --green: #228c61; --amber: #b97515; --red: #c84253; background: radial-gradient(ellipse at 68% -30%, #e5f4fb 0%, #f6f9fc 42%, #e9f0f6 100%); color: #17283c; }
+body.light-theme {  --bg: #f2f6fa; --bg-deep: #e8eef5; --panel: #ffffff; --panel-2: #f6f9fc; --panel-3: #eaf1f7; --line: #cbd8e6; --line-soft: rgba(69, 99, 132, .14); --text: #17283c; --muted: #526b86; --quiet: #71859d; --cyan: #148c81; --cyan-2: #0d766e; --blue: #397bcc; --violet: #725dce; --green: #228c61; --amber: #b97515; --red: #c84253; background: radial-gradient(ellipse at 68% -30%, #e5f4fb 0%, #f6f9fc 42%, #e9f0f6 100%); color: #17283c; }
 body.light-theme .topbar { background: rgba(255, 255, 255, .9); border-bottom-color: #cfdae7; }
 body.light-theme .brand strong, body.light-theme .project-title { color: #1b3048; }
 body.light-theme .brand span, body.light-theme .save-status { color: #6e829b; }
@@ -262,6 +284,8 @@ body.light-theme .history-actions { border-right-color: #d3dee9; }
 body.light-theme .icon-button, body.light-theme .small-icon, body.light-theme .icon-tool { color: #5c7089; }
 body.light-theme .icon-button:hover:not(:disabled), body.light-theme .small-icon:hover, body.light-theme .icon-tool:hover { background: #e6eef6; color: #17324c; }
 body.light-theme .new-project-button { color: #28527a; background: #eaf2fb; border-color: #bdd1e6; }
+body.light-theme .learn-top-button { color: #08736a; background: #e2f5f0; border-color: #abd9d0; }
+body.light-theme .learn-top-button:hover, body.light-theme .learn-top-button.active { color: #075c55; background: #ccece5; border-color: #7dc5b8; }
 body.light-theme .theme-button { color: #72520f; background: #fff5d8; border-color: #e7ca80; }
 body.light-theme .about-button { color: #536a85; border-color: #c5d3e2; }
 body.light-theme .about-button:hover { color: #233f5c; background: #e9f1f8; border-color: #9fb8d0; }
@@ -296,8 +320,8 @@ body.light-theme .toolbar-divider { background: #d2dde8; }
 body.light-theme .view-switch { background: #eef3f8; border-color: #c7d5e3; }
 body.light-theme .view-switch button { color: #647994; }
 body.light-theme .view-switch button.active { color: #223a55; background: #ffffff; box-shadow: 0 1px 3px rgba(45, 72, 103, .15); }
-body.light-theme .board-texture-toggle { color: #526b85; }
-body.light-theme .board-texture-check { background: #f7fafc; border-color: #aabdd0; }
+body.light-theme .board-texture-toggle, body.light-theme .toolbar-switch { color: #526b85; }
+body.light-theme .board-texture-check, body.light-theme .toolbar-switch-check { background: #f7fafc; border-color: #aabdd0; }
 body.light-theme .zoom-controls { color: #5e748e; }
 body.light-theme .zoom-controls button:hover { background: #e5eef7; }
 body.light-theme .canvas-wrap:not(.breadboard-canvas) { background: #edf4fa; }
@@ -305,6 +329,7 @@ body.light-theme .canvas-help { color: #405b78; text-shadow: 0 1px 0 rgba(255,25
 body.light-theme .status-chip { background: rgba(255,255,255,.92); border-color: #b8cadb; color: #3d5874; box-shadow: 0 2px 9px rgba(60, 84, 108, .11); }
 body.light-theme .canvas-toggle { color: #536d89; background: rgba(255,255,255,.9); border-color: #bfd0e0; }
 body.light-theme .canvas-toggle:hover, body.light-theme .canvas-toggle.active { color: #0c6e65; background: #e1f4ef; border-color: #80cbbf; }
+body.light-theme .quick-measure-panel { color: #29445f; background: rgba(255,255,255,.96); border-color: #b9cbdc; box-shadow: 0 9px 24px rgba(50, 75, 102, .18); }body.light-theme .quick-measure-head { color: #536d88; }body.light-theme .quick-measure-head button:hover { color: #1e3d59; background: #e5eff7; }body.light-theme .quick-measure-panel h4 { color: #24415e; }body.light-theme .quick-measure-value { color: #11766c; }body.light-theme .quick-measure-panel p { color: #647d96; }body.light-theme .quick-measure-row { background: #f2f6fa; border-color: #cbd9e6; }body.light-theme .quick-measure-row span { color: #7188a0; }body.light-theme .quick-measure-row b { color: #2b4965; }
 body.light-theme .minimap { background: rgba(248, 251, 253, .94); border-color: #aebfd0; }
 body.light-theme .minimap-grid { background-image: radial-gradient(#9fb4c9 1px, transparent 1px); }
 body.light-theme .minimap-viewport { border-color: #11897e; }
@@ -319,6 +344,7 @@ body.light-theme .circuit-canvas .component .part-fill { fill: #f8fbfd; stroke: 
 body.light-theme .circuit-canvas .component .part-label { fill: #1f3853; stroke: #edf4fa; }
 body.light-theme .circuit-canvas .component .part-value { fill: #56708a; stroke: #edf4fa; }
 body.light-theme .circuit-canvas .component .pin-label { fill: #5e768e; }
+body.light-theme .circuit-canvas .component .bridge-ac { fill: #365b7e; }
 body.light-theme .circuit-canvas .component .terminal { fill: #f8fbfd; stroke: #4c6983; }
 body.light-theme .circuit-canvas.wire-mode .terminal { fill: #1c9c90; stroke: #e9fffa; }
 body.light-theme .circuit-canvas .selection-box { stroke: #0a8277; }
@@ -359,6 +385,18 @@ body.light-theme .meter-mode { background: #edf3f8; border-color: #c8d6e4; }
 body.light-theme .meter-mode button { color: #647a92; }
 body.light-theme .meter-mode button.active { color: #08736a; background: #dff2ed; }
 body.light-theme .issue { border-bottom-color: #dbe4ec; }
+body.light-theme .lesson-dock { background: rgba(255,255,255,.96); border-color: #a9d5cd; box-shadow: 0 12px 28px rgba(56, 88, 112, .2); }
+body.light-theme .lesson-dock-head b, body.light-theme .lesson-step b { color: #24415f; }
+body.light-theme .lesson-dock-head small, body.light-theme .lesson-step p, body.light-theme .lesson-progress-label { color: #647d96; }
+body.light-theme .lesson-progress { background: #dbe8ed; }body.light-theme .lesson-progress i { background: linear-gradient(90deg, #1a9c8d, #4b90d0); }
+body.light-theme .lesson-hint { color: #21655e; background: #e7f5f1; border-left-color: #50bcae; }
+body.light-theme .lesson-hint-button { color: #146c63; background: #e1f3ef; border-color: #a4d9d1; }
+body.light-theme .beginner-mode-toggle { color: #5f7791; }body.light-theme .beginner-mode-toggle span { background: #f3f8fb; border-color: #afc4d6; }
+body.light-theme .component-item.lesson-suggested { background: linear-gradient(90deg, #dff4ef, #f4faf8); border-color: #9fd7ce; box-shadow: inset 3px 0 0 #2b9d8d; }
+body.light-theme .component-item.lesson-suggested .part-add { color: #0d776e; background: #d5efe9; }
+body.light-theme .learn-intro { color: #5e7791; background: #eef5fa; border-color: #c9dbe9; }body.light-theme .learn-intro b { color: #285071; }
+body.light-theme .lesson-card { background: #f8fbfd; border-color: #cbd9e7; }body.light-theme .lesson-card:hover { border-color: #73b7ad; box-shadow: 0 5px 16px rgba(50, 80, 106, .14); }body.light-theme .lesson-card h3 { color: #26415d; }body.light-theme .lesson-card p, body.light-theme .lesson-card-meta { color: #647c95; }body.light-theme .lesson-card button { color: #106c63; background: #e1f4ef; border-color: #9ed7ce; }
+body.light-theme .glossary-card { background: linear-gradient(135deg, #e9f6f3, #eef3fb); border-color: #b8dbd4; }body.light-theme .glossary-card b { color: #28566b; }body.light-theme .glossary-card span { color: #187f74; }body.light-theme .glossary-card p { color: #5f7e88; }
 body.light-theme .selection-quick-actions { background: rgba(255,255,255,.97); border-color: #b8c9da; box-shadow: 0 9px 20px rgba(55, 79, 105, .2); }
 body.light-theme .selection-action-label { color: #2d4966; }
 body.light-theme .selection-action-button { color: #38627e; background: #edf4fa; border-color: #c1d2e1; }
@@ -414,9 +452,10 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
           </button>
         </div>
         <button class="new-project-button" id="newProjectBtn" title="Create a new empty project"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v5h5M12 10v7M8.5 13.5h7"/></svg>New</button>
+        <button class="learn-top-button" id="learnBtn" title="Open guided circuit lessons"><svg viewBox="0 0 24 24"><path d="M5 4.5h5.5c1.2 0 2.2.5 3 1.3.8-.8 1.8-1.3 3-1.3H21v14.2h-4.5c-1.3 0-2.5.5-3.5 1.4-1-1-2.2-1.4-3.5-1.4H5zM13.5 6v13.8"/></svg>Learn</button>
         <button class="theme-button" id="themeToggleBtn" title="Switch to light theme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span id="themeLabel">Light</span></button>
         <button class="about-button" id="aboutBtn" title="About Fluxa"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 10v6M12 7.2v.2"/></svg>About</button>
-        <button class="ai-top-button" id="aiTopBtn"><span class="sparkle">✦</span>AI tools</button>
+        <button class="ai-top-button" id="aiTopBtn"><span class="sparkle">✦</span>Smart tools</button>
         <button class="simulate-button" id="simulateBtn"><span class="play-icon">▶</span><span id="simulateLabel">Simulate</span></button>
         <button class="share-button" id="shareBtn"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="19" r="2.3"/><path d="m8 11 7.8-4.8M8 13l7.8 4.8"/></svg>Share</button>
         <button class="export-button" id="exportBtn">Export <svg viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></button>
@@ -450,14 +489,23 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       <section class="studio" aria-label="Circuit editor">
         <div class="editor-toolbar">
           <div class="tool-group editor-tools" aria-label="Editor tool">
-            <button class="tool-button active" data-tool="select" title="Select and move (V)"><svg viewBox="0 0 24 24"><path d="m5 3 12.6 8.2-6.1 1.3 3.5 6.5-3.1 1.6-3.5-6.5-3.3 5.3z"/></svg><span>Select</span></button>
-            <button class="tool-button" data-tool="wire" title="Wire terminals (W)"><svg viewBox="0 0 24 24"><circle cx="5" cy="7" r="1.8"/><circle cx="19" cy="17" r="1.8"/><path d="M6.5 8.2c4 0 4.3 7.6 10.7 7.6"/></svg><span>Wire</span></button>
+            <button class="tool-button active" data-tool="select" title="Select, move, pan and wire terminals (V / W)"><svg viewBox="0 0 24 24"><path d="m5 3 12.6 8.2-6.1 1.3 3.5 6.5-3.1 1.6-3.5-6.5-3.3 5.3z"/></svg><span>Select &amp; Wire</span></button>
             <button class="tool-button" data-tool="probe" title="Measure two points (M)"><svg viewBox="0 0 24 24"><path d="M5 4v7a7 7 0 0 0 14 0V4M3.5 4h3M17.5 4h3M8 16l-2.8 4M16 16l2.8 4"/></svg><span>Probe</span></button>
+            <label class="toolbar-switch" title="Show or hide the Quick Measure panel">
+              <input type="checkbox" id="quickMeasureToggle" checked />
+              <span class="toolbar-switch-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg></span>
+              <span>Quick Measure</span>
+            </label>
+            <label class="toolbar-switch" title="Enable terminal-to-terminal wiring">
+              <input type="checkbox" id="wiringToggle" checked />
+              <span class="toolbar-switch-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg></span>
+              <span>Wiring</span>
+            </label>
+            <button class="tool-button" id="centerViewBtn" title="Center circuit in workspace"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5M3 8l5-5M16 3l5 5M3 16l5 5M16 21l5-5"/></svg><span>Center</span></button>
           </div>
           <span class="toolbar-divider"></span>
           <div class="tool-group">
             <button class="icon-tool" id="deleteToolBtn" title="Delete selected (Delete)"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M9 4h6l1 3H8zM6.5 7l.8 13h9.4l.8-13"/></svg></button>
-            <button class="icon-tool" id="fitBtn" title="Fit circuit to view"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M8 21H3v-5M21 16v5h-5M3 8l5-5M16 3l5 5M3 16l5 5M16 21l5-5"/></svg></button>
           </div>
           <div class="view-control-group">
             <div class="view-switch" role="group" aria-label="Editor view">
@@ -465,7 +513,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
               <button data-view="breadboard">Breadboard</button>
             </div>
             <label class="board-texture-toggle hidden" id="boardTextureToggleWrap" title="Show a perforated breadboard background">
-              <input type="checkbox" id="boardTextureToggle" checked />
+              <input type="checkbox" id="boardTextureToggle" />
               <span class="board-texture-check" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg></span>
               <span>Board holes</span>
             </label>
@@ -493,6 +541,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
               <pattern id="fineDots" width="10" height="10" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="0.85" fill="#586174" opacity=".48"/></pattern>
               <pattern id="boardLines" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="9" cy="9" r="2.1" fill="#323947"/><circle cx="9" cy="9" r=".7" fill="#141a25"/></pattern>
               <filter id="softGlow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <marker id="flowArrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="4.5" markerHeight="4.5" orient="auto"><path d="M0 1 9 5 0 9z" fill="#e3fff8"/></marker>
               <filter id="chipShadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#02050b" flood-opacity=".44"/></filter>
               <linearGradient id="sourceFace" x1="0" x2="1"><stop stop-color="#253856"/><stop offset="1" stop-color="#18243a"/></linearGradient>
               <linearGradient id="ledBody" x1="0" x2="1"><stop stop-color="#4cf2ac"/><stop offset=".55" stop-color="#14b77b"/><stop offset="1" stop-color="#098c62"/></linearGradient>
@@ -507,11 +556,12 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
             <g id="interactionLayer"></g>
           </svg>
           <div class="selection-quick-actions hidden" id="selectionQuickActions" role="toolbar" aria-label="Selected item actions"></div>
+          <aside class="lesson-dock hidden" id="lessonDock" aria-label="Guided lesson"></aside>
           <div class="canvas-bottom-left">
             <button class="canvas-toggle" id="snapBtn"><span class="snap-dot"></span>Snap <b>20</b></button>
             <button class="canvas-toggle" id="thermalBtn"><span class="heat-dot"></span>Heat map</button>
           </div>
-          <div class="minimap" aria-hidden="true"><div class="minimap-grid"><span></span><i></i><b></b></div><div id="konvaMinimap" class="konva-minimap"></div><div class="minimap-viewport"></div></div>
+          <aside class="quick-measure-panel" id="quickMeasurePanel" aria-live="polite" aria-label="Quick Measure"></aside>
         </div>
 
         <section class="lab-drawer" id="labDrawer" aria-label="Signal lab">
@@ -529,7 +579,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
         <div class="inspector-tabs" role="tablist">
           <button class="active" data-righttab="properties">Properties</button>
           <button data-righttab="measurements">Measurements</button>
-          <button data-righttab="assistant"><span class="tab-spark">✦</span>Inspector</button>
+          <button data-righttab="assistant"><span class="tab-spark">✦</span>Smart Inspector</button>
         </div>
         <div class="inspector-content" id="inspectorContent"></div>
       </aside>
@@ -596,6 +646,9 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     circuitStateChip: $('#circuitStateChip'),
     canvasHelp: $('#canvasHelp'),
     selectionQuickActions: $('#selectionQuickActions'),
+    quickMeasurePanel: $('#quickMeasurePanel'),
+    quickMeasureToggle: $('#quickMeasureToggle'),
+    wiringToggle: $('#wiringToggle'),
     inspectorContent: $('#inspectorContent'),
     labContent: $('#labContent'),
     labDrawer: $('#labDrawer'),
@@ -606,6 +659,8 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     exportMenu: $('#exportMenu'),
     jsonImportInput: $('#jsonImportInput'),
     newProjectBtn: $('#newProjectBtn'),
+    learnBtn: $('#learnBtn'),
+    lessonDock: $('#lessonDock'),
     themeToggleBtn: $('#themeToggleBtn'),
     themeLabel: $('#themeLabel'),
     aboutBtn: $('#aboutBtn'),
@@ -666,6 +721,10 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       title: 'Diode', subtitle: 'Rectifier / signal diode', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'D',
       defaults: { value: '1N4007', forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 1000 }, models: ['Generic diode', '1N4007', '1N4148']
     },
+    bridge: {
+      title: 'Bridge Rectifier', subtitle: 'Full-wave diode bridge', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'BR',
+      defaults: { value: 'KBP206', forwardVoltage: 1.4, maxCurrent: 2, reverseVoltage: 600 }, models: ['Generic bridge rectifier', 'KBP206', 'W04']
+    },
     zener: {
       title: 'Zener Diode', subtitle: 'Voltage reference', group: 'Semiconductors', category: 'semi', iconClass: 'part-semi', prefix: 'DZ',
       defaults: { value: '5.1 V', zenerVoltage: 5.1, powerRating: 1 }, models: ['Generic Zener', '1N4733A · 5.1 V', 'BZX55C12 · 12 V']
@@ -712,6 +771,9 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     'Generic diode': { detail: 'Constant 0.7 V forward model', params: { forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 100 } },
     '1N4007': { detail: '1 A rectifier · 1000 V repetitive reverse voltage', params: { value: '1N4007', forwardVoltage: 0.7, maxCurrent: 1, reverseVoltage: 1000 } },
     '1N4148': { detail: '100 mA fast switching diode · 100 V', params: { value: '1N4148', forwardVoltage: 0.72, maxCurrent: 0.1, reverseVoltage: 100 } },
+    'Generic bridge rectifier': { detail: 'Full-wave bridge model with two diode drops in the conducting path', params: { value: 'Bridge rectifier', forwardVoltage: 1.4, maxCurrent: 1, reverseVoltage: 400 } },
+    'KBP206': { detail: 'Single-phase bridge rectifier · 2 A · 600 V', params: { value: 'KBP206', forwardVoltage: 1.4, maxCurrent: 2, reverseVoltage: 600 } },
+    'W04': { detail: 'Single-phase bridge rectifier · 1.5 A · 400 V', params: { value: 'W04', forwardVoltage: 1.4, maxCurrent: 1.5, reverseVoltage: 400 } },
     'Generic Zener': { detail: 'Ideal shunt voltage reference', params: { zenerVoltage: 5.1, powerRating: 1 } },
     '1N4733A · 5.1 V': { detail: '5.1 V Zener · 1 W axial package', params: { value: '1N4733A', zenerVoltage: 5.1, powerRating: 1 } },
     'BZX55C12 · 12 V': { detail: '12 V Zener · 0.5 W axial package', params: { value: 'BZX55C12', zenerVoltage: 12, powerRating: 0.5 } },
@@ -732,7 +794,123 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     'TL081': { detail: 'JFET-input op-amp · 3 MHz GBW', params: { value: 'TL081', supply: '±15 V', gain: 200000, bandwidth: '3 MHz' } }
   };
 
-  const typeOrder = ['source', 'acsource', 'ground', 'resistor', 'capacitor', 'inductor', 'transformer', 'potentiometer', 'switch', 'diode', 'zener', 'led', 'bjt', 'mosfet', 'timer555', 'opamp'];
+  const LESSONS = [
+    {
+      id: 'led-resistor', icon: '◉', title: 'LED + Resistor', level: 'Starter', duration: '5 min',
+      summary: 'Build a safe LED indicator and learn why a resistor matters.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Drag DC Supply from Sources & references onto the canvas.' },
+        { kind: 'place', type: 'resistor', text: 'Add a resistor to limit current.', hint: 'A resistor protects the LED from too much current.' },
+        { kind: 'place', type: 'led', text: 'Add a green LED.', hint: 'Place the LED to the right of the resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add a ground reference.', hint: 'Every simple DC circuit needs a return path to GND.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Wire the supply to the resistor.', hint: 'Click or drag from the positive source terminal to one resistor terminal.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Wire the resistor to the LED.', hint: 'Connect the free resistor terminal to the LED input.' },
+        { kind: 'wire', types: ['led', 'ground'], text: 'Wire the LED to ground.', hint: 'Connect the LED output terminal to GND.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the return path.', hint: 'Connect the negative source terminal to GND.' },
+        { kind: 'simulate', text: 'Run the circuit.', hint: 'Press Simulate to see current flow and LED brightness.' }
+      ]
+    },
+    {
+      id: 'voltage-divider', icon: '÷', title: 'Voltage Divider', level: 'Starter', duration: '6 min',
+      summary: 'Use two resistors to create a lower voltage at a midpoint.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Start with a DC Supply.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'The two resistors form the divider.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Ground defines the reference voltage.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect the source to the first resistor.', hint: 'Start from the positive source terminal.' },
+        { kind: 'wire', types: ['resistor', 'resistor'], text: 'Connect the two resistors together.', hint: 'Their shared point is the divider output.' },
+        { kind: 'wire', types: ['resistor', 'ground'], text: 'Connect the lower resistor to ground.', hint: 'This completes the divider path.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Connect source negative to ground.', hint: 'Close the DC return path.' },
+        { kind: 'simulate', text: 'Run the divider.', hint: 'Use the Probe tool later to inspect the midpoint.' }
+      ]
+    },
+    {
+      id: 'rc-filter', icon: '∿', title: 'RC Low-pass Filter', level: 'Starter', duration: '7 min',
+      summary: 'Combine a resistor and capacitor to smooth a changing signal.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a source.', hint: 'Use a DC Supply or replace it with an AC Source after the lesson.' },
+        { kind: 'place', type: 'resistor', text: 'Add a series resistor.', hint: 'The resistor controls how quickly the capacitor charges.' },
+        { kind: 'place', type: 'capacitor', text: 'Add a capacitor.', hint: 'The capacitor stores charge and smooths the output.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Use GND for the return path.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect source to resistor.', hint: 'Wire from the source output to the resistor.' },
+        { kind: 'wire', types: ['resistor', 'capacitor'], text: 'Connect resistor to capacitor.', hint: 'Their shared point is the filtered output.' },
+        { kind: 'wire', types: ['capacitor', 'ground'], text: 'Connect capacitor to ground.', hint: 'This lets the capacitor charge and discharge.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the return path.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the filter.', hint: 'Open Signal Lab to observe the source and output.' }
+      ]
+    },
+    {
+      id: 'button-led', icon: '⏻', title: 'Push-button LED', level: 'Starter', duration: '6 min',
+      summary: 'Put a switch in series with an LED indicator.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Use the DC Supply component.' },
+        { kind: 'place', type: 'switch', text: 'Add an SPST switch.', hint: 'The switch controls whether current can flow.' },
+        { kind: 'place', type: 'resistor', text: 'Add a current-limiting resistor.', hint: 'Keep the LED protected.' },
+        { kind: 'place', type: 'led', text: 'Add an LED.', hint: 'Place it after the resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Finish with a ground reference.' },
+        { kind: 'wire', types: ['source', 'switch'], text: 'Wire source to switch.', hint: 'Use the positive terminal of the source.' },
+        { kind: 'wire', types: ['switch', 'resistor'], text: 'Wire switch to resistor.', hint: 'The switch should sit before the resistor.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Wire resistor to LED.', hint: 'Connect the resistor output to the LED input.' },
+        { kind: 'wire', types: ['led', 'ground'], text: 'Wire LED to ground.', hint: 'Connect the LED output to GND.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Close the return path.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the circuit.', hint: 'Try changing the switch position in Properties.' }
+      ]
+    },
+    {
+      id: 'npn-switch', icon: 'Q', title: 'NPN Transistor Switch', level: 'Intermediate', duration: '10 min',
+      summary: 'Explore how an NPN transistor can control an LED load.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'This supplies the load and control path.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'One is for the LED load and one helps limit base current.' },
+        { kind: 'place', type: 'led', text: 'Add an LED load.', hint: 'Place the LED after the load resistor.' },
+        { kind: 'place', type: 'bjt', text: 'Add an NPN transistor.', hint: 'Select the 2N2222 model if you want a real example part.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'The emitter return connects to ground.' },
+        { kind: 'wire', types: ['source', 'resistor'], text: 'Connect supply to a resistor.', hint: 'One resistor can feed the LED load.' },
+        { kind: 'wire', types: ['resistor', 'led'], text: 'Connect resistor to LED.', hint: 'This is the load path.' },
+        { kind: 'wire', types: ['led', 'bjt'], text: 'Connect LED to the transistor.', hint: 'Use the collector-side terminal of the transistor.' },
+        { kind: 'wire', types: ['bjt', 'ground'], text: 'Connect transistor to ground.', hint: 'Use the emitter-side terminal as the return path.' },
+        { kind: 'wire', types: ['resistor', 'bjt'], text: 'Add a base-control connection.', hint: 'Use the second resistor between a control point and the base.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the source return.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the switch example.', hint: 'Use the Inspector to review the estimated operating point.' }
+      ]
+    },
+    {
+      id: 'timer-blinker', icon: '555', title: '555 Timer Blinker', level: 'Intermediate', duration: '12 min',
+      summary: 'Arrange a 555 timer with RC timing parts for a blinking concept.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'The 555 needs a supply and ground reference.' },
+        { kind: 'place', type: 'timer555', text: 'Add a 555 timer.', hint: 'Use the NE555P model for a familiar part.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two timing resistors.', hint: 'Together they help set the charge and discharge timing.' },
+        { kind: 'place', type: 'capacitor', text: 'Add a timing capacitor.', hint: 'The capacitor creates the timing interval.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Use GND for the timer return.' },
+        { kind: 'wire', types: ['source', 'timer555'], text: 'Connect power to the 555.', hint: 'Wire source positive to the timer supply terminal.' },
+        { kind: 'wire', types: ['timer555', 'ground'], text: 'Ground the timer.', hint: 'Wire the timer ground terminal to GND.' },
+        { kind: 'wire', types: ['resistor', 'timer555'], text: 'Connect a timing resistor to the timer.', hint: 'Use the timing-related pins on the 555 symbol.' },
+        { kind: 'wire', types: ['capacitor', 'timer555'], text: 'Connect the capacitor to the timer.', hint: 'The capacitor shares the timing node.' },
+        { kind: 'wire', types: ['capacitor', 'ground'], text: 'Ground the timing capacitor.', hint: 'This completes the RC branch.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Complete the power return.', hint: 'Connect source negative to GND.' },
+        { kind: 'simulate', text: 'Run the timing example.', hint: 'Use Signal Lab to explore the generated signal concept.' }
+      ]
+    },
+    {
+      id: 'opamp-amplifier', icon: '△', title: 'Basic Op-Amp Amplifier', level: 'Intermediate', duration: '12 min',
+      summary: 'Arrange a simple feedback concept around an op-amp.',
+      steps: [
+        { kind: 'place', type: 'source', text: 'Place a DC supply.', hint: 'Use a source as a simple input/reference for this lesson.' },
+        { kind: 'place', type: 'opamp', text: 'Add an Op-Amp 741.', hint: 'The op-amp symbol has +, − and OUT terminals.' },
+        { kind: 'place', type: 'resistor', count: 2, text: 'Add two resistors.', hint: 'One can represent an input resistor and one feedback resistor.' },
+        { kind: 'place', type: 'ground', text: 'Add ground.', hint: 'Ground provides the common reference.' },
+        { kind: 'wire', types: ['source', 'opamp'], text: 'Connect a source to the op-amp.', hint: 'Use one of the input terminals.' },
+        { kind: 'wire', types: ['resistor', 'opamp'], text: 'Connect a resistor to an input.', hint: 'This creates the input/feedback concept.' },
+        { kind: 'wire', types: ['opamp', 'resistor'], text: 'Connect output through a resistor.', hint: 'Use the OUT terminal and the second resistor.' },
+        { kind: 'wire', types: ['resistor', 'ground'], text: 'Connect a resistor to ground.', hint: 'This gives the feedback path a reference.' },
+        { kind: 'wire', types: ['source', 'ground'], text: 'Connect source negative to ground.', hint: 'Complete the source reference.' },
+        { kind: 'simulate', text: 'Run the amplifier concept.', hint: 'Inspect the model and discuss feedback with the glossary card.' }
+      ]
+    }
+  ];
+
+  const typeOrder = ['source', 'acsource', 'ground', 'resistor', 'capacitor', 'inductor', 'transformer', 'potentiometer', 'switch', 'diode', 'bridge', 'zener', 'led', 'bjt', 'mosfet', 'timer555', 'opamp'];
   const DEFAULT_COMPONENTS = [
     { id: 'c-v1', type: 'source', label: 'V1', x: 170, y: 365, rotation: 0, model: 'Bench DC supply', props: { value: '9 V', voltage: 9, waveform: 'DC', frequency: 1000 } },
     { id: 'c-r1', type: 'resistor', label: 'R1', x: 345, y: 319, rotation: 0, model: 'Generic resistor', props: { value: '470 Ω', resistance: 470, rating: 0.25, tolerance: '5%' } },
@@ -753,7 +931,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       components: clone(DEFAULT_COMPONENTS),
       wires: clone(DEFAULT_WIRES),
       view: 'schematic', tool: 'select', selectedId: null, selectedWireId: null,
-      heatmap: false, snap: true, breadboardTexture: true, theme: 'dark', running: false, labTab: 'scope', rightTab: 'properties',
+      heatmap: false, snap: true, breadboardTexture: false, theme: 'dark', quickMeasureVisible: true, wiringEnabled: true, running: false, labTab: 'scope', rightTab: 'properties',
       meterMode: 'voltage', probeTerminals: []
     };
   }
@@ -765,6 +943,8 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   let selectedCategory = 'all';
   let viewBox = { x: 0, y: 0, w: 1200, h: 690 };
   let dragState = null;
+  let panState = null;
+  let panFrame = null;
   let wireStart = null;
   let wirePointer = null;
   let liveTimer = null;
@@ -772,6 +952,12 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   let labResize = null;
   let miniMapStage = null;
   let miniMapLayer = null;
+  let activeLessonId = null;
+  let lessonStepIndex = 0;
+  let beginnerMode = true;
+  let lessonHintVisible = false;
+  let lessonCompletionAnnounced = false;
+  let quickMeasureTarget = null;
 
   function applyTheme(persist = false) {
     const light = state.theme === 'light';
@@ -837,7 +1023,50 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   function getComponent(id) { return state.components.find(component => component.id === id); }
   function getWire(id) { return state.wires.find(wire => wire.id === id); }
   function componentMetric(id) { return simulation?.metrics?.[id] || { voltage: 0, current: 0, power: 0, temp: 25 }; }
-  function primaryValue(component) {
+  function getLesson(id = activeLessonId) { return LESSONS.find(lesson => lesson.id === id) || null; }
+  function getCurrentLessonStep() {
+    const lesson = getLesson();
+    return lesson?.steps[lessonStepIndex] || null;
+  }
+  function countLessonComponents(type) { return state.components.filter(component => component.type === type).length; }
+  function hasWireBetweenTypes(firstType, secondType) {
+    return state.wires.some(wire => {
+      const first = getComponent(wire.from.compId);
+      const second = getComponent(wire.to.compId);
+      if (!first || !second) return false;
+      return (first.type === firstType && second.type === secondType) || (first.type === secondType && second.type === firstType);
+    });
+  }
+  function isLessonStepComplete(step) {
+    if (!step) return false;
+    if (step.kind === 'place') return countLessonComponents(step.type) >= (step.count || 1);
+    if (step.kind === 'wire') return hasWireBetweenTypes(step.types[0], step.types[1]);
+    if (step.kind === 'simulate') return state.running;
+    return false;
+  }
+  function updateLessonProgress() {
+    const lesson = getLesson();
+    if (!lesson) { lessonStepIndex = 0; return; }
+    let index = 0;
+    while (index < lesson.steps.length && isLessonStepComplete(lesson.steps[index])) index++;
+    lessonStepIndex = index;
+    if (index === lesson.steps.length && !lessonCompletionAnnounced) {
+      lessonCompletionAnnounced = true;
+      showToast(`Lesson complete: ${lesson.title}. Great work!`);
+    }
+    if (index < lesson.steps.length) lessonCompletionAnnounced = false;
+  }
+  function getLessonTargetTypes() {
+    const step = getCurrentLessonStep();
+    if (!step || !beginnerMode) return [];
+    if (step.kind === 'place') return [step.type];
+    if (step.kind === 'wire') return step.types;
+    return [];
+  }
+  function isLessonComponentTarget(component) {
+    return Boolean(activeLessonId && beginnerMode && getLessonTargetTypes().includes(component.type));
+  }
+  function primaryValue(component) { 
     if (!component) return '';
     const p = component.props || {};
     if (component.type === 'resistor') return p.value || formatResistance(p.resistance);
@@ -860,6 +1089,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       case 'opamp': return [{ dx: -52, dy: -19, label: '−' }, { dx: -52, dy: 19, label: '+' }, { dx: 50, dy: 0, label: 'OUT' }, { dx: 0, dy: -43, label: 'V+' }, { dx: 0, dy: 43, label: 'V−' }];
       case 'potentiometer': return [{ dx: -58, dy: 0, label: '1' }, { dx: 58, dy: 0, label: '3' }, { dx: 0, dy: -42, label: 'W' }];
       case 'transformer': return [{ dx: -55, dy: -22, label: 'P1' }, { dx: -55, dy: 22, label: 'P2' }, { dx: 55, dy: -22, label: 'S1' }, { dx: 55, dy: 22, label: 'S2' }];
+      case 'bridge': return [{ dx: -48, dy: 0, label: '~1' }, { dx: 48, dy: 0, label: '~2' }, { dx: 0, dy: -48, label: '+' }, { dx: 0, dy: 48, label: '−' }];
       default: return [{ dx: -62, dy: 0, label: '1' }, { dx: 62, dy: 0, label: '2' }];
     }
   }
@@ -893,6 +1123,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     if (component.type === 'timer555') return { x: -61, y: -42, w: 122, h: 84 };
     if (component.type === 'opamp') return { x: -56, y: -47, w: 112, h: 94 };
     if (component.type === 'transformer') return { x: -58, y: -43, w: 116, h: 86 };
+    if (component.type === 'bridge') return { x: -55, y: -55, w: 110, h: 110 };
     if (component.type === 'potentiometer') return { x: -67, y: -48, w: 134, h: 96 };
     return { x: -67, y: -37, w: 134, h: 74 };
   }
@@ -911,6 +1142,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       potentiometer: '<path d="M2 16h8l3-7 5 14 5-14 5 14 3-7h8M22 3v12m0-12-4 4m4-4 4 4"/>',
       switch: '<path d="M4 20h8m20 0h8M12 20 30 9"/><circle cx="12" cy="20" r="1.5"/><circle cx="32" cy="20" r="1.5"/>',
       diode: '<path d="M2 15h12l10-8v16L14 15h-12m22-8v16m0-8h18"/>',
+      bridge: '<path d="M22 3 37 15 22 27 7 15Z"/><path d="M2 15h5m30 0h5M22 3v5m0 11v8M16 12h12M22 8v8"/>',
       zener: '<path d="M2 15h12l10-8v16L14 15h-12m22-8v4m0 4v4m0-4h18"/>',
       led: '<path d="M2 17h12l10-8v16l-10-8H2m22-8v16m0-8h18M28 7l5-4m-1 7 5-4"/>',
       bjt: '<circle cx="23" cy="15" r="8"/><path d="M3 15h12m8-5 10-6m-10 11 10 6m-4-4 4 0-2-3"/>',
@@ -931,6 +1163,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     if (type === 'transformer') return '<path class="part-pin" d="M-55 -22H-38M-55 22H-38M38 -22H55M38 22H55"/><rect class="bread-transformer" x="-38" y="-31" width="76" height="62" rx="7"/><path class="bread-transformer-line" d="M-28 -16h16m-16 11h16m24-11h16m-16 11h16"/>';
     if (type === 'potentiometer') return '<path class="part-pin" d="M-58 0H-25M25 0H58M0 -42V-25"/><circle class="bread-pot" cx="0" cy="0" r="25"/><circle class="bread-pot-shaft" cx="0" cy="0" r="9"/><path class="bread-screen-line" d="M0 -42V-5"/>';
     if (type === 'switch') return '<path class="part-pin" d="M-62 0H-34M34 0H62"/><rect class="bread-switch" x="-34" y="-16" width="68" height="32" rx="6"/><rect class="bread-switch-lever" x="-6" y="-20" width="12" height="21" rx="4"/>';
+    if (type === 'bridge') return '<path class="part-pin" d="M-48 0H-27M27 0H48M0 -48V-27M0 27V48"/><rect class="bread-bridge" x="-29" y="-29" width="58" height="58" rx="8"/><path class="bread-bridge-mark" d="M0 -20v12m-6-6h12M-20 0h9m22 0h9M0 8v12"/><text class="bread-bridge-text" x="-14" y="4">~</text><text class="bread-bridge-text" x="14" y="4">~</text>';
     if (type === 'diode' || type === 'zener') return '<path class="part-pin" d="M-62 0H-32M32 0H62"/><rect class="bread-diode" x="-32" y="-9" width="64" height="18" rx="9"/><rect class="bread-band silver" x="16" y="-9" width="4" height="18"/>';
     if (type === 'led') return '<path class="part-pin" d="M-62 0H-19M19 0H62"/><path class="bread-led" d="M-19 8v-11a19 19 0 0 1 38 0V8Z"/><rect class="bread-led-base" x="-20" y="7" width="40" height="8" rx="2"/><path class="bread-led-glint" d="M-7 -11c5-4 9-3 12 0"/>';
     if (type === 'bjt' || type === 'mosfet') return `<path class="part-pin" d="M${type === 'bjt' ? '-41 0H-18M16 -17 33 -27M16 17 33 27' : '-45 0H-17M17 -17 35 -27M17 17 35 27'}"/><path class="bread-transistor" d="M-18 20V-2a18 18 0 0 1 36 0v22Z"/><path class="bread-transistor-line" d="M-9 -9h18M-9 -3h18"/>`;
@@ -957,6 +1190,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     if (type === 'transformer') return '<path class="part-pin" d="M-55 -22H-37M-55 22H-37M37 -22H55M37 22H55"/><path class="part-stroke" d="M-37 -22c22 0 22 11 0 11 22 0 22 11 0 11M37 -22c-22 0-22 11 0 11-22 0-22 11 0 11M-5 -31V31M5 -31V31"/>';
     if (type === 'potentiometer') return '<path class="part-pin" d="M-62 0H-40M40 0H62M0 -42V-17"/><polyline class="part-stroke" points="-40,0 -33,-14 -23,14 -13,-14 -3,14 7,-14 17,14 27,-14 37,14 40,0"/><path class="part-accent" d="M0 -35V-6m0-29-7 8m7-8 7 8"/>';
     if (type === 'switch') return '<path class="part-pin" d="M-62 0H-29M29 0H62"/><circle class="part-fill" cx="-27" cy="0" r="3"/><circle class="part-fill" cx="28" cy="0" r="3"/><path class="part-stroke" d="M-25 -2 20 -23"/>';
+    if (type === 'bridge') return '<path class="part-pin" d="M-48 0H-30M30 0H48M0 -48V-30M0 30V48"/><path class="part-fill" d="M0 -30 30 0 0 30 -30 0Z"/><path class="part-stroke" d="M0 -21v14m-7-7h14M-21 0h10m22 0h10M0 7v14"/><text class="bridge-ac" x="-15" y="4">~</text><text class="bridge-ac" x="15" y="4">~</text>';
     if (type === 'diode' || type === 'zener' || type === 'led') {
       const zener = type === 'zener' ? '<path class="part-stroke" d="M17 -20v8M17 12v8"/>' : '';
       const arrows = type === 'led' ? '<path class="part-accent" d="M2 -29 10 -37M8 -22l8 -8"/><path class="part-accent" d="m8 -37 2 7m0-7-7 2M14 -30l2 7m0-7-7 2"/>' : '';
@@ -971,7 +1205,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   }
 
   function terminalMarkup(component) {
-    const visibleRadius = state.tool === 'wire' ? 6.1 : 4.2;
+    const visibleRadius = wireStart ? 6.1 : 4.2;
     return getPins(component).map((pin, index) => `<g class="terminal-group" data-terminal-comp="${component.id}" data-terminal-pin="${index}"><circle class="terminal-hit" cx="${pin.dx}" cy="${pin.dy}" r="11"/><circle class="terminal" cx="${pin.dx}" cy="${pin.dy}" r="${visibleRadius}"/><text class="pin-label" x="${pin.dx}" y="${pin.dy - (pin.dy < 0 ? 8 : pin.dy > 0 ? -8 : 10)}">${escapeHTML(pin.label)}</text></g>`).join('');
   }
   function heatForComponent(component) {
@@ -984,10 +1218,13 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     const selected = state.selectedId === component.id;
     const metric = componentMetric(component.id);
     const heat = heatForComponent(component);
+    const lessonTarget = isLessonComponentTarget(component);
+    const ledIntensity = component.type === 'led' && state.running ? Math.max(0, Math.min(1, metric.current / Math.max(.001, Number(component.props.maxCurrent || .02)))) : 0;
+    const ledGlow = 4 + ledIntensity * 17;
     const labelY = bounds.y - 10;
     const valueY = bounds.y + bounds.h + 14;
     const thermalSize = Math.max(bounds.w, bounds.h) * 0.88;
-    return `<g class="component ${selected ? 'selected' : ''}" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
+    return `<g class="component ${selected ? 'selected' : ''} ${lessonTarget ? 'lesson-target' : ''} ${ledIntensity > .02 ? 'led-lit' : ''}" style="--led-intensity:${ledIntensity.toFixed(3)};--led-glow:${ledGlow.toFixed(1)}px" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
       <circle class="thermal-halo" cx="0" cy="0" r="${thermalSize}" fill="${heat.fill}" opacity="${heat.opacity}"/>
       <rect class="component-hitbox" x="${bounds.x - 9}" y="${bounds.y - 9}" width="${bounds.w + 18}" height="${bounds.h + 18}" rx="10"/>
       <rect class="selection-box" x="${bounds.x - 6}" y="${bounds.y - 6}" width="${bounds.w + 12}" height="${bounds.h + 12}" rx="8"/>
@@ -998,26 +1235,36 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     </g>`;
   }
 
-  function wirePath(wire) {
-    const from = getTerminalFromPoint(wire.from);
-    const to = getTerminalFromPoint(wire.to);
+  function routedWirePath(from, to) {
     if (!from || !to) return '';
     const dx = Math.abs(to.x - from.x), dy = Math.abs(to.y - from.y);
     if (dx < 25 || dy < 20) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
     const middle = Math.round(((from.x + to.x) / 2) / 20) * 20;
     return `M ${from.x} ${from.y} H ${middle} V ${to.y} H ${to.x}`;
   }
+  function wirePath(wire, reverse = false) {
+    const from = getTerminalFromPoint(reverse ? wire.to : wire.from);
+    const to = getTerminalFromPoint(reverse ? wire.from : wire.to);
+    return routedWirePath(from, to);
+  }
   function wireClass(wire) {
     const classes = ['wire'];
-    if (simulation?.shortCircuit) classes.push('warn');
-    else if (state.running) classes.push('active');
+    const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
+    if (isActive && simulation?.shortCircuit) classes.push('warn');
+    else if (isActive) classes.push('active');
     if (state.selectedWireId === wire.id) classes.push('selected');
     return classes.join(' ');
   }
   function renderWires() {
     const endpointCounts = new Map();
     state.wires.forEach(wire => [wire.from, wire.to].forEach(point => endpointCounts.set(pinKey(point), (endpointCounts.get(pinKey(point)) || 0) + 1)));
-    const paths = state.wires.map(wire => { const path = wirePath(wire); return `<path class="wire-hit" data-wire-id="${wire.id}" d="${path}"/><path class="${wireClass(wire)}" data-wire-id="${wire.id}" d="${path}"/>`; }).join('');
+    const paths = state.wires.map(wire => {
+      const path = wirePath(wire);
+      const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
+      const direction = simulation?.wireDirections?.[wire.id];
+      const flow = isActive ? `<path class="wire-flow" marker-end="url(#flowArrow)" d="${wirePath(wire, direction === 'reverse')}"/>` : '';
+      return `<path class="wire-hit" data-wire-id="${wire.id}" d="${path}"/><path class="${wireClass(wire)}" data-wire-id="${wire.id}" d="${path}"/>${flow}`;
+    }).join('');
     const junctions = [...endpointCounts.entries()].filter(([, count]) => count > 1).map(([key]) => {
       const [compId, pin] = key.split(':');
       const point = getTerminalFromPoint({ compId, pin: Number(pin) });
@@ -1068,6 +1315,25 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     }
     return null;
   }
+  function componentOverlayBounds(component) {
+    const bounds = getBounds(component);
+    const corners = [
+      { x: bounds.x, y: bounds.y },
+      { x: bounds.x + bounds.w, y: bounds.y },
+      { x: bounds.x + bounds.w, y: bounds.y + bounds.h },
+      { x: bounds.x, y: bounds.y + bounds.h }
+    ].map(corner => {
+      const rotated = rotatePoint(corner.x, corner.y, component.rotation || 0);
+      return svgPointToCanvasOverlay({ x: component.x + rotated.x, y: component.y + rotated.y });
+    });
+    if (corners.some(point => !point)) return null;
+    return {
+      left: Math.min(...corners.map(point => point.x)),
+      right: Math.max(...corners.map(point => point.x)),
+      top: Math.min(...corners.map(point => point.y)),
+      bottom: Math.max(...corners.map(point => point.y))
+    };
+  }
   function svgPointToCanvasOverlay(point) {
     try {
       const ctm = dom.canvas.getScreenCTM?.();
@@ -1096,19 +1362,95 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       : `${quickActionButton('rewire', 'Reconnect wire')}${quickActionButton('delete', 'Remove wire', true)}`;
     toolbar.innerHTML = `<span class="selection-action-label">${escapeHTML(label)}</span>${actions}`;
     toolbar.classList.remove('hidden');
-    const anchor = selectedItemAnchor();
-    const overlayPoint = anchor && svgPointToCanvasOverlay(anchor);
-    if (!overlayPoint) {
-      toolbar.classList.add('hidden');
-      return;
-    }
     const wrap = dom.canvasWrap.getBoundingClientRect();
+    const toolbarHeight = Math.max(36, toolbar.offsetHeight);
     const halfWidth = Math.max(75, toolbar.offsetWidth / 2);
-    const below = overlayPoint.y < 72;
-    const x = Math.max(halfWidth + 8, Math.min(wrap.width - halfWidth - 8, overlayPoint.x));
+    let anchorX = 0;
+    let top = 0;
+    let below = false;
+    if (component) {
+      const bounds = componentOverlayBounds(component);
+      if (!bounds) { toolbar.classList.add('hidden'); return; }
+      anchorX = (bounds.left + bounds.right) / 2;
+      const aboveAnchor = bounds.top - 25;
+      const belowAnchor = bounds.bottom + 27;
+      const fitsAbove = aboveAnchor - toolbarHeight >= 8;
+      const fitsBelow = belowAnchor + toolbarHeight <= wrap.height - 8;
+      below = !fitsAbove && fitsBelow;
+      top = below ? belowAnchor : Math.max(toolbarHeight + 8, aboveAnchor);
+    } else {
+      const anchor = selectedItemAnchor();
+      const point = anchor && svgPointToCanvasOverlay(anchor);
+      if (!point) { toolbar.classList.add('hidden'); return; }
+      anchorX = point.x;
+      const fitsAbove = point.y - 14 - toolbarHeight >= 8;
+      const fitsBelow = point.y + 14 + toolbarHeight <= wrap.height - 8;
+      below = !fitsAbove && fitsBelow;
+      top = below ? point.y + 14 : Math.max(toolbarHeight + 8, point.y - 14);
+    }
+    const x = Math.max(halfWidth + 8, Math.min(wrap.width - halfWidth - 8, anchorX));
     toolbar.classList.toggle('below', below);
     toolbar.style.left = `${x}px`;
-    toolbar.style.top = `${below ? overlayPoint.y + 18 : overlayPoint.y - 12}px`;
+    toolbar.style.top = `${top}px`;
+  }
+  function quickMeasureNodeVoltage(target, sim) {
+    const component = getComponent(target.compId);
+    if (!component) return null;
+    if (component.type === 'ground') return 0;
+    if (component.id === sim.source?.id) return target.pin === 0 ? sim.sourceVoltage : 0;
+    const value = sim.nodeVoltages?.get(`${target.compId}:${target.pin}`);
+    return Number.isFinite(value) ? value : null;
+  }
+  function quickMeasureRow(label, value, subtle = '') {
+    return `<div class="quick-measure-row"><span>${escapeHTML(label)}</span><b>${escapeHTML(value)}</b>${subtle ? `<small>${escapeHTML(subtle)}</small>` : ''}</div>`;
+  }
+  function renderQuickMeasurePanel() {
+    const panel = dom.quickMeasurePanel;
+    if (!panel) return;
+    if (!state.quickMeasureVisible) {
+      panel.classList.add('hidden');
+      return;
+    }
+    panel.classList.remove('hidden');
+    const sim = simulation || calculateSimulation();
+    let content = '';
+    let hasTarget = false;
+    if (quickMeasureTarget?.kind === 'terminal') {
+      const component = getComponent(quickMeasureTarget.compId);
+      const pin = component && getPins(component)[quickMeasureTarget.pin];
+      if (component && pin) {
+        hasTarget = true;
+        const voltage = quickMeasureNodeVoltage(quickMeasureTarget, sim);
+        const connected = sim.hasActivePath && sim.topology.reachableFromPositive.has(`${component.id}:${quickMeasureTarget.pin}`);
+        content = `<div class="quick-measure-kicker">Node readout</div><h4>${escapeHTML(component.label)} · ${escapeHTML(pin.label)}</h4><div class="quick-measure-value">${voltage === null ? '—' : formatVoltage(voltage)}</div><p>${voltage === null ? 'No estimated voltage is available because this node is outside a complete conducting path.' : connected ? 'Estimated relative to GND on the active path.' : 'Reference measurement relative to GND.'}</p>${quickMeasureRow('Reference', 'GND')}`;
+      }
+    } else if (quickMeasureTarget?.kind === 'wire') {
+      const wire = getWire(quickMeasureTarget.wireId);
+      if (wire) {
+        hasTarget = true;
+        const active = sim.activeWireIds?.has(wire.id);
+        const reversed = sim.wireDirections?.[wire.id] === 'reverse';
+        const start = reversed ? wire.to : wire.from;
+        const end = reversed ? wire.from : wire.to;
+        content = `<div class="quick-measure-kicker">Branch readout</div><h4>Wire current</h4><div class="quick-measure-value">${active ? formatCurrent(sim.current) : '0 A'}</div><p>${active ? `${escapeHTML(terminalDescription(start))} → ${escapeHTML(terminalDescription(end))}` : 'This wire is not on a complete conducting path.'}</p>${quickMeasureRow('Direction', active ? 'Active path' : 'No current')}`;
+      }
+    } else if (quickMeasureTarget?.kind === 'component') {
+      const component = getComponent(quickMeasureTarget.compId);
+      if (component) {
+        hasTarget = true;
+        const metric = sim.metrics?.[component.id] || { voltage: 0, current: 0, power: 0 };
+        const active = sim.activeComponentIds?.has(component.id);
+        content = `<div class="quick-measure-kicker">Component readout</div><h4>${escapeHTML(component.label)} · ${escapeHTML(partData(component.type).title)}</h4><div class="quick-measure-grid">${quickMeasureRow('Voltage drop', active ? formatVoltage(metric.voltage) : '—')}${quickMeasureRow('Current', active ? formatCurrent(metric.current) : '0 A')}${quickMeasureRow('Power', active ? formatPower(metric.power) : '0 W')}</div><p>${active ? 'Estimated values for this component on the active path.' : 'This component is outside the current conducting path.'}</p>`;
+      }
+    }
+    if (!hasTarget) {
+      content = `<div class="quick-measure-kicker">Circuit overview</div><h4>Quick Measure</h4><div class="quick-measure-grid">${quickMeasureRow('Parts', String(state.components.length))}${quickMeasureRow('Wires', String(state.wires.length))}${quickMeasureRow('Input', sim.source ? formatVoltage(sim.sourceVoltage) : '—')}${quickMeasureRow('Active current', sim.hasActivePath ? formatCurrent(sim.current) : '—')}</div><p>${sim.hasActivePath ? 'Click a node, wire or component with Quick Measure to inspect it.' : 'Run or complete a circuit, then click a node, wire or component to inspect it.'}</p>`;
+    }
+    panel.innerHTML = `<div class="quick-measure-head"><span><i>⌁</i>Quick Measure</span>${hasTarget ? '<button data-quick-measure-action="clear" title="Clear readout" aria-label="Clear readout">×</button>' : ''}</div>${content}`;
+  }
+  function setQuickMeasureTarget(target) {
+    quickMeasureTarget = target;
+    renderQuickMeasurePanel();
   }
   function renderBreadboardBackground() {
     if (state.view !== 'breadboard' || !state.breadboardTexture) return '';
@@ -1119,61 +1461,221 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       <rect x="-2000" y="330" width="6000" height="20" fill="#b9b19e" opacity=".75"/>`;
   }
 
-  function calculateSimulation() {
+  function conductiveTopology(source) {
+    const forwardEdges = new Map();
+    const reverseEdges = new Map();
+    const key = (compId, pin) => `${compId}:${pin}`;
+    const addDirected = (from, to) => {
+      if (!forwardEdges.has(from)) forwardEdges.set(from, []);
+      if (!reverseEdges.has(to)) reverseEdges.set(to, []);
+      forwardEdges.get(from).push(to);
+      reverseEdges.get(to).push(from);
+    };
+    const addBidirectional = (a, b) => { addDirected(a, b); addDirected(b, a); };
+    const pin = (component, index) => key(component.id, index);
+
+    state.wires.forEach(wire => addBidirectional(key(wire.from.compId, wire.from.pin), key(wire.to.compId, wire.to.pin)));
+    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
+    state.components.forEach(component => {
+      const pins = getPins(component);
+      if (pins.length < 2) return;
+      const pair = (a = 0, b = 1) => addBidirectional(pin(component, a), pin(component, b));
+      if (['resistor', 'inductor'].includes(component.type)) pair();
+      else if (component.type === 'capacitor' && alternatingSource) pair();
+      else if (component.type === 'potentiometer') { addBidirectional(pin(component, 0), pin(component, 2)); addBidirectional(pin(component, 2), pin(component, 1)); }
+      else if (component.type === 'switch' && component.props?.position === 'Closed') pair();
+      else if (['diode', 'led', 'zener'].includes(component.type)) addDirected(pin(component, 0), pin(component, 1));
+      else if (component.type === 'bridge') {
+        // Educational full-wave bridge approximation: AC terminals feed +, and − returns to either AC terminal.
+        addDirected(pin(component, 0), pin(component, 2));
+        addDirected(pin(component, 1), pin(component, 2));
+        addDirected(pin(component, 3), pin(component, 0));
+        addDirected(pin(component, 3), pin(component, 1));
+      } else if (component.type === 'bjt' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
+        addDirected(pin(component, 1), pin(component, 2));
+      } else if (component.type === 'mosfet' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
+        addDirected(pin(component, 1), pin(component, 2));
+      }
+    });
+
+    const grounds = state.components.filter(component => component.type === 'ground');
+    for (let index = 1; index < grounds.length; index++) addBidirectional(pin(grounds[0], 0), pin(grounds[index], 0));
+    if (!source) return { hasActivePath: false, activeWireIds: new Set(), wireDirections: {}, reachableFromPositive: new Set(), reachesNegative: new Set() };
+
+    const walk = (start, edges) => {
+      const visited = new Set([start]);
+      const queue = [start];
+      while (queue.length) {
+        const current = queue.shift();
+        (edges.get(current) || []).forEach(next => { if (!visited.has(next)) { visited.add(next); queue.push(next); } });
+      }
+      return visited;
+    };
+    const start = pin(source, 0);
+    const target = pin(source, 1);
+    const reachableFromPositive = walk(start, forwardEdges);
+    const reachesNegative = walk(target, reverseEdges);
+    const hasActivePath = reachableFromPositive.has(target);
+    const activeWireIds = new Set();
+    const wireDirections = {};
+    if (hasActivePath) {
+      state.wires.forEach(wire => {
+        const from = key(wire.from.compId, wire.from.pin);
+        const to = key(wire.to.compId, wire.to.pin);
+        if (reachableFromPositive.has(from) && reachesNegative.has(to)) {
+          activeWireIds.add(wire.id);
+          wireDirections[wire.id] = 'forward';
+        } else if (reachableFromPositive.has(to) && reachesNegative.has(from)) {
+          activeWireIds.add(wire.id);
+          wireDirections[wire.id] = 'reverse';
+        }
+      });
+    }
+    return { hasActivePath, activeWireIds, wireDirections, reachableFromPositive, reachesNegative };
+  }
+  function componentOnActivePath(component, topology, source) {
+    if (!topology.hasActivePath) return false;
+    const forward = topology.reachableFromPositive;
+    const reverse = topology.reachesNegative;
+    const node = index => `${component.id}:${index}`;
+    const pair = (a = 0, b = 1, directed = false) => (forward.has(node(a)) && reverse.has(node(b))) || (!directed && forward.has(node(b)) && reverse.has(node(a)));
+    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
+    if (['resistor', 'inductor'].includes(component.type)) return pair();
+    if (component.type === 'capacitor') return alternatingSource && pair();
+    if (component.type === 'potentiometer') return pair(0, 2) || pair(2, 1);
+    if (component.type === 'switch') return component.props?.position === 'Closed' && pair();
+    if (['diode', 'led', 'zener'].includes(component.type)) return pair(0, 1, true);
+    if (component.type === 'bridge') return pair(0, 2, true) || pair(1, 2, true) || pair(3, 0, true) || pair(3, 1, true);
+    if (['bjt', 'mosfet'].includes(component.type)) return pair(1, 2, true);
+    if (component.type === 'ground') return forward.has(node(0)) && reverse.has(node(0));
+    return false;
+  }
+  function estimateNodeVoltages(sim) {
+    const values = new Map();
+    if (!sim?.source || !sim.hasActivePath) return values;
+    const edges = new Map();
+    const addEdge = (from, to, drop = 0) => {
+      if (!edges.has(from)) edges.set(from, []);
+      edges.get(from).push({ to, drop });
+    };
+    const node = (component, pin) => `${component.id}:${pin}`;
+    const topology = sim.topology;
+    const forward = topology.reachableFromPositive;
+    const reverse = topology.reachesNegative;
+    const activePair = (component, a = 0, b = 1, directed = false) => {
+      const first = node(component, a), second = node(component, b);
+      if (forward.has(first) && reverse.has(second)) return { from: a, to: b };
+      if (!directed && forward.has(second) && reverse.has(first)) return { from: b, to: a };
+      return null;
+    };
+    state.wires.forEach(wire => {
+      if (!sim.activeWireIds.has(wire.id)) return;
+      const reverseDirection = sim.wireDirections[wire.id] === 'reverse';
+      const from = reverseDirection ? `${wire.to.compId}:${wire.to.pin}` : `${wire.from.compId}:${wire.from.pin}`;
+      const to = reverseDirection ? `${wire.from.compId}:${wire.from.pin}` : `${wire.to.compId}:${wire.to.pin}`;
+      addEdge(from, to, 0);
+    });
+    state.components.forEach(component => {
+      if (!sim.activeComponentIds.has(component.id) || component.id === sim.source.id) return;
+      const resistorDrop = Math.abs(sim.current * parseNumber(component.props?.resistance ?? component.props?.value, 0));
+      const addPair = (a, b, drop, directed = false) => {
+        const active = activePair(component, a, b, directed);
+        if (active) addEdge(node(component, active.from), node(component, active.to), drop);
+      };
+      if (component.type === 'resistor') addPair(0, 1, resistorDrop);
+      else if (component.type === 'potentiometer') { addPair(0, 2, resistorDrop / 2); addPair(2, 1, resistorDrop / 2); }
+      else if (['inductor', 'switch', 'capacitor'].includes(component.type)) addPair(0, 1, 0);
+      else if (component.type === 'diode') addPair(0, 1, Number(component.props?.forwardVoltage || .7), true);
+      else if (component.type === 'led') addPair(0, 1, Number(component.props?.forwardVoltage || 2.1), true);
+      else if (component.type === 'zener') addPair(0, 1, Number(component.props?.zenerVoltage || 5.1), true);
+      else if (component.type === 'bridge') {
+        addPair(0, 2, Number(component.props?.forwardVoltage || 1.4), true);
+        addPair(1, 2, Number(component.props?.forwardVoltage || 1.4), true);
+        addPair(3, 0, 0, true);
+        addPair(3, 1, 0, true);
+      } else if (['bjt', 'mosfet'].includes(component.type)) addPair(1, 2, .2, true);
+    });
+    const start = node(sim.source, 0);
+    values.set(start, sim.sourceVoltage);
+    const queue = [start];
+    while (queue.length) {
+      const current = queue.shift();
+      const voltage = values.get(current);
+      (edges.get(current) || []).forEach(edge => {
+        const nextVoltage = voltage - edge.drop;
+        if (!values.has(edge.to)) { values.set(edge.to, nextVoltage); queue.push(edge.to); }
+      });
+    }
+    values.set(node(sim.source, 1), 0);
+    state.components.filter(component => component.type === 'ground').forEach(component => values.set(node(component, 0), 0));
+    return values;
+  }
+  function calculateSimulation() { 
     const components = state.components;
     const source = components.find(c => c.type === 'source' || c.type === 'acsource');
     const sourceVoltage = source ? parseNumber(source.props.voltage ?? source.props.value, 0) : 0;
-    const resistors = components.filter(c => c.type === 'resistor' || c.type === 'potentiometer');
+    const topology = conductiveTopology(source);
+    const activeComponentIds = new Set();
+    components.forEach(component => {
+      if (component.id === source?.id || componentOnActivePath(component, topology, source)) activeComponentIds.add(component.id);
+    });
+    const resistors = components.filter(component => (component.type === 'resistor' || component.type === 'potentiometer') && activeComponentIds.has(component.id));
     const totalResistance = resistors.reduce((sum, resistor) => sum + Math.max(0, parseNumber(resistor.props.resistance ?? resistor.props.value, 0)), 0);
-    const diodes = components.filter(c => ['diode', 'led', 'zener'].includes(c.type));
+    const diodes = components.filter(component => ['diode', 'bridge', 'led', 'zener'].includes(component.type) && activeComponentIds.has(component.id));
     const forwardDrop = diodes.reduce((sum, component) => {
       if (component.type === 'led') return sum + Number(component.props.forwardVoltage || 2.1);
       if (component.type === 'zener') return sum + Number(component.props.zenerVoltage || 5.1);
+      if (component.type === 'bridge') return sum + Number(component.props.forwardVoltage || 1.4);
       return sum + Number(component.props.forwardVoltage || .7);
     }, 0);
-    const enoughWiring = state.wires.length >= Math.max(2, components.length - 1);
-    const noResistance = source && totalResistance < .5 && enoughWiring;
+    const enoughWiring = topology.hasActivePath;
+    const noResistance = source && totalResistance < .5 && topology.hasActivePath;
     let current = 0;
-    if (source && totalResistance > 0 && enoughWiring) current = Math.max(0, (sourceVoltage - forwardDrop) / totalResistance);
+    if (source && totalResistance > 0 && topology.hasActivePath) current = Math.max(0, (sourceVoltage - forwardDrop) / totalResistance);
     if (noResistance) current = Math.min(2, sourceVoltage * 2.5);
     const metrics = {};
     components.forEach(component => {
-      let voltage = 0, power = 0, componentCurrent = current;
+      const isActive = activeComponentIds.has(component.id);
+      let voltage = 0, power = 0, componentCurrent = isActive ? current : 0;
       if (component.type === 'source' || component.type === 'acsource') { voltage = sourceVoltage; power = sourceVoltage * current; }
       else if (component.type === 'resistor' || component.type === 'potentiometer') { const r = Math.max(0, parseNumber(component.props.resistance ?? component.props.value)); voltage = current * r; power = current * current * r; }
       else if (component.type === 'led') { voltage = Number(component.props.forwardVoltage || 2.1); power = voltage * current; }
       else if (component.type === 'diode') { voltage = Number(component.props.forwardVoltage || .7); power = voltage * current; }
+      else if (component.type === 'bridge') { voltage = Number(component.props.forwardVoltage || 1.4); power = voltage * current; }
       else if (component.type === 'zener') { voltage = Number(component.props.zenerVoltage || 5.1); power = voltage * current; }
       else if (component.type === 'capacitor') { voltage = sourceVoltage; componentCurrent = 0; }
-      else if (component.type === 'ground') { voltage = 0; componentCurrent = current; }
+      else if (component.type === 'ground') { voltage = 0; componentCurrent = isActive ? current : 0; }
       const temp = 25 + Math.min(65, power * 245);
       metrics[component.id] = { voltage, current: componentCurrent, power, temp };
     });
     const hasGround = components.some(c => c.type === 'ground');
     const outputVoltage = diodes.length ? forwardDrop : Math.max(0, sourceVoltage - (current * totalResistance));
-    return { source, sourceVoltage, totalResistance, forwardDrop, current, metrics, outputVoltage, hasGround, enoughWiring, shortCircuit: noResistance };
+    const result = { source, sourceVoltage, totalResistance, forwardDrop, current, metrics, outputVoltage, hasGround, enoughWiring, shortCircuit: noResistance, hasActivePath: topology.hasActivePath, activeWireIds: topology.activeWireIds, wireDirections: topology.wireDirections, activeComponentIds, topology };
+    result.nodeVoltages = estimateNodeVoltages(result);
+    return result;
   }
   function analyzeCircuit() {
     const sim = simulation || calculateSimulation();
     const issues = [];
     let health = 100;
-    if (!sim.source) { issues.push({ type: 'error', title: 'No source connected', text: 'Add a DC or AC source to drive this circuit.' }); health -= 50; }
-    if (!sim.hasGround) { issues.push({ type: 'error', title: 'Missing reference ground', text: 'SPICE-style analysis needs one GND node to resolve voltages.' }); health -= 30; }
-    if (state.wires.length < Math.max(2, state.components.length - 1)) { issues.push({ type: 'info', title: 'Circuit is still being wired', text: 'Connect the remaining terminals to complete the signal path.' }); health -= 8; }
-    if (sim.shortCircuit) { issues.push({ type: 'error', title: 'Potential short circuit', text: 'A source is connected with less than 0.5 Ω of series resistance.' }); health -= 55; }
+    if (!sim.source) { issues.push({ type: 'error', title: 'Your circuit needs power', text: 'Add a DC or AC source so the circuit has something to drive it.' }); health -= 50; }
+    if (!sim.hasGround) { issues.push({ type: 'error', title: 'Add a ground reference', text: 'Place GND and connect it to the return side of your circuit so voltages have a shared reference.' }); health -= 30; }
+    if (state.wires.length < Math.max(2, state.components.length - 1)) { issues.push({ type: 'info', title: 'Keep wiring the circuit', text: 'Connect the remaining terminals to complete a path from the source through the load and back to ground.' }); health -= 8; }
+    if (sim.source && sim.hasGround && state.wires.length >= Math.max(2, state.components.length - 1) && !sim.hasActivePath) { issues.push({ type: 'warn', title: 'No complete conducting path yet', text: 'Fluxa cannot find a path from source positive back to source negative. Check open switches, diode direction and disconnected wires.' }); health -= 18; }
+    if (sim.shortCircuit) { issues.push({ type: 'error', title: 'This may be a short circuit', text: 'Power is reaching the loop without enough resistance. Add a resistor before running the circuit again.' }); health -= 55; }
     state.components.filter(c => c.type === 'resistor').forEach(component => {
       const metric = componentMetric(component.id);
       const rating = Number(component.props.rating || .25);
-      if (metric.power > rating) { issues.push({ type: 'warn', title: `${component.label} exceeds its power rating`, text: `${formatPower(metric.power)} estimated versus ${rating} W rated. Choose a higher-wattage part.` }); health -= 22; }
+      if (metric.power > rating) { issues.push({ type: 'warn', title: `${component.label} may get too hot`, text: `Too much current is passing through it: about ${formatPower(metric.power)} for a ${rating} W part. Try increasing the resistance or using a higher-wattage resistor.` }); health -= 22; }
     });
     state.components.filter(c => c.type === 'led').forEach(component => {
       const metric = componentMetric(component.id);
       const max = Number(component.props.maxCurrent || .02);
-      if (metric.current > max) { issues.push({ type: 'warn', title: `${component.label} current is high`, text: `${formatCurrent(metric.current)} exceeds the ${formatCurrent(max)} model limit.` }); health -= 16; }
+      if (metric.current > max) { issues.push({ type: 'warn', title: `${component.label} needs more current limiting`, text: `The estimated current is ${formatCurrent(metric.current)}, above this LED model's ${formatCurrent(max)} limit. Increase the series resistor value.` }); health -= 16; }
     });
     if (!issues.some(issue => issue.type === 'error' || issue.type === 'warn') && sim.source && sim.hasGround && sim.enoughWiring) {
-      issues.unshift({ type: 'success', title: 'Bias and thermal load look healthy', text: `${formatCurrent(sim.current)} through the active path; no component model is over its nominal limit.` });
-      issues.push({ type: 'info', title: 'Model confidence: high', text: 'Local library parameters are applied to the selected market parts.' });
+      issues.unshift({ type: 'success', title: 'Nice work — this path looks safe', text: `${formatCurrent(sim.current)} is estimated through the active path, and the connected part models are within their basic limits.` });
+      issues.push({ type: 'info', title: 'Learning note', text: 'These values are educational estimates based on the selected parts and the simple circuit path.' });
     }
     return { issues: issues.slice(0, 4), health: Math.max(0, Math.min(100, health)) };
   }
@@ -1270,10 +1772,11 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     state.view = payload.view === 'breadboard' ? 'breadboard' : 'schematic';
     state.heatmap = Boolean(payload.heatmap);
     state.snap = payload.snap !== false;
-    state.breadboardTexture = payload.breadboardTexture !== false;
+    state.breadboardTexture = payload.breadboardTexture === true;
     state.selectedId = null;
     state.selectedWireId = null;
     state.probeTerminals = [];
+    quickMeasureTarget = null;
     wireStart = null;
     wirePointer = null;
   }
@@ -1334,18 +1837,32 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     });
     dom.componentList.innerHTML = types.length ? [...groups.entries()].map(([group, groupTypes]) => `<section class="component-group"><div class="component-group-title">${escapeHTML(group)} <span>${groupTypes.length}</span></div>${groupTypes.map(type => {
       const item = partData(type);
-      return `<div class="component-item" draggable="true" data-part-type="${type}" title="Drag ${escapeHTML(item.title)} onto the canvas">
+      const lessonSuggested = Boolean(activeLessonId && beginnerMode && getLessonTargetTypes().includes(type));
+      return `<div class="component-item ${lessonSuggested ? 'lesson-suggested' : ''}" draggable="true" data-part-type="${type}" title="${lessonSuggested ? `Lesson hint: add ${escapeHTML(item.title)}` : `Drag ${escapeHTML(item.title)} onto the canvas`}">
         <div class="part-icon ${item.iconClass}">${partIconSvg(type)}</div><div class="part-info"><b>${escapeHTML(item.title)}</b><span>${escapeHTML(item.subtitle)}</span></div><button class="part-add" data-add-type="${type}" aria-label="Add ${escapeHTML(item.title)}"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg></button></div>`;
     }).join('')}</section>`).join('') : '<div class="empty-library">No parts match that search.<br><br>Try a model name such as <b>2N2222</b>.</div>';
   }
 
+  function updateLabCollapseControl() {
+    const button = $('#collapseLabBtn');
+    if (!button) return;
+    const collapsed = dom.labDrawer.classList.contains('collapsed');
+    button.classList.toggle('collapsed', collapsed);
+    button.title = collapsed ? 'Expand lab' : 'Collapse lab';
+    button.setAttribute('aria-label', collapsed ? 'Expand Signal Lab' : 'Collapse Signal Lab');
+    button.setAttribute('aria-expanded', String(!collapsed));
+  }
   function renderToolbar() {
     applyTheme();
+    updateLabCollapseControl();
     dom.projectName.textContent = state.projectName;
-    $$('.tool-button').forEach(button => button.classList.toggle('active', button.dataset.tool === state.tool));
+    dom.learnBtn.classList.toggle('active', Boolean(activeLessonId));
+    $$('.tool-button[data-tool]').forEach(button => button.classList.toggle('active', button.dataset.tool === state.tool));
     $$('.view-switch button').forEach(button => button.classList.toggle('active', button.dataset.view === state.view));
     dom.boardTextureToggleWrap.classList.toggle('hidden', state.view !== 'breadboard');
     dom.boardTextureToggle.checked = state.breadboardTexture;
+    dom.quickMeasureToggle.checked = state.quickMeasureVisible;
+    dom.wiringToggle.checked = state.wiringEnabled;
     $$('.inspector-tabs button').forEach(button => button.classList.toggle('active', button.dataset.righttab === state.rightTab));
     $$('.lab-tabs button').forEach(button => button.classList.toggle('active', button.dataset.labtab === state.labTab));
     dom.thermalBtn.classList.toggle('active', state.heatmap);
@@ -1356,7 +1873,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     dom.circuitStateChip.classList.toggle('running', state.running);
     const analysis = analyzeCircuit();
     dom.circuitStateChip.querySelector('span').textContent = state.running ? `Live simulation · ${formatCurrent(simulation.current)}` : analysis.health > 75 ? 'Ready to simulate' : 'Review circuit alerts';
-    const helper = state.tool === 'wire' ? (wireStart ? 'Drag to a glowing terminal, or click one to finish' : 'Drag between glowing terminals to wire parts') : state.tool === 'probe' ? 'Click two terminals to measure between them' : 'Drag parts to move · press W to wire pins';
+    const helper = wireStart ? 'Drag to a glowing terminal, or click one to finish the wire' : state.tool === 'probe' ? 'Click two terminals to measure between them' : state.wiringEnabled ? 'Drag parts to move · drag empty space to pan · drag from a terminal to wire' : 'Wiring is paused · click a node, wire or component to update Quick Measure';
     dom.canvasHelp.innerHTML = helper.replace(/(W)/, '<kbd>$1</kbd>');
   }
   // Konva maintains the miniature spatial overview while the SVG layer renders the detailed Fritzing-compatible parts.
@@ -1391,7 +1908,10 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   function renderCanvas() {
     simulation = calculateSimulation();
     dom.canvas.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
-    dom.canvas.classList.toggle('wire-mode', state.tool === 'wire');
+    dom.canvas.classList.toggle('wire-mode', Boolean(wireStart));
+    dom.canvas.classList.toggle('simulating', state.running);
+    dom.canvas.classList.toggle('heatmap-on', state.running && state.heatmap);
+    dom.canvas.classList.toggle('lesson-active', Boolean(activeLessonId && beginnerMode));
     dom.canvas.classList.toggle('breadboard-view', state.view === 'breadboard');
     dom.canvasWrap.classList.toggle('breadboard-canvas', state.view === 'breadboard');
     dom.background.setAttribute('fill', state.view === 'breadboard' ? '#d8d1bd' : state.theme === 'light' ? 'url(#lightGridPattern)' : 'url(#gridPattern)');
@@ -1428,6 +1948,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     else if (component.type === 'potentiometer') fields += input('Total resistance', 'resistance', p.resistance || p.value) + input('Wiper position', 'position', `${p.position || 50}%`);
     else if (component.type === 'switch') fields += select('Position', 'position', p.position || 'Open', ['Open', 'Closed'], true);
     else if (component.type === 'diode') fields += input('Forward voltage', 'forwardVoltage', `${p.forwardVoltage || .7} V`) + input('Max current', 'maxCurrent', `${p.maxCurrent || 1} A`) + input('Reverse voltage', 'reverseVoltage', `${p.reverseVoltage || 100} V`, true);
+    else if (component.type === 'bridge') fields += input('Bridge voltage drop', 'forwardVoltage', `${p.forwardVoltage || 1.4} V`) + input('Max current', 'maxCurrent', `${p.maxCurrent || 2} A`) + input('Reverse voltage', 'reverseVoltage', `${p.reverseVoltage || 600} V`, true);
     else if (component.type === 'zener') fields += input('Zener voltage', 'zenerVoltage', `${p.zenerVoltage || 5.1} V`) + input('Power rating', 'powerRating', `${p.powerRating || 1} W`);
     else if (component.type === 'led') fields += input('Forward voltage', 'forwardVoltage', `${p.forwardVoltage || 2.1} V`) + input('Max current', 'maxCurrent', `${(p.maxCurrent || .02) * 1000} mA`) + select('Lens colour', 'color', p.color || 'Green', ['Green', 'Red', 'Blue', 'Amber'], true);
     else if (component.type === 'bjt') fields += select('Polarity', 'polarity', p.polarity || 'NPN', ['NPN', 'PNP']) + input('DC gain hFE', 'hfe', p.hfe || 100) + input('Collector current', 'maxCurrent', `${p.maxCurrent || .6} A`, true);
@@ -1436,14 +1957,39 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     else if (component.type === 'opamp') fields += input('Supply range', 'supply', p.supply || '±15 V') + input('Open-loop gain', 'gain', p.gain || 100000) + input('Bandwidth', 'bandwidth', p.bandwidth || '1 MHz', true);
     return `<div class="field-grid">${fields}</div>`;
   }
-  function renderSelectedProperties(component) {
+  function glossaryEntry(type) {
+    const entries = {
+      source: ['DC supply', 'Volt (V)', 'Provides electrical energy to a circuit.'],
+      acsource: ['AC source', 'Volt (V)', 'Produces a changing signal such as a sine or square wave.'],
+      ground: ['Ground', '0 V reference', 'Defines the reference point used to compare circuit voltages.'],
+      resistor: ['Resistor', 'Ohm (Ω)', 'Limits current and can divide voltage in a circuit.'],
+      capacitor: ['Capacitor', 'Farad (F)', 'Stores charge temporarily and can smooth or delay signals.'],
+      inductor: ['Inductor', 'Henry (H)', 'Stores energy in a magnetic field and resists rapid current changes.'],
+      transformer: ['Transformer', 'Turns ratio', 'Transfers energy between coils and can change voltage levels.'],
+      potentiometer: ['Potentiometer', 'Ohm (Ω)', 'An adjustable resistor often used as a control or voltage divider.'],
+      switch: ['Switch', 'Open / closed', 'Lets you intentionally allow or stop current flow.'],
+      diode: ['Diode', 'Forward voltage', 'Allows current mainly in one direction.'],
+      bridge: ['Bridge rectifier', 'Volt / Ampere', 'Uses four diodes to turn AC input into a single positive and negative DC output.'],
+      zener: ['Zener diode', 'Volt (V)', 'Uses reverse breakdown to provide a reference voltage.'],
+      led: ['LED', 'Forward current', 'A diode that emits light when current flows in the correct direction.'],
+      bjt: ['BJT transistor', 'Current gain hFE', 'A small base current can control a larger collector current.'],
+      mosfet: ['MOSFET', 'RDS(on)', 'A voltage at the gate controls current between drain and source.'],
+      timer555: ['555 timer', 'Time / frequency', 'A common IC used for delays, pulses and oscillators.'],
+      opamp: ['Operational amplifier', 'Voltage gain', 'An IC that compares two input voltages and drives an output.' ]
+    };
+    const [term, unit, description] = entries[type] || ['Electronic part', '—', 'A component used in an electronic circuit.'];
+    return { term, unit, description };
+  }
+  function renderSelectedProperties(component) { 
     const data = partData(component.type);
     const modelData = MODEL_DATA[component.model] || { detail: 'Generic simulation model', params: {} };
     const artworkNote = FRITZING_PARTS[component.type] ? ' · Fritzing SVG mapping ready' : '';
+    const glossary = glossaryEntry(component.type);
     const pins = getPins(component);
     return `<div class="inspector-section"><div class="selected-component-head"><div class="selected-icon">${partIconSvg(component.type)}</div><div><h3>${escapeHTML(data.title)}</h3><p>${escapeHTML(data.subtitle)}</p></div><span class="component-id-badge">${escapeHTML(component.label)}</span></div></div>
       <div class="inspector-section"><div class="section-label">Market model</div><div class="model-select-wrap"><label>Datasheet-linked part</label><select id="componentModel">${data.models.map(model => `<option ${model === component.model ? 'selected' : ''}>${escapeHTML(model)}</option>`).join('')}</select><div class="model-note">Technical parameters applied</div></div></div>
       <div class="inspector-section"><div class="section-label">Electrical properties</div>${propertyFields(component)}</div>
+      <div class="inspector-section"><div class="section-label">Quick glossary</div><div class="glossary-card"><div class="glossary-card-head"><b>${escapeHTML(glossary.term)}</b><span>${escapeHTML(glossary.unit)}</span></div><p>${escapeHTML(glossary.description)}</p></div></div>
       <div class="inspector-section"><div class="section-label">Terminals</div><div class="pin-list">${pins.map((pin, index) => `<div class="pin-item"><b>${index + 1}</b>${escapeHTML(pin.label)}</div>`).join('')}</div></div>
       <div class="inspector-section"><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6zM14 3v5h5M9 13h6M9 17h6"/></svg>Datasheet parameters active</div><p>${escapeHTML(modelData.detail)}${escapeHTML(artworkNote)}</p></div></div>
       <div class="inspector-section"><div class="property-actions"><button data-action="rotate">↻ Rotate 90°</button><button class="danger" data-action="delete">Delete part</button></div></div>`;
@@ -1483,7 +2029,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   function renderAssistant() {
     const result = analyzeCircuit();
     const icon = { success: '✓', info: 'i', warn: '!', error: '×' };
-    dom.inspectorContent.innerHTML = `<div class="ai-hero"><div class="ai-hero-top"><div class="ai-avatar">✦</div><div><h3>Fluxa Circuit Inspector</h3><p>Live topology, bias and thermal checks</p></div></div><div class="health-meter"><i style="width:${result.health}%"></i></div><div class="health-row"><span>Circuit health</span><b>${result.health}/100</b></div></div><div class="issue-list">${result.issues.map(issue => `<div class="issue ${issue.type}"><div class="issue-icon">${icon[issue.type]}</div><div><b>${escapeHTML(issue.title)}</b><p>${escapeHTML(issue.text)}</p></div></div>`).join('')}</div><button class="ai-action" data-action="autotune">✦ Auto-tune this circuit</button><div class="inspector-section"><div class="section-label">How Fluxa checked it</div><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M5 12h4l2-6 4 12 2-6h2"/></svg>Local simulation snapshot</div><p>Node connectivity, model limits, estimated power loss and DC operating point were evaluated together.</p></div></div>`;
+    dom.inspectorContent.innerHTML = `<div class="ai-hero"><div class="ai-hero-top"><div class="ai-avatar">✦</div><div><h3>Smart Circuit Inspector</h3><p>Friendly topology, current and thermal checks</p></div></div><div class="health-meter"><i style="width:${result.health}%"></i></div><div class="health-row"><span>Circuit health</span><b>${result.health}/100</b></div></div><div class="issue-list">${result.issues.map(issue => `<div class="issue ${issue.type}"><div class="issue-icon">${icon[issue.type]}</div><div><b>${escapeHTML(issue.title)}</b><p>${escapeHTML(issue.text)}</p></div></div>`).join('')}</div><button class="ai-action" data-action="autotune">✦ Auto-tune this circuit</button><div class="inspector-section"><div class="section-label">How Fluxa checked it</div><div class="datasheet-card"><div><svg viewBox="0 0 24 24"><path d="M5 12h4l2-6 4 12 2-6h2"/></svg>Educational circuit estimate</div><p>Fluxa checked basic connectivity, selected part limits and estimated DC power so you can learn what to adjust next.</p></div></div>`;
   }
   function renderInspector() {
     if (state.rightTab === 'measurements') renderMeasurements();
@@ -1533,8 +2079,11 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   function updateLabDensity() {
     if (!dom.labDrawer) return;
     const height = dom.labDrawer.getBoundingClientRect().height;
-    const compact = !dom.labDrawer.classList.contains('collapsed') && height > 0 && height < 180;
-    const micro = compact && height < 140;
+    const active = !dom.labDrawer.classList.contains('collapsed') && height > 0;
+    const dense = active && height < 205;
+    const compact = active && height < 162;
+    const micro = active && height < 124;
+    dom.labDrawer.classList.toggle('dense', dense);
     dom.labDrawer.classList.toggle('compact', compact);
     dom.labDrawer.classList.toggle('micro', micro);
   }
@@ -1543,7 +2092,32 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     if (dom.labDrawer.classList.contains('collapsed')) return;
     dom.labContent.innerHTML = state.labTab === 'spectrum' ? renderSpectrum() : state.labTab === 'thermal' ? renderThermal() : renderScope();
   }
-  function renderAll() { simulation = calculateSimulation(); renderLibrary(); renderToolbar(); renderCanvas(); renderInspector(); renderLab(); updateHistoryControls(); }
+  function renderLessonDock() {
+    const dock = dom.lessonDock;
+    const lesson = getLesson();
+    if (!dock || !lesson) {
+      dock?.classList.add('hidden');
+      if (dock) dock.innerHTML = '';
+      return;
+    }
+    const complete = lessonStepIndex >= lesson.steps.length;
+    const step = getCurrentLessonStep();
+    const progress = Math.round((Math.min(lessonStepIndex, lesson.steps.length) / lesson.steps.length) * 100);
+    dock.innerHTML = `<div class="lesson-dock-head"><div class="lesson-dock-icon">${escapeHTML(lesson.icon)}</div><div><b>${escapeHTML(lesson.title)}</b><small>${escapeHTML(lesson.level)} · ${escapeHTML(lesson.duration)}</small></div><button class="lesson-close" data-lesson-dock-action="exit" title="Exit lesson" aria-label="Exit lesson">×</button></div><div class="lesson-progress-label"><span>${complete ? 'Lesson complete' : `Step ${lessonStepIndex + 1} of ${lesson.steps.length}`}</span><b>${progress}%</b></div><div class="lesson-progress"><i style="width:${progress}%"></i></div><div class="lesson-step ${complete ? 'complete' : ''}"><span class="lesson-step-dot">${complete ? '✓' : lessonStepIndex + 1}</span><div><b>${complete ? 'Nice work!' : escapeHTML(step.text)}</b><p>${complete ? 'You completed every guided step. Explore the circuit or start another lesson.' : escapeHTML(lesson.summary)}</p></div></div>${!complete && lessonHintVisible ? `<div class="lesson-hint">${escapeHTML(step.hint)}</div>` : ''}<div class="lesson-dock-actions">${!complete ? `<button class="lesson-hint-button" data-lesson-dock-action="hint">${lessonHintVisible ? 'Hide hint' : 'Show hint'}</button>` : `<button class="lesson-hint-button" data-lesson-dock-action="lessons">More lessons</button>`}<label class="beginner-mode-toggle"><input type="checkbox" data-lesson-dock-action="beginner" ${beginnerMode ? 'checked' : ''}/><span></span>Beginner hints</label></div>`;
+    dock.classList.remove('hidden');
+  }
+  function renderAll() {
+    simulation = calculateSimulation();
+    updateLessonProgress();
+    renderLibrary();
+    renderToolbar();
+    renderCanvas();
+    renderQuickMeasurePanel();
+    renderInspector();
+    renderLab();
+    renderLessonDock();
+    updateHistoryControls();
+  }
 
   function toSvgPoint(event) {
     const point = dom.canvas.createSVGPoint();
@@ -1552,21 +2126,31 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     return { x: transformed.x, y: transformed.y };
   }
   function snapCoordinate(value) { return state.snap ? Math.round(value / 20) * 20 : Math.round(value); }
+  function schedulePanRender() {
+    if (panFrame !== null) return;
+    panFrame = requestAnimationFrame(() => {
+      panFrame = null;
+      dom.canvas.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    });
+  }
   function selectComponent(id) {
     state.selectedId = id;
     state.selectedWireId = null;
     state.rightTab = 'properties';
+    quickMeasureTarget = { kind: 'component', compId: id };
     renderAll();
   }
   function selectWire(id) {
     state.selectedWireId = id;
     state.selectedId = null;
     state.rightTab = 'properties';
+    quickMeasureTarget = { kind: 'wire', wireId: id };
     renderAll();
   }
   function setTool(tool) {
-    state.tool = tool;
-    if (tool !== 'wire') { wireStart = null; wirePointer = null; }
+    const nextTool = tool === 'wire' ? 'select' : tool;
+    state.tool = nextTool;
+    if (wireStart) { wireStart = null; wirePointer = null; }
     renderAll();
   }
   function connectionExists(a, b) {
@@ -1602,7 +2186,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     state.wires = state.wires.filter(item => item.id !== wire.id);
     state.selectedWireId = null;
     state.selectedId = null;
-    state.tool = 'wire';
+    state.tool = 'select';
     wireStart = wire.from;
     wirePointer = getTerminalFromPoint(wire.from);
     recordHistory();
@@ -1610,13 +2194,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     showToast(`Endpoint B released from ${terminalDescription(wire.to)}. Choose a new terminal.`);
   }
   function handleTerminalClick(point) {
-    if (state.tool === 'wire') {
-      if (!wireStart) beginWire(point);
-      else if (pinKey(wireStart) === pinKey(point)) {
-        // Keep the active endpoint so a click followed by a drag remains natural.
-        renderCanvas();
-      } else completeWire(point);
-    } else if (state.tool === 'probe') {
+    if (state.tool === 'probe') {
       const key = pinKey(point);
       const existing = state.probeTerminals.findIndex(item => pinKey(item) === key);
       if (existing !== -1) state.probeTerminals.splice(existing, 1);
@@ -1625,9 +2203,17 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       state.rightTab = 'measurements';
       renderAll();
       showToast(state.probeTerminals.length === 2 ? 'Both probe points are set.' : 'Probe point A is set. Choose point B.');
-    } else {
-      selectComponent(point.compId);
+      return;
     }
+    if (!state.wiringEnabled) {
+      setQuickMeasureTarget({ kind: 'terminal', compId: point.compId, pin: point.pin });
+      return;
+    }
+    if (!wireStart) beginWire(point);
+    else if (pinKey(wireStart) === pinKey(point)) {
+      // Keep the active endpoint so a click followed by a drag remains natural.
+      renderCanvas();
+    } else completeWire(point);
   }
 
   function setViewBox(next) {
@@ -1646,6 +2232,23 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     setViewBox({ x: cx - width / 2, y: cy - height / 2, w: width, h: height });
   }
   function fitView() { viewBox = { x: 0, y: 0, w: 1200, h: 690 }; renderCanvas(); showToast('Circuit fitted to the workspace.'); }
+  function centerCircuitView() {
+    if (!state.components.length) { fitView(); return; }
+    const points = [];
+    state.components.forEach(component => {
+      const bounds = getBounds(component);
+      [[bounds.x, bounds.y], [bounds.x + bounds.w, bounds.y], [bounds.x + bounds.w, bounds.y + bounds.h], [bounds.x, bounds.y + bounds.h]].forEach(([x, y]) => {
+        const rotated = rotatePoint(x, y, component.rotation || 0);
+        points.push({ x: component.x + rotated.x, y: component.y + rotated.y });
+      });
+    });
+    const centerX = (Math.min(...points.map(point => point.x)) + Math.max(...points.map(point => point.x))) / 2;
+    const centerY = (Math.min(...points.map(point => point.y)) + Math.max(...points.map(point => point.y))) / 2;
+    viewBox.x = centerX - viewBox.w / 2;
+    viewBox.y = centerY - viewBox.h / 2;
+    renderCanvas();
+    showToast('Circuit centered in the workspace.');
+  }
 
   function getLabResizeBounds() {
     const studio = $('.studio');
@@ -1714,6 +2317,7 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
   function runSimulation() {
     state.running = !state.running;
     if (state.running) {
+      state.heatmap = true;
       if (liveTimer) clearInterval(liveTimer);
       liveTimer = setInterval(() => { if (state.running && state.labTab === 'scope') renderLab(); }, 260);
       showToast('Live simulation is running.');
@@ -1781,10 +2385,66 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     openModal(`<div class="modal-head"><div class="modal-head-icon">✎</div><div><h2>Rename project</h2><p>Give this Fluxa circuit a memorable name.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="modal-field"><label>Project name</label><input id="renameInput" maxlength="48" value="${escapeHTML(state.projectName)}" /></div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Cancel</button><button class="button-primary" id="renameSave">Save name</button></div>`, modal => { const input = $('#renameInput', modal); setTimeout(() => { input.focus(); input.select(); }, 30); const save = () => { const value = input.value.trim(); if (value) { state.projectName = value; recordHistory(); renderAll(); } closeModal(); }; $('#renameSave', modal).addEventListener('click', save); input.addEventListener('keydown', event => { if (event.key === 'Enter') save(); }); });
   }
   function openAboutModal() {
-    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.0</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
+    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.1</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
+  }
+  function openLearnModal() {
+    const cards = LESSONS.map(lesson => `<article class="lesson-card"><div class="lesson-card-top"><span class="lesson-card-icon">${escapeHTML(lesson.icon)}</span><span class="lesson-level">${escapeHTML(lesson.level)}</span></div><h3>${escapeHTML(lesson.title)}</h3><p>${escapeHTML(lesson.summary)}</p><div class="lesson-card-meta"><span>${lesson.steps.length} steps</span><span>${escapeHTML(lesson.duration)}</span></div><button data-lesson-action="start" data-lesson-id="${lesson.id}">Start guided build <span>→</span></button></article>`).join('');
+    openModal(`<div class="modal-head"><div class="modal-head-icon">▣</div><div><h2>Learn circuits</h2><p>Choose a short guided build. Beginner hints will highlight the next useful part or connection.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="learn-modal-body"><div class="learn-intro"><b>Build at your pace.</b> Each lesson starts with an empty workspace and checks your progress as you add parts, wire them and run the circuit.</div><div class="lesson-card-grid">${cards}</div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => {
+      modal.classList.add('learn-modal');
+      modal.addEventListener('click', event => {
+        const button = event.target.closest('[data-lesson-action="start"]');
+        if (!button) return;
+        const lesson = getLesson(button.dataset.lessonId);
+        if (!lesson) return;
+        closeModal();
+        openLessonConfirmation(lesson);
+      });
+    });
+  }
+  function openLessonConfirmation(lesson) {
+    openModal(`<div class="modal-head"><div class="modal-head-icon">${escapeHTML(lesson.icon)}</div><div><h2>Start ${escapeHTML(lesson.title)}?</h2><p>This guided build starts with an empty workspace and replaces the current circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="modal-note"><b>What you will learn:</b><br>${escapeHTML(lesson.summary)}<br><br>${lesson.steps.length} guided steps · ${escapeHTML(lesson.duration)} · ${escapeHTML(lesson.level)}</div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Cancel</button><button class="button-primary" id="confirmLessonStart">Start lesson</button></div>`, modal => {
+      $('#confirmLessonStart', modal).addEventListener('click', () => { closeModal(); startGuidedLesson(lesson); });
+    });
+  }
+  function startGuidedLesson(lesson) {
+    if (liveTimer) { clearInterval(liveTimer); liveTimer = null; }
+    const theme = state.theme;
+    state = initialState();
+    state.theme = theme;
+    state.projectName = lesson.title;
+    state.components = [];
+    state.wires = [];
+    state.running = false;
+    state.view = 'schematic';
+    state.rightTab = 'properties';
+    state.tool = 'select';
+    activeLessonId = lesson.id;
+    lessonStepIndex = 0;
+    beginnerMode = true;
+    lessonHintVisible = false;
+    lessonCompletionAnnounced = false;
+    selectedCategory = 'all';
+    dom.partSearch.value = '';
+    $$('#libraryTabs [data-category]').forEach(tab => tab.classList.toggle('active', tab.dataset.category === 'all'));
+    wireStart = null;
+    wirePointer = null;
+    viewBox = { x: 0, y: 0, w: 1200, h: 690 };
+    try { window.history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (_) {}
+    history = []; historyIndex = -1;
+    recordHistory();
+    renderAll();
+    showToast(`Lesson started: ${lesson.title}.`);
+  }
+  function exitGuidedLesson() {
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
+    lessonCompletionAnnounced = false;
+    renderAll();
+    showToast('Guided lesson closed. Your circuit remains on the canvas.');
   }
   function openShortcutsModal() {
-    openModal(`<div class="modal-head"><div class="modal-head-icon">⌘</div><div><h2>Keyboard shortcuts</h2><p>Stay in the flow while building your circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="shortcut-list"><span>Select / move tool</span><kbd>V</kbd><span>Wire terminals</span><kbd>W</kbd><span>Measurement probe</span><kbd>M</kbd><span>Undo / redo</span><kbd>⌘ Z / ⇧⌘ Z</kbd><span>Delete selected part</span><kbd>Delete</kbd><span>Search library</span><kbd>⌘ K</kbd><span>Cancel active wire</span><kbd>Esc</kbd></div></div><div class="modal-foot"><button class="button-primary" data-modal-close>Got it</button></div>`);
+    openModal(`<div class="modal-head"><div class="modal-head-icon">⌘</div><div><h2>Keyboard shortcuts</h2><p>Stay in the flow while building your circuit.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="shortcut-list"><span>Select, move and wire</span><kbd>V / W</kbd><span>Start a wire</span><kbd>Drag a terminal</kbd><span>Toggle Quick Measure panel</span><kbd>Q</kbd><span>Measurement probe</span><kbd>M</kbd><span>Undo / redo</span><kbd>⌘ Z / ⇧⌘ Z</kbd><span>Delete selected part</span><kbd>Delete</kbd><span>Search library</span><kbd>⌘ K</kbd><span>Cancel active wire</span><kbd>Esc</kbd></div></div><div class="modal-foot"><button class="button-primary" data-modal-close>Got it</button></div>`);
   }
 
   function showToast(message, type = 'success') {
@@ -1879,6 +2539,9 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
         state.running = false;
         state.tool = 'select';
         state.rightTab = 'properties';
+        activeLessonId = null;
+        lessonStepIndex = 0;
+        lessonHintVisible = false;
         viewBox = { x: 0, y: 0, w: 1200, h: 690 };
         try { window.history.replaceState(null, '', `${location.pathname}${location.search}`); } catch (_) {}
         history = []; historyIndex = -1;
@@ -1904,6 +2567,9 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     const theme = state.theme;
     state = initialState();
     state.theme = theme;
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
     viewBox = { x: 0, y: 0, w: 1200, h: 690 };
     history = []; historyIndex = -1; recordHistory(); renderAll(); showToast('LED example restored.');
   }
@@ -1912,6 +2578,9 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     const theme = state.theme;
     state = initialState();
     state.theme = theme;
+    activeLessonId = null;
+    lessonStepIndex = 0;
+    lessonHintVisible = false;
     state.projectName = 'Untitled circuit';
     state.components = [];
     state.wires = [];
@@ -1964,16 +2633,22 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     dom.canvasWrap.addEventListener('dragover', event => { event.preventDefault(); event.dataTransfer.dropEffect = 'copy'; });
     dom.canvasWrap.addEventListener('drop', event => { event.preventDefault(); const type = event.dataTransfer.getData('text/fluxa-part'); if (!type) return; const point = toSvgPoint(event); addComponent(type, snapCoordinate(point.x), snapCoordinate(point.y)); });
 
-    $$('.tool-button').forEach(button => button.addEventListener('click', () => setTool(button.dataset.tool)));
+    $$('.tool-button[data-tool]').forEach(button => button.addEventListener('click', () => setTool(button.dataset.tool)));
     $$('.view-switch button').forEach(button => button.addEventListener('click', () => { state.view = button.dataset.view; recordHistory(); renderAll(); showToast(`${state.view === 'breadboard' ? 'Breadboard' : 'Schematic'} view enabled.`); }));
     dom.boardTextureToggle.addEventListener('change', event => { state.breadboardTexture = event.target.checked; recordHistory(); renderAll(); });
+    dom.quickMeasureToggle.addEventListener('change', event => { state.quickMeasureVisible = event.target.checked; renderAll(); });
+    dom.wiringToggle.addEventListener('change', event => {
+      state.wiringEnabled = event.target.checked;
+      if (!state.wiringEnabled) { wireStart = null; wirePointer = null; }
+      renderAll();
+    });
     $('#deleteToolBtn').addEventListener('click', deleteSelected);
-    $('#fitBtn').addEventListener('click', fitView);
+    $('#centerViewBtn').addEventListener('click', centerCircuitView);
     $('#zoomInBtn').addEventListener('click', () => zoomBy(.82));
     $('#zoomOutBtn').addEventListener('click', () => zoomBy(1.22));
     dom.thermalBtn.addEventListener('click', () => { state.heatmap = !state.heatmap; recordHistory(); renderAll(); showToast(state.heatmap ? 'Thermal heatmap enabled.' : 'Thermal heatmap hidden.'); });
     dom.snapBtn.addEventListener('click', () => { state.snap = !state.snap; recordHistory(); renderAll(); });
-    $('#collapseLabBtn').addEventListener('click', event => { const collapsed = dom.labDrawer.classList.toggle('collapsed'); event.currentTarget.title = collapsed ? 'Expand lab' : 'Collapse lab'; renderLab(); renderCanvas(); });
+    $('#collapseLabBtn').addEventListener('click', () => { dom.labDrawer.classList.toggle('collapsed'); updateLabCollapseControl(); renderLab(); renderCanvas(); });
     dom.labResizeHandle.addEventListener('pointerdown', beginLabResize);
     dom.labResizeHandle.addEventListener('pointermove', moveLabResize);
     dom.labResizeHandle.addEventListener('pointerup', endLabResize);
@@ -2000,6 +2675,17 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
     $('#aiTopBtn').addEventListener('click', () => { state.rightTab = 'assistant'; renderAll(); });
     $('#shareBtn').addEventListener('click', openShareModal);
     dom.newProjectBtn.addEventListener('click', openNewProjectModal);
+    dom.learnBtn.addEventListener('click', openLearnModal);
+    dom.lessonDock.addEventListener('click', event => {
+      const action = event.target.closest('[data-lesson-dock-action]')?.dataset.lessonDockAction;
+      if (!action) return;
+      if (action === 'exit') exitGuidedLesson();
+      else if (action === 'hint') { lessonHintVisible = !lessonHintVisible; renderLessonDock(); }
+      else if (action === 'lessons') openLearnModal();
+    });
+    dom.lessonDock.addEventListener('change', event => {
+      if (event.target.matches('[data-lesson-dock-action="beginner"]')) { beginnerMode = event.target.checked; renderAll(); }
+    });
     dom.themeToggleBtn.addEventListener('click', toggleTheme);
     dom.aboutBtn.addEventListener('click', openAboutModal);
     $('#projectTitleBtn').addEventListener('click', openRenameModal);
@@ -2030,6 +2716,12 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       else if (action === 'rewire') rewireSelectedWire();
       else if (action === 'delete') deleteSelected();
     });
+    dom.quickMeasurePanel.addEventListener('click', event => {
+      if (event.target.closest('[data-quick-measure-action="clear"]')) {
+        quickMeasureTarget = null;
+        renderQuickMeasurePanel();
+      }
+    });
 
     dom.canvas.addEventListener('pointerdown', event => {
       const terminalPoint = terminalPointFromElement(event.target);
@@ -2041,10 +2733,12 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       }
       const wireElement = event.target.closest?.('[data-wire-id]');
       if (wireElement) {
+        event.preventDefault();
         if (state.tool === 'select') {
-          event.preventDefault();
           selectWire(wireElement.dataset.wireId);
           showToast('Wire selected. Press Delete to remove it, or use Reconnect in Properties.');
+        } else {
+          setQuickMeasureTarget({ kind: 'wire', wireId: wireElement.dataset.wireId });
         }
         return;
       }
@@ -2052,17 +2746,44 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       if (componentElement) {
         const id = componentElement.dataset.compId;
         if (state.tool === 'select') {
+          if (wireStart) {
+            wireStart = null;
+            wirePointer = null;
+            renderAll();
+            showToast('Wire cancelled. Start again from a terminal.', 'warn');
+            return;
+          }
           const component = getComponent(id); const point = toSvgPoint(event);
           state.selectedId = id; state.selectedWireId = null; state.rightTab = 'properties';
+          quickMeasureTarget = { kind: 'component', compId: id };
           dragState = { id, pointerId: event.pointerId, offsetX: point.x - component.x, offsetY: point.y - component.y, moved: false };
           dom.canvas.setPointerCapture?.(event.pointerId);
           renderAll();
         } else if (state.tool === 'probe') selectComponent(id);
-        else if (state.tool === 'wire') showToast('Choose one of the glowing connection terminals to wire this part.', 'warn');
         return;
       }
-      if (state.tool === 'select') { state.selectedId = null; state.selectedWireId = null; renderAll(); }
-      if (state.tool === 'wire' && wireStart) { wireStart = null; wirePointer = null; renderAll(); showToast('Wire cancelled.', 'warn'); }
+      if (state.tool === 'select') {
+        if (wireStart) {
+          wireStart = null;
+          wirePointer = null;
+          renderAll();
+          showToast('Wire cancelled.', 'warn');
+          return;
+        }
+        const ctm = dom.canvas.getScreenCTM?.();
+        const rect = dom.canvas.getBoundingClientRect();
+        const scaleX = ctm?.a ? 1 / ctm.a : viewBox.w / Math.max(1, rect.width);
+        const scaleY = ctm?.d ? 1 / ctm.d : viewBox.h / Math.max(1, rect.height);
+        state.selectedId = null;
+        state.selectedWireId = null;
+        quickMeasureTarget = null;
+        panState = { pointerId: event.pointerId, clientX: event.clientX, clientY: event.clientY, viewX: viewBox.x, viewY: viewBox.y, scaleX, scaleY, moved: false };
+        dom.canvas.setPointerCapture?.(event.pointerId);
+        renderAll();
+      } else if (state.quickMeasureVisible) {
+        quickMeasureTarget = null;
+        renderQuickMeasurePanel();
+      }
     });
     dom.canvas.addEventListener('pointermove', event => {
       if (dragState) {
@@ -2070,6 +2791,14 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
         const point = toSvgPoint(event);
         component.x = snapCoordinate(point.x - dragState.offsetX); component.y = snapCoordinate(point.y - dragState.offsetY);
         dragState.moved = true; renderCanvas();
+      } else if (panState) {
+        const deltaX = (event.clientX - panState.clientX) * panState.scaleX;
+        const deltaY = (event.clientY - panState.clientY) * panState.scaleY;
+        viewBox.x = panState.viewX - deltaX;
+        viewBox.y = panState.viewY - deltaY;
+        panState.moved = Math.abs(deltaX) > .25 || Math.abs(deltaY) > .25;
+        dom.canvas.classList.add('panning');
+        schedulePanRender();
       } else if (wireStart) { wirePointer = toSvgPoint(event); renderCanvas(); }
     });
     const endPointer = event => {
@@ -2079,8 +2808,16 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
         if (moved) { recordHistory(); renderAll(); }
         return;
       }
+      if (panState) {
+        panState = null;
+        if (panFrame !== null) { cancelAnimationFrame(panFrame); panFrame = null; }
+        dom.canvas.classList.remove('panning');
+        try { dom.canvas.releasePointerCapture?.(event.pointerId); } catch (_) {}
+        renderCanvas();
+        return;
+      }
       // Supports natural drag-to-wire in addition to the existing click-two-terminals workflow.
-      if (event.type === 'pointerup' && state.tool === 'wire' && wireStart) {
+      if (event.type === 'pointerup' && state.tool === 'select' && wireStart) {
         const target = terminalPointAtClient(event.clientX, event.clientY);
         if (target && pinKey(target) !== pinKey(wireStart)) completeWire(target);
       }
@@ -2129,11 +2866,12 @@ body.light-theme .toast { color: #29445f; background: #ffffff; border-color: #be
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); event.shiftKey ? redo() : undo(); return; }
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); dom.partSearch.focus(); return; }
       if (editing) return;
-      if (event.key.toLowerCase() === 'w') { event.preventDefault(); setTool('wire'); }
+      if (event.key.toLowerCase() === 'w') { event.preventDefault(); setTool('select'); }
       else if (event.key.toLowerCase() === 'v') setTool('select');
+      else if (event.key.toLowerCase() === 'q') { state.quickMeasureVisible = !state.quickMeasureVisible; renderAll(); }
       else if (event.key.toLowerCase() === 'm') setTool('probe');
       else if (event.key === 'Delete' || event.key === 'Backspace') { event.preventDefault(); deleteSelected(); }
-      else if (event.key === 'Escape') { wireStart = null; wirePointer = null; state.tool = 'select'; closeModal(); renderAll(); }
+      else if (event.key === 'Escape') { wireStart = null; wirePointer = null; panState = null; if (panFrame !== null) { cancelAnimationFrame(panFrame); panFrame = null; } dom.canvas.classList.remove('panning'); state.tool = 'select'; closeModal(); renderAll(); }
       else if (event.key === '+') zoomBy(.82);
       else if (event.key === '-') zoomBy(1.22);
     });
