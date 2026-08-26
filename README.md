@@ -2,12 +2,9 @@
 
 **Fluxa** is a browser-based workspace for drawing, arranging and exploring simple electronic circuits.
 
-<<<<<<< HEAD
-- Version: **1.1**
+- Version: **1.2**
 - Repository: [github.com/Arvanta/Fluxa](https://github.com/Arvanta/Fluxa)
 
-=======
->>>>>>> f46c34bbbe4bc7de36fd44eac9145240dd8d5010
 <p align="center">
   <img src="assets/screenshots/fluxa-schematic.png" alt="Fluxa schematic workspace in the dark theme" width="49%" />
   <img src="assets/screenshots/fluxa-light.png" alt="Fluxa Breadboard workspace in the light theme with a simple board background" width="49%" />
@@ -17,14 +14,14 @@
 
 - A component library with passive components, sources, ground, diodes, bridge rectifiers, LEDs, BJTs, MOSFETs, transformers, 555 timers and 741 op-amps.
 - A small selectable catalog of example market models such as `2N2222`, `1N4007`, `1N4148`, `IRFZ44N`, `NE555P` and `LM741CN`.
-- SVG circuit editor with drag/drop, move, snap, zoom, Undo/Redo, component rotation, duplication and deletion.
+- SVG circuit editor with drag/drop, move, snap, pan, zoom, Undo/Redo, component rotation, duplication, deletion and nearby-terminal auto-connect.
 - Wiring by clicking two terminals or dragging between terminals. Existing wires can be selected, reconnected or removed.
 - Schematic and Breadboard views. Breadboard view can use either a simple light background or a perforated-board background.
 - Dark and light application themes.
 - Seven guided Learn Mode builds: LED + resistor, voltage divider, RC filter, push-button LED, NPN switch, 555 timer and basic op-amp concepts.
 - Beginner hints that highlight the next relevant library part or circuit component without locking the editor.
 - Basic measurement and feedback panels: virtual meter, Quick Measure, oscilloscope-style display, spectrum display, thermal view and the Smart Circuit Inspector.
-- Simulation-only visual feedback for active wires, current-direction arrows, LED brightness and optional thermal heatmap.
+- Simulation-only visual feedback for active wires, current-direction arrows, output-node voltage labels, LED brightness, optional thermal heatmap and amber open-path previews. Independent simple source loops are evaluated separately.
 - Short glossary cards in Properties for common component terms and units.
 - PNG and SVG output based on the active canvas view.
 - Fluxa JSON export and confirmation-based JSON import.
@@ -100,7 +97,7 @@ python3 scripts/build_standalone.py
 
 ## Current limitations
 
-Fluxa currently uses a browser-side heuristic for its circuit feedback rather than a full SPICE solver. It is useful for demonstrating the editor flow and simple operating-point feedback, but it is not intended to replace a dedicated electrical simulation tool. There is no backend, authentication or real-time collaboration layer.
+Fluxa currently uses a browser-side educational model rather than a full SPICE solver. Its LED model uses a small current-to-forward-voltage lookup curve, so LED voltage changes with current in simple series circuits. It is useful for demonstrating the editor flow and simple operating-point feedback, but it is not intended to replace a dedicated electrical simulation tool. There is no backend, authentication or real-time collaboration layer.
 
 ## Credits
 

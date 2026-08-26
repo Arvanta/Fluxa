@@ -340,6 +340,8 @@
   let lessonHintVisible = false;
   let lessonCompletionAnnounced = false;
   let quickMeasureTarget = null;
+  let autoConnectPreview = [];
+  let pendingPropertyChange = false;
 
   function applyTheme(persist = false) {
     const light = state.theme === 'light';
@@ -401,6 +403,42 @@
     if (p < 1e-3) return `${trimNumber(value * 1e6, 1)} µW`;
     if (p < 1) return `${trimNumber(value * 1e3, 1)} mW`;
     return `${trimNumber(value, 2)} W`;
+  }
+  const GREEN_LED_IV_CURVE = [
+    [0, 0], [0.01, 1.36], [0.1, 1.52], [1, 1.69], [5, 1.90], [20, 2.10], [50, 2.14], [100, 2.17], [150, 2.20], [300, 2.25]
+  ];
+  function interpolateLedCurve(currentMilliamp, curve = GREEN_LED_IV_CURVE) {
+    const current = Math.max(0, currentMilliamp);
+    for (let index = 1; index < curve.length; index++) {
+      const [upperCurrent, upperVoltage] = curve[index];
+      if (current <= upperCurrent) {
+        const [lowerCurrent, lowerVoltage] = curve[index - 1];
+        const ratio = upperCurrent === lowerCurrent ? 0 : (current - lowerCurrent) / (upperCurrent - lowerCurrent);
+        return lowerVoltage + (upperVoltage - lowerVoltage) * ratio;
+      }
+    }
+    const [lastCurrent, lastVoltage] = curve[curve.length - 1];
+    const [previousCurrent, previousVoltage] = curve[curve.length - 2];
+    return lastVoltage + ((current - lastCurrent) * (lastVoltage - previousVoltage)) / (lastCurrent - previousCurrent);
+  }
+  function ledForwardVoltageAtCurrent(component, currentAmp) {
+    const nominal = Number(component.props?.forwardVoltage || 2.1);
+    const nominalCurveVoltage = 2.1;
+    const modelOffset = nominal - nominalCurveVoltage;
+    return Math.max(0, interpolateLedCurve(currentAmp * 1000) + modelOffset);
+  }
+  function solveSeriesLedCurrent(sourceVoltage, totalResistance, fixedDrop, leds) {
+    if (sourceVoltage <= fixedDrop || totalResistance <= 0) return 0;
+    let low = 0;
+    let high = Math.max(0, (sourceVoltage - fixedDrop) / totalResistance);
+    for (let iteration = 0; iteration < 42; iteration++) {
+      const current = (low + high) / 2;
+      const ledDrop = leds.reduce((sum, component) => sum + ledForwardVoltageAtCurrent(component, current), 0);
+      const balance = current * totalResistance + fixedDrop + ledDrop - sourceVoltage;
+      if (balance > 0) high = current;
+      else low = current;
+    }
+    return low;
   }
   function getComponent(id) { return state.components.find(component => component.id === id); }
   function getWire(id) { return state.wires.find(wire => wire.id === id); }
@@ -586,9 +624,15 @@
     return '<path class="part-pin" d="M-62 0H62"/>';
   }
 
+  function autoConnectRole(compId, pin) {
+    const pointKey = `${compId}:${pin}`;
+    if (autoConnectPreview.some(pair => pinKey(pair.from) === pointKey)) return 'auto-connect-source';
+    if (autoConnectPreview.some(pair => pinKey(pair.to) === pointKey)) return 'auto-connect-target';
+    return '';
+  }
   function terminalMarkup(component) {
     const visibleRadius = wireStart ? 6.1 : 4.2;
-    return getPins(component).map((pin, index) => `<g class="terminal-group" data-terminal-comp="${component.id}" data-terminal-pin="${index}"><circle class="terminal-hit" cx="${pin.dx}" cy="${pin.dy}" r="11"/><circle class="terminal" cx="${pin.dx}" cy="${pin.dy}" r="${visibleRadius}"/><text class="pin-label" x="${pin.dx}" y="${pin.dy - (pin.dy < 0 ? 8 : pin.dy > 0 ? -8 : 10)}">${escapeHTML(pin.label)}</text></g>`).join('');
+    return getPins(component).map((pin, index) => `<g class="terminal-group ${autoConnectRole(component.id, index)}" data-terminal-comp="${component.id}" data-terminal-pin="${index}"><circle class="terminal-hit" cx="${pin.dx}" cy="${pin.dy}" r="11"/><circle class="terminal" cx="${pin.dx}" cy="${pin.dy}" r="${visibleRadius}"/><text class="pin-label" x="${pin.dx}" y="${pin.dy - (pin.dy < 0 ? 8 : pin.dy > 0 ? -8 : 10)}">${escapeHTML(pin.label)}</text></g>`).join('');
   }
   function heatForComponent(component) {
     const metric = componentMetric(component.id);
@@ -601,12 +645,14 @@
     const metric = componentMetric(component.id);
     const heat = heatForComponent(component);
     const lessonTarget = isLessonComponentTarget(component);
-    const ledIntensity = component.type === 'led' && state.running ? Math.max(0, Math.min(1, metric.current / Math.max(.001, Number(component.props.maxCurrent || .02)))) : 0;
+    const ledLimit = Math.max(.001, Number(component.props.maxCurrent || .02));
+    const ledIntensity = component.type === 'led' && state.running ? Math.max(0, Math.min(1, metric.current / ledLimit)) : 0;
+    const ledOvercurrent = component.type === 'led' && state.running && metric.current > ledLimit;
     const ledGlow = 4 + ledIntensity * 17;
     const labelY = bounds.y - 10;
     const valueY = bounds.y + bounds.h + 14;
     const thermalSize = Math.max(bounds.w, bounds.h) * 0.88;
-    return `<g class="component ${selected ? 'selected' : ''} ${lessonTarget ? 'lesson-target' : ''} ${ledIntensity > .02 ? 'led-lit' : ''}" style="--led-intensity:${ledIntensity.toFixed(3)};--led-glow:${ledGlow.toFixed(1)}px" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
+    return `<g class="component ${selected ? 'selected' : ''} ${lessonTarget ? 'lesson-target' : ''} ${ledIntensity > .02 ? 'led-lit' : ''} ${ledOvercurrent ? 'led-overcurrent' : ''}" style="--led-intensity:${ledIntensity.toFixed(3)};--led-glow:${ledGlow.toFixed(1)}px" data-comp-id="${component.id}" data-fritzing-asset="${FRITZING_PARTS[component.type] || ''}" transform="translate(${component.x} ${component.y}) rotate(${component.rotation || 0})">
       <circle class="thermal-halo" cx="0" cy="0" r="${thermalSize}" fill="${heat.fill}" opacity="${heat.opacity}"/>
       <rect class="component-hitbox" x="${bounds.x - 9}" y="${bounds.y - 9}" width="${bounds.w + 18}" height="${bounds.h + 18}" rx="10"/>
       <rect class="selection-box" x="${bounds.x - 6}" y="${bounds.y - 6}" width="${bounds.w + 12}" height="${bounds.h + 12}" rx="8"/>
@@ -617,34 +663,75 @@
     </g>`;
   }
 
-  function routedWirePath(from, to) {
+  function laneValue(index) {
+    if (index === 0) return 0;
+    const magnitude = Math.ceil(index / 2);
+    return index % 2 ? magnitude : -magnitude;
+  }
+  function getWireRouteLanes() {
+    const groups = new Map();
+    state.wires.forEach(wire => {
+      const from = getTerminalFromPoint(wire.from);
+      const to = getTerminalFromPoint(wire.to);
+      if (!from || !to) return;
+      const middleX = (from.x + to.x) / 2;
+      const middleY = (from.y + to.y) / 2;
+      const key = `${Math.round(middleX / 170)}:${Math.round(middleY / 170)}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(wire);
+    });
+    const lanes = new Map();
+    groups.forEach(group => {
+      group.sort((a, b) => a.id.localeCompare(b.id));
+      group.forEach((wire, index) => lanes.set(wire.id, group.length > 1 ? laneValue(index) : 0));
+    });
+    return lanes;
+  }
+  function routedWirePath(from, to, lane = 0) {
     if (!from || !to) return '';
     const dx = Math.abs(to.x - from.x), dy = Math.abs(to.y - from.y);
-    if (dx < 25 || dy < 20) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
-    const middle = Math.round(((from.x + to.x) / 2) / 20) * 20;
+    const laneOffset = lane * 20;
+    if (dy < 20) {
+      if (!lane) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+      // Use the average endpoint position so the route is identical when the flow path is reversed.
+      const routeY = Math.round((((from.y + to.y) / 2 + laneOffset) / 10)) * 10;
+      return `M ${from.x} ${from.y} V ${routeY} H ${to.x} V ${to.y}`;
+    }
+    if (dx < 25) {
+      if (!lane) return `M ${from.x} ${from.y} L ${to.x} ${to.y}`;
+      // Same symmetry rule for near-vertical connections.
+      const routeX = Math.round((((from.x + to.x) / 2 + laneOffset) / 10)) * 10;
+      return `M ${from.x} ${from.y} H ${routeX} V ${to.y} H ${to.x}`;
+    }
+    const middle = Math.round(((from.x + to.x) / 2 + laneOffset) / 20) * 20;
     return `M ${from.x} ${from.y} H ${middle} V ${to.y} H ${to.x}`;
   }
-  function wirePath(wire, reverse = false) {
+  function wirePath(wire, reverse = false, lane = 0) {
     const from = getTerminalFromPoint(reverse ? wire.to : wire.from);
     const to = getTerminalFromPoint(reverse ? wire.from : wire.to);
-    return routedWirePath(from, to);
+    return routedWirePath(from, to, lane);
   }
   function wireClass(wire) {
     const classes = ['wire'];
     const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
+    const isPartial = state.running && simulation?.partialWireIds?.has(wire.id);
     if (isActive && simulation?.shortCircuit) classes.push('warn');
     else if (isActive) classes.push('active');
+    else if (isPartial) classes.push('partial');
     if (state.selectedWireId === wire.id) classes.push('selected');
     return classes.join(' ');
   }
   function renderWires() {
     const endpointCounts = new Map();
+    const lanes = getWireRouteLanes();
     state.wires.forEach(wire => [wire.from, wire.to].forEach(point => endpointCounts.set(pinKey(point), (endpointCounts.get(pinKey(point)) || 0) + 1)));
     const paths = state.wires.map(wire => {
-      const path = wirePath(wire);
+      const lane = lanes.get(wire.id) || 0;
+      const path = wirePath(wire, false, lane);
       const isActive = state.running && simulation?.activeWireIds?.has(wire.id);
-      const direction = simulation?.wireDirections?.[wire.id];
-      const flow = isActive ? `<path class="wire-flow" marker-end="url(#flowArrow)" d="${wirePath(wire, direction === 'reverse')}"/>` : '';
+      const isPartial = state.running && simulation?.partialWireIds?.has(wire.id);
+      const direction = isActive ? simulation?.wireDirections?.[wire.id] : simulation?.partialWireDirections?.[wire.id];
+      const flow = isActive || isPartial ? `<path class="wire-flow ${isPartial ? 'partial' : ''}" marker-end="url(#flowArrow)" d="${wirePath(wire, direction === 'reverse', lane)}"/>` : '';
       return `<path class="wire-hit" data-wire-id="${wire.id}" d="${path}"/><path class="${wireClass(wire)}" data-wire-id="${wire.id}" d="${path}"/>${flow}`;
     }).join('');
     const junctions = [...endpointCounts.entries()].filter(([, count]) => count > 1).map(([key]) => {
@@ -654,7 +741,83 @@
     }).join('');
     return paths + junctions;
   }
+  function activeWireEndpoints(wire, sim) {
+    const reverse = sim.wireDirections?.[wire.id] === 'reverse';
+    return { from: reverse ? wire.to : wire.from, to: reverse ? wire.from : wire.to };
+  }
+  function voltageLabelPosition(wire, sim, lane = 0) {
+    const { from, to } = activeWireEndpoints(wire, sim);
+    const start = getTerminalFromPoint(from);
+    const end = getTerminalFromPoint(to);
+    if (!start || !end) return null;
+    const dx = Math.abs(end.x - start.x);
+    const dy = Math.abs(end.y - start.y);
+    const laneOffset = lane * 20;
+    let x;
+    let y;
+    let vertical = false;
+    if (dy < 20) {
+      x = (start.x + end.x) / 2;
+      y = lane ? Math.round((((start.y + end.y) / 2 + laneOffset) / 10)) * 10 : (start.y + end.y) / 2;
+    } else if (dx < 25) {
+      x = lane ? Math.round((((start.x + end.x) / 2 + laneOffset) / 10)) * 10 : (start.x + end.x) / 2;
+      y = (start.y + end.y) / 2;
+      vertical = true;
+    } else {
+      const middle = Math.round(((start.x + end.x) / 2 + laneOffset) / 20) * 20;
+      if (Math.abs(middle - start.x) > 18) {
+        x = (start.x + middle) / 2;
+        y = start.y;
+      } else {
+        x = middle;
+        y = (start.y + end.y) / 2;
+        vertical = true;
+      }
+    }
+    return vertical ? { x: x + 12, y: y + 3, anchor: 'start' } : { x, y: y - 11, anchor: 'middle' };
+  }
+  function renderVoltageLabels() {
+    const sim = simulation;
+    if (!state.running || !sim?.hasActivePath) return '';
+    const lanes = getWireRouteLanes();
+    const labels = [];
+    state.components.forEach(component => {
+      if (component.type === 'ground' || !sim.activeComponentIds?.has(component.id)) return;
+      const wire = state.wires.find(candidate => {
+        if (!sim.activeWireIds?.has(candidate.id)) return false;
+        const flow = activeWireEndpoints(candidate, sim);
+        return flow.from.compId === component.id;
+      });
+      if (!wire) return;
+      const flow = activeWireEndpoints(wire, sim);
+      const voltage = sim.nodeVoltages?.get(`${flow.from.compId}:${flow.from.pin}`);
+      const position = voltageLabelPosition(wire, sim, lanes.get(wire.id) || 0);
+      if (!Number.isFinite(voltage) || !position) return;
+      labels.push(`<text class="wire-voltage-label" x="${position.x}" y="${position.y}" text-anchor="${position.anchor}">${escapeHTML(formatVoltage(voltage))}</text>`);
+    });
+    return labels.join('');
+  }
+  function renderOpenPathMarkers() {
+    const sim = simulation;
+    if (!state.running || !sim?.partialOpenNodeIds?.size) return '';
+    let labeled = false;
+    return [...sim.partialOpenNodeIds].map(nodeId => {
+      const [compId, pin] = nodeId.split(':');
+      const point = getTerminalFromPoint({ compId, pin: Number(pin) });
+      if (!point) return '';
+      const label = !labeled ? `<text class="open-path-label" x="${point.x + 11}" y="${point.y - 12}">Open path</text>` : '';
+      labeled = true;
+      return `<circle class="open-path-marker" cx="${point.x}" cy="${point.y}" r="8"/>${label}`;
+    }).join('');
+  }
   function renderAnnotations() {
+    const voltageLabels = renderVoltageLabels();
+    const openPathMarkers = renderOpenPathMarkers();
+    const autoConnectLines = autoConnectPreview.map(pair => {
+      const from = getTerminalFromPoint(pair.from);
+      const to = getTerminalFromPoint(pair.to);
+      return from && to ? `<path class="auto-connect-preview" d="M ${from.x} ${from.y} L ${to.x} ${to.y}"/>` : '';
+    }).join('');
     const markers = state.probeTerminals.map((point, index) => {
       const pos = getTerminalFromPoint(point);
       return pos ? `<circle class="probe-marker" cx="${pos.x}" cy="${pos.y}" r="10" fill="none" stroke="${index === 0 ? '#62e4d0' : '#a897ff'}" stroke-width="1.7"/><text x="${pos.x + 11}" y="${pos.y - 10}" fill="${index === 0 ? '#72ead7' : '#b5a9ff'}" font-size="9" font-weight="700">${index === 0 ? 'A' : 'B'}</text>` : '';
@@ -667,9 +830,9 @@
     let statusTag = '';
     if (state.running && simulation?.source) {
       const src = simulation.source;
-      statusTag = `<g transform="translate(${src.x + 43} ${src.y - 22})"><rect width="73" height="19" rx="4" fill="#153448" stroke="#357e78"/><text x="8" y="13" fill="#a6f7e9" font-size="9" font-weight="700">${formatCurrent(simulation.current)}</text></g>`;
+      statusTag = `<g transform="translate(${src.x + 43} ${src.y - 22})"><rect width="73" height="19" rx="4" fill="#153448" stroke="#357e78"/><text x="8" y="13" fill="#a6f7e9" font-size="9" font-weight="700">${formatCurrent(simulation.sourceCurrents?.[src.id] ?? simulation.current)}</text></g>`;
     }
-    return preview + markers + statusTag;
+    return voltageLabels + openPathMarkers + autoConnectLines + preview + markers + statusTag;
   }
   function quickActionIcon(action) {
     const icons = {
@@ -814,7 +977,7 @@
         const reversed = sim.wireDirections?.[wire.id] === 'reverse';
         const start = reversed ? wire.to : wire.from;
         const end = reversed ? wire.from : wire.to;
-        content = `<div class="quick-measure-kicker">Branch readout</div><h4>Wire current</h4><div class="quick-measure-value">${active ? formatCurrent(sim.current) : '0 A'}</div><p>${active ? `${escapeHTML(terminalDescription(start))} → ${escapeHTML(terminalDescription(end))}` : 'This wire is not on a complete conducting path.'}</p>${quickMeasureRow('Direction', active ? 'Active path' : 'No current')}`;
+        content = `<div class="quick-measure-kicker">Branch readout</div><h4>Wire current</h4><div class="quick-measure-value">${active ? formatCurrent(sim.wireCurrents?.[wire.id] ?? sim.current) : '0 A'}</div><p>${active ? `${escapeHTML(terminalDescription(start))} → ${escapeHTML(terminalDescription(end))}` : 'This wire is not on a complete conducting path.'}</p>${quickMeasureRow('Direction', active ? 'Active path' : 'No current')}`;
       }
     } else if (quickMeasureTarget?.kind === 'component') {
       const component = getComponent(quickMeasureTarget.compId);
@@ -826,7 +989,7 @@
       }
     }
     if (!hasTarget) {
-      content = `<div class="quick-measure-kicker">Circuit overview</div><h4>Quick Measure</h4><div class="quick-measure-grid">${quickMeasureRow('Parts', String(state.components.length))}${quickMeasureRow('Wires', String(state.wires.length))}${quickMeasureRow('Input', sim.source ? formatVoltage(sim.sourceVoltage) : '—')}${quickMeasureRow('Active current', sim.hasActivePath ? formatCurrent(sim.current) : '—')}</div><p>${sim.hasActivePath ? 'Click a node, wire or component with Quick Measure to inspect it.' : 'Run or complete a circuit, then click a node, wire or component to inspect it.'}</p>`;
+      content = `<div class="quick-measure-kicker">Circuit overview</div><h4>Quick Measure</h4><div class="quick-measure-grid">${quickMeasureRow('Parts', String(state.components.length))}${quickMeasureRow('Wires', String(state.wires.length))}${quickMeasureRow('Input', sim.source ? formatVoltage(sim.sourceVoltage) : '—')}${quickMeasureRow('Active current', sim.hasActivePath ? formatCurrent(sim.totalCurrent ?? sim.current) : '—')}</div><p>${sim.hasActivePath ? 'Click a node, wire or component to inspect it.' : sim.partialWireIds?.size ? 'An amber path preview shows where the circuit reaches an open connection.' : 'Run or complete a circuit, then click a node, wire or component to inspect it.'}</p>`;
     }
     panel.innerHTML = `<div class="quick-measure-head"><span><i>⌁</i>Quick Measure</span>${hasTarget ? '<button data-quick-measure-action="clear" title="Clear readout" aria-label="Clear readout">×</button>' : ''}</div>${content}`;
   }
@@ -844,197 +1007,282 @@
   }
 
   function conductiveTopology(source) {
-    const forwardEdges = new Map();
-    const reverseEdges = new Map();
+    const edges = new Map();
+    const wireById = new Map(state.wires.map(wire => [wire.id, wire]));
     const key = (compId, pin) => `${compId}:${pin}`;
-    const addDirected = (from, to) => {
-      if (!forwardEdges.has(from)) forwardEdges.set(from, []);
-      if (!reverseEdges.has(to)) reverseEdges.set(to, []);
-      forwardEdges.get(from).push(to);
-      reverseEdges.get(to).push(from);
+    const addEdge = (from, to, meta) => {
+      if (!edges.has(from)) edges.set(from, []);
+      edges.get(from).push({ from, to, ...meta });
     };
-    const addBidirectional = (a, b) => { addDirected(a, b); addDirected(b, a); };
-    const pin = (component, index) => key(component.id, index);
+    const addBidirectional = (from, to, meta) => {
+      addEdge(from, to, meta);
+      addEdge(to, from, meta);
+    };
+    const node = (component, pin) => key(component.id, pin);
+    const addComponentEdge = (component, fromPin, toPin, bidirectional = false, extraMeta = {}) => {
+      const meta = { kind: 'component', componentId: component.id, fromPin, toPin, ...extraMeta };
+      addEdge(node(component, fromPin), node(component, toPin), meta);
+      if (bidirectional) addEdge(node(component, toPin), node(component, fromPin), { kind: 'component', componentId: component.id, fromPin: toPin, toPin: fromPin, ...extraMeta });
+    };
 
-    state.wires.forEach(wire => addBidirectional(key(wire.from.compId, wire.from.pin), key(wire.to.compId, wire.to.pin)));
-    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
+    state.wires.forEach(wire => {
+      const from = key(wire.from.compId, wire.from.pin);
+      const to = key(wire.to.compId, wire.to.pin);
+      addBidirectional(from, to, { kind: 'wire', wireId: wire.id });
+    });
+    const hasExternalPin = (component, pinIndex) => state.wires.some(wire => (wire.from.compId === component.id && wire.from.pin === pinIndex) || (wire.to.compId === component.id && wire.to.pin === pinIndex));
     state.components.forEach(component => {
       const pins = getPins(component);
-      if (pins.length < 2) return;
-      const pair = (a = 0, b = 1) => addBidirectional(pin(component, a), pin(component, b));
-      if (['resistor', 'inductor'].includes(component.type)) pair();
-      else if (component.type === 'capacitor' && alternatingSource) pair();
-      else if (component.type === 'potentiometer') { addBidirectional(pin(component, 0), pin(component, 2)); addBidirectional(pin(component, 2), pin(component, 1)); }
-      else if (component.type === 'switch' && component.props?.position === 'Closed') pair();
-      else if (['diode', 'led', 'zener'].includes(component.type)) addDirected(pin(component, 0), pin(component, 1));
+      if (pins.length < 2 || component.id === source?.id) return;
+      if (['resistor', 'inductor'].includes(component.type)) addComponentEdge(component, 0, 1, true);
+      // Capacitors are not treated as a continuous DC conduction path. Their transient AC/charging behavior needs a dedicated solver.
+      else if (component.type === 'potentiometer') {
+        // Wiper position (0-100%, terminal "1" side) splits the track into two resistive segments.
+        // Both the current solve (totalResistance) and the displayed drop (pathDrop) must agree on
+        // these segment values, so the ratio is computed once here and carried on the edge itself.
+        const fullResistance = Math.max(0, parseNumber(component.props?.resistance ?? component.props?.value, 0));
+        const wiperRatio = Math.min(1, Math.max(0, parseNumber(component.props?.position ?? 50, 50) / 100));
+        addComponentEdge(component, 0, 2, true, { segmentResistance: fullResistance * wiperRatio });
+        addComponentEdge(component, 2, 1, true, { segmentResistance: fullResistance * (1 - wiperRatio) });
+      }
+      else if (component.type === 'switch' && component.props?.position === 'Closed') addComponentEdge(component, 0, 1, true);
+      else if (['diode', 'led'].includes(component.type)) addComponentEdge(component, 0, 1);
+      // Zener diodes are normally used reverse-biased (cathode toward the positive rail) so that the
+      // breakdown voltage regulates the node. Model both the rare forward direction (0->1, like a normal
+      // diode) and the standard reverse-breakdown direction (1->0) so typical regulator wiring is detected.
+      else if (component.type === 'zener') { addComponentEdge(component, 0, 1, false, { zenerConduction: 'forward' }); addComponentEdge(component, 1, 0, false, { zenerConduction: 'reverse' }); }
       else if (component.type === 'bridge') {
-        // Educational full-wave bridge approximation: AC terminals feed +, and − returns to either AC terminal.
-        addDirected(pin(component, 0), pin(component, 2));
-        addDirected(pin(component, 1), pin(component, 2));
-        addDirected(pin(component, 3), pin(component, 0));
-        addDirected(pin(component, 3), pin(component, 1));
-      } else if (component.type === 'bjt' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
-        addDirected(pin(component, 1), pin(component, 2));
-      } else if (component.type === 'mosfet' && state.wires.some(wire => wire.from.compId === component.id && wire.from.pin === 0 || wire.to.compId === component.id && wire.to.pin === 0)) {
-        addDirected(pin(component, 1), pin(component, 2));
+        addComponentEdge(component, 0, 2);
+        addComponentEdge(component, 1, 2);
+        addComponentEdge(component, 3, 0);
+        addComponentEdge(component, 3, 1);
+      } else if (component.type === 'bjt' && hasExternalPin(component, 0)) {
+        // NPN conducts collector->emitter (pin1->pin2); PNP conducts the opposite way, emitter->collector.
+        if ((component.props?.polarity || 'NPN') === 'PNP') addComponentEdge(component, 2, 1);
+        else addComponentEdge(component, 1, 2);
+      } else if (component.type === 'mosfet' && hasExternalPin(component, 0)) {
+        // N-channel conducts drain->source (pin1->pin2); P-channel conducts source->drain.
+        if ((component.props?.channel || 'N-channel') === 'P-channel') addComponentEdge(component, 2, 1);
+        else addComponentEdge(component, 1, 2);
       }
     });
 
     const grounds = state.components.filter(component => component.type === 'ground');
-    for (let index = 1; index < grounds.length; index++) addBidirectional(pin(grounds[0], 0), pin(grounds[index], 0));
-    if (!source) return { hasActivePath: false, activeWireIds: new Set(), wireDirections: {}, reachableFromPositive: new Set(), reachesNegative: new Set() };
+    for (let index = 1; index < grounds.length; index++) addBidirectional(node(grounds[0], 0), node(grounds[index], 0), { kind: 'ground' });
+    if (!source) return { hasActivePath: false, pathEdges: [], activeWireIds: new Set(), wireDirections: {}, activeComponentIds: new Set(), nodePath: [], partialWireIds: new Set(), partialWireDirections: {}, partialComponentIds: new Set(), openNodeIds: new Set() };
 
-    const walk = (start, edges) => {
-      const visited = new Set([start]);
-      const queue = [start];
-      while (queue.length) {
-        const current = queue.shift();
-        (edges.get(current) || []).forEach(next => { if (!visited.has(next)) { visited.add(next); queue.push(next); } });
-      }
-      return visited;
-    };
-    const start = pin(source, 0);
-    const target = pin(source, 1);
-    const reachableFromPositive = walk(start, forwardEdges);
-    const reachesNegative = walk(target, reverseEdges);
-    const hasActivePath = reachableFromPositive.has(target);
-    const activeWireIds = new Set();
-    const wireDirections = {};
-    if (hasActivePath) {
-      state.wires.forEach(wire => {
-        const from = key(wire.from.compId, wire.from.pin);
-        const to = key(wire.to.compId, wire.to.pin);
-        if (reachableFromPositive.has(from) && reachesNegative.has(to)) {
-          activeWireIds.add(wire.id);
-          wireDirections[wire.id] = 'forward';
-        } else if (reachableFromPositive.has(to) && reachesNegative.has(from)) {
-          activeWireIds.add(wire.id);
-          wireDirections[wire.id] = 'reverse';
+    const start = node(source, 0);
+    const target = node(source, 1);
+    const queue = [start];
+    const visited = new Set([start]);
+    const parents = new Map();
+    while (queue.length && !visited.has(target)) {
+      const current = queue.shift();
+      (edges.get(current) || []).forEach(edge => {
+        if (!visited.has(edge.to)) {
+          visited.add(edge.to);
+          parents.set(edge.to, { previous: current, edge });
+          queue.push(edge.to);
         }
       });
     }
-    return { hasActivePath, activeWireIds, wireDirections, reachableFromPositive, reachesNegative };
-  }
-  function componentOnActivePath(component, topology, source) {
-    if (!topology.hasActivePath) return false;
-    const forward = topology.reachableFromPositive;
-    const reverse = topology.reachesNegative;
-    const node = index => `${component.id}:${index}`;
-    const pair = (a = 0, b = 1, directed = false) => (forward.has(node(a)) && reverse.has(node(b))) || (!directed && forward.has(node(b)) && reverse.has(node(a)));
-    const alternatingSource = source && (source.type === 'acsource' || source.props?.waveform !== 'DC');
-    if (['resistor', 'inductor'].includes(component.type)) return pair();
-    if (component.type === 'capacitor') return alternatingSource && pair();
-    if (component.type === 'potentiometer') return pair(0, 2) || pair(2, 1);
-    if (component.type === 'switch') return component.props?.position === 'Closed' && pair();
-    if (['diode', 'led', 'zener'].includes(component.type)) return pair(0, 1, true);
-    if (component.type === 'bridge') return pair(0, 2, true) || pair(1, 2, true) || pair(3, 0, true) || pair(3, 1, true);
-    if (['bjt', 'mosfet'].includes(component.type)) return pair(1, 2, true);
-    if (component.type === 'ground') return forward.has(node(0)) && reverse.has(node(0));
-    return false;
-  }
-  function estimateNodeVoltages(sim) {
-    const values = new Map();
-    if (!sim?.source || !sim.hasActivePath) return values;
-    const edges = new Map();
-    const addEdge = (from, to, drop = 0) => {
-      if (!edges.has(from)) edges.set(from, []);
-      edges.get(from).push({ to, drop });
-    };
-    const node = (component, pin) => `${component.id}:${pin}`;
-    const topology = sim.topology;
-    const forward = topology.reachableFromPositive;
-    const reverse = topology.reachesNegative;
-    const activePair = (component, a = 0, b = 1, directed = false) => {
-      const first = node(component, a), second = node(component, b);
-      if (forward.has(first) && reverse.has(second)) return { from: a, to: b };
-      if (!directed && forward.has(second) && reverse.has(first)) return { from: b, to: a };
-      return null;
-    };
-    state.wires.forEach(wire => {
-      if (!sim.activeWireIds.has(wire.id)) return;
-      const reverseDirection = sim.wireDirections[wire.id] === 'reverse';
-      const from = reverseDirection ? `${wire.to.compId}:${wire.to.pin}` : `${wire.from.compId}:${wire.from.pin}`;
-      const to = reverseDirection ? `${wire.from.compId}:${wire.from.pin}` : `${wire.to.compId}:${wire.to.pin}`;
-      addEdge(from, to, 0);
-    });
-    state.components.forEach(component => {
-      if (!sim.activeComponentIds.has(component.id) || component.id === sim.source.id) return;
-      const resistorDrop = Math.abs(sim.current * parseNumber(component.props?.resistance ?? component.props?.value, 0));
-      const addPair = (a, b, drop, directed = false) => {
-        const active = activePair(component, a, b, directed);
-        if (active) addEdge(node(component, active.from), node(component, active.to), drop);
-      };
-      if (component.type === 'resistor') addPair(0, 1, resistorDrop);
-      else if (component.type === 'potentiometer') { addPair(0, 2, resistorDrop / 2); addPair(2, 1, resistorDrop / 2); }
-      else if (['inductor', 'switch', 'capacitor'].includes(component.type)) addPair(0, 1, 0);
-      else if (component.type === 'diode') addPair(0, 1, Number(component.props?.forwardVoltage || .7), true);
-      else if (component.type === 'led') addPair(0, 1, Number(component.props?.forwardVoltage || 2.1), true);
-      else if (component.type === 'zener') addPair(0, 1, Number(component.props?.zenerVoltage || 5.1), true);
-      else if (component.type === 'bridge') {
-        addPair(0, 2, Number(component.props?.forwardVoltage || 1.4), true);
-        addPair(1, 2, Number(component.props?.forwardVoltage || 1.4), true);
-        addPair(3, 0, 0, true);
-        addPair(3, 1, 0, true);
-      } else if (['bjt', 'mosfet'].includes(component.type)) addPair(1, 2, .2, true);
-    });
-    const start = node(sim.source, 0);
-    values.set(start, sim.sourceVoltage);
-    const queue = [start];
-    while (queue.length) {
-      const current = queue.shift();
-      const voltage = values.get(current);
-      (edges.get(current) || []).forEach(edge => {
-        const nextVoltage = voltage - edge.drop;
-        if (!values.has(edge.to)) { values.set(edge.to, nextVoltage); queue.push(edge.to); }
+    if (!visited.has(target)) {
+      const partialWireIds = new Set();
+      const partialWireDirections = {};
+      const partialComponentIds = new Set([source.id]);
+      const childCounts = new Map();
+      parents.forEach(({ previous, edge }) => {
+        childCounts.set(previous, (childCounts.get(previous) || 0) + 1);
+        const [fromComp] = edge.from.split(':');
+        const [toComp] = edge.to.split(':');
+        partialComponentIds.add(fromComp);
+        partialComponentIds.add(toComp);
+        if (edge.kind === 'component') partialComponentIds.add(edge.componentId);
+        if (edge.kind === 'wire') {
+          const wire = wireById.get(edge.wireId);
+          if (!wire) return;
+          partialWireIds.add(edge.wireId);
+          partialWireDirections[edge.wireId] = edge.from === key(wire.from.compId, wire.from.pin) ? 'forward' : 'reverse';
+        }
       });
+      const openNodeIds = new Set([...visited].filter(nodeId => nodeId !== start && !childCounts.has(nodeId)));
+      return { hasActivePath: false, pathEdges: [], activeWireIds: new Set(), wireDirections: {}, activeComponentIds: new Set(), nodePath: [], partialWireIds, partialWireDirections, partialComponentIds, openNodeIds };
     }
-    values.set(node(sim.source, 1), 0);
-    state.components.filter(component => component.type === 'ground').forEach(component => values.set(node(component, 0), 0));
-    return values;
+
+    const pathEdges = [];
+    const nodePath = [target];
+    let current = target;
+    while (current !== start) {
+      const parent = parents.get(current);
+      if (!parent) break;
+      pathEdges.unshift(parent.edge);
+      current = parent.previous;
+      nodePath.unshift(current);
+    }
+    const activeWireIds = new Set();
+    const wireDirections = {};
+    const activeComponentIds = new Set([source.id]);
+    pathEdges.forEach(edge => {
+      const [fromComp] = edge.from.split(':');
+      const [toComp] = edge.to.split(':');
+      activeComponentIds.add(fromComp);
+      activeComponentIds.add(toComp);
+      if (edge.kind === 'wire') {
+        const wire = wireById.get(edge.wireId);
+        if (!wire) return;
+        activeWireIds.add(edge.wireId);
+        wireDirections[edge.wireId] = edge.from === key(wire.from.compId, wire.from.pin) ? 'forward' : 'reverse';
+      }
+      if (edge.kind === 'component') activeComponentIds.add(edge.componentId);
+    });
+    return { hasActivePath: true, pathEdges, activeWireIds, wireDirections, activeComponentIds, nodePath, partialWireIds: new Set(), partialWireDirections: {}, partialComponentIds: new Set(), openNodeIds: new Set() };
   }
-  function calculateSimulation() { 
+  function calculateSimulation() {
     const components = state.components;
-    const source = components.find(c => c.type === 'source' || c.type === 'acsource');
-    const sourceVoltage = source ? parseNumber(source.props.voltage ?? source.props.value, 0) : 0;
-    const topology = conductiveTopology(source);
+    const componentsById = new Map(components.map(component => [component.id, component]));
+    const sources = components.filter(component => component.type === 'source' || component.type === 'acsource');
+    const metrics = Object.fromEntries(components.map(component => [component.id, { voltage: 0, current: 0, power: 0, temp: 25 }]));
+    const activeWireIds = new Set();
+    const wireDirections = {};
+    const wireCurrents = {};
+    const partialWireIds = new Set();
+    const partialWireDirections = {};
+    const partialOpenNodeIds = new Set();
     const activeComponentIds = new Set();
-    components.forEach(component => {
-      if (component.id === source?.id || componentOnActivePath(component, topology, source)) activeComponentIds.add(component.id);
+    const ledVoltages = new Map();
+    const nodeVoltages = new Map();
+    const sourceCurrents = {};
+    const pathResults = [];
+
+    const addMetric = (componentId, voltage, current, power) => {
+      const metric = metrics[componentId];
+      if (!metric) return;
+      metric.voltage = Math.max(metric.voltage, Math.abs(voltage));
+      metric.current += Math.abs(current);
+      metric.power += Math.abs(power);
+    };
+    // Resistance contributed by a single path edge. Defined per-edge (not per-component) so a
+    // potentiometer that only conducts through one wiper segment contributes just that segment's
+    // resistance — the same value used both to solve for current and to display the voltage drop.
+    const edgeResistance = (edge) => {
+      const component = componentsById.get(edge.componentId);
+      if (!component) return 0;
+      if (component.type === 'resistor') return Math.max(0, parseNumber(component.props?.resistance ?? component.props?.value, 0));
+      if (component.type === 'potentiometer') {
+        if (Number.isFinite(edge.segmentResistance)) return Math.max(0, edge.segmentResistance);
+        return Math.max(0, parseNumber(component.props?.resistance ?? component.props?.value, 0)) / 2;
+      }
+      return 0;
+    };
+    const pathDrop = (edge, path) => {
+      if (edge.kind !== 'component') return 0;
+      const component = componentsById.get(edge.componentId);
+      if (!component) return 0;
+      if (component.type === 'resistor' || component.type === 'potentiometer') return path.current * edgeResistance(edge);
+      if (component.type === 'diode') return Number(component.props?.forwardVoltage || .7);
+      if (component.type === 'led') return path.ledVoltages.get(component.id) || 0;
+      if (component.type === 'zener') return Number(component.props?.zenerVoltage || 5.1);
+      if (component.type === 'bridge') return edge.toPin === 2 ? Number(component.props?.forwardVoltage || 1.4) : 0;
+      if (component.type === 'bjt' || component.type === 'mosfet') return .2;
+      return 0;
+    };
+
+    sources.forEach(source => {
+      const topology = conductiveTopology(source);
+      const sourceVoltage = parseNumber(source.props?.voltage ?? source.props?.value, 0);
+      if (!topology.hasActivePath) {
+        metrics[source.id].voltage = sourceVoltage;
+        topology.partialWireIds.forEach(id => partialWireIds.add(id));
+        Object.assign(partialWireDirections, topology.partialWireDirections);
+        topology.openNodeIds.forEach(id => partialOpenNodeIds.add(id));
+        return;
+      }
+      const pathComponentIds = new Set(topology.pathEdges.filter(edge => edge.kind === 'component').map(edge => edge.componentId));
+      const pathComponents = [...pathComponentIds].map(id => componentsById.get(id)).filter(Boolean);
+      const resistiveEdges = topology.pathEdges.filter(edge => edge.kind === 'component' && ['resistor', 'potentiometer'].includes(componentsById.get(edge.componentId)?.type));
+      const totalResistance = resistiveEdges.reduce((sum, edge) => sum + edgeResistance(edge), 0);
+      const leds = pathComponents.filter(component => component.type === 'led');
+      const fixedDropComponents = pathComponents.filter(component => ['diode', 'bridge', 'zener'].includes(component.type));
+      const fixedDrop = fixedDropComponents.reduce((sum, component) => {
+        if (component.type === 'zener') return sum + Number(component.props?.zenerVoltage || 5.1);
+        if (component.type === 'bridge') return sum + Number(component.props?.forwardVoltage || 1.4);
+        return sum + Number(component.props?.forwardVoltage || .7);
+      }, 0);
+      const noResistance = totalResistance < .5;
+      let current = 0;
+      if (totalResistance > 0) current = solveSeriesLedCurrent(sourceVoltage, totalResistance, fixedDrop, leds);
+      if (noResistance) current = Math.min(2, sourceVoltage * 2.5);
+      const pathLedVoltages = new Map(leds.map(component => [component.id, ledForwardVoltageAtCurrent(component, current)]));
+      const forwardDrop = fixedDrop + [...pathLedVoltages.values()].reduce((sum, voltage) => sum + voltage, 0);
+      const path = { source, topology, current, sourceVoltage, totalResistance, fixedDrop, forwardDrop, ledVoltages: pathLedVoltages, noResistance };
+      pathResults.push(path);
+      sourceCurrents[source.id] = current;
+      pathLedVoltages.forEach((voltage, id) => ledVoltages.set(id, voltage));
+      topology.activeComponentIds.forEach(id => activeComponentIds.add(id));
+      topology.pathEdges.forEach(edge => {
+        if (edge.kind === 'wire') {
+          activeWireIds.add(edge.wireId);
+          wireDirections[edge.wireId] = edge.from === `${state.wires.find(wire => wire.id === edge.wireId).from.compId}:${state.wires.find(wire => wire.id === edge.wireId).from.pin}` ? 'forward' : 'reverse';
+          wireCurrents[edge.wireId] = (wireCurrents[edge.wireId] || 0) + current;
+        }
+      });
+
+      let voltageAtNode = sourceVoltage;
+      nodeVoltages.set(`${source.id}:0`, sourceVoltage);
+      addMetric(source.id, sourceVoltage, current, sourceVoltage * current);
+      const groundSeen = new Set();
+      topology.pathEdges.forEach(edge => {
+        const drop = pathDrop(edge, path);
+        voltageAtNode -= drop;
+        nodeVoltages.set(edge.to, voltageAtNode);
+        if (edge.kind === 'component') addMetric(edge.componentId, drop, current, drop * current);
+        const [fromComponentId] = edge.from.split(':');
+        const [toComponentId] = edge.to.split(':');
+        [fromComponentId, toComponentId].forEach(componentId => {
+          const component = componentsById.get(componentId);
+          if (component?.type === 'ground' && !groundSeen.has(componentId)) {
+            addMetric(componentId, 0, current, 0);
+            groundSeen.add(componentId);
+          }
+        });
+      });
+      nodeVoltages.set(`${source.id}:1`, 0);
     });
-    const resistors = components.filter(component => (component.type === 'resistor' || component.type === 'potentiometer') && activeComponentIds.has(component.id));
-    const totalResistance = resistors.reduce((sum, resistor) => sum + Math.max(0, parseNumber(resistor.props.resistance ?? resistor.props.value, 0)), 0);
-    const diodes = components.filter(component => ['diode', 'bridge', 'led', 'zener'].includes(component.type) && activeComponentIds.has(component.id));
-    const forwardDrop = diodes.reduce((sum, component) => {
-      if (component.type === 'led') return sum + Number(component.props.forwardVoltage || 2.1);
-      if (component.type === 'zener') return sum + Number(component.props.zenerVoltage || 5.1);
-      if (component.type === 'bridge') return sum + Number(component.props.forwardVoltage || 1.4);
-      return sum + Number(component.props.forwardVoltage || .7);
-    }, 0);
-    const enoughWiring = topology.hasActivePath;
-    const noResistance = source && totalResistance < .5 && topology.hasActivePath;
-    let current = 0;
-    if (source && totalResistance > 0 && topology.hasActivePath) current = Math.max(0, (sourceVoltage - forwardDrop) / totalResistance);
-    if (noResistance) current = Math.min(2, sourceVoltage * 2.5);
-    const metrics = {};
-    components.forEach(component => {
-      const isActive = activeComponentIds.has(component.id);
-      let voltage = 0, power = 0, componentCurrent = isActive ? current : 0;
-      if (component.type === 'source' || component.type === 'acsource') { voltage = sourceVoltage; power = sourceVoltage * current; }
-      else if (component.type === 'resistor' || component.type === 'potentiometer') { const r = Math.max(0, parseNumber(component.props.resistance ?? component.props.value)); voltage = current * r; power = current * current * r; }
-      else if (component.type === 'led') { voltage = Number(component.props.forwardVoltage || 2.1); power = voltage * current; }
-      else if (component.type === 'diode') { voltage = Number(component.props.forwardVoltage || .7); power = voltage * current; }
-      else if (component.type === 'bridge') { voltage = Number(component.props.forwardVoltage || 1.4); power = voltage * current; }
-      else if (component.type === 'zener') { voltage = Number(component.props.zenerVoltage || 5.1); power = voltage * current; }
-      else if (component.type === 'capacitor') { voltage = sourceVoltage; componentCurrent = 0; }
-      else if (component.type === 'ground') { voltage = 0; componentCurrent = isActive ? current : 0; }
-      const temp = 25 + Math.min(65, power * 245);
-      metrics[component.id] = { voltage, current: componentCurrent, power, temp };
-    });
-    const hasGround = components.some(c => c.type === 'ground');
-    const outputVoltage = diodes.length ? forwardDrop : Math.max(0, sourceVoltage - (current * totalResistance));
-    const result = { source, sourceVoltage, totalResistance, forwardDrop, current, metrics, outputVoltage, hasGround, enoughWiring, shortCircuit: noResistance, hasActivePath: topology.hasActivePath, activeWireIds: topology.activeWireIds, wireDirections: topology.wireDirections, activeComponentIds, topology };
-    result.nodeVoltages = estimateNodeVoltages(result);
-    return result;
+
+    components.filter(component => component.type === 'ground').forEach(component => nodeVoltages.set(`${component.id}:0`, 0));
+    Object.values(metrics).forEach(metric => { metric.temp = 25 + Math.min(65, metric.power * 245); });
+    const primary = pathResults[0] || null;
+    const source = sources[0] || null;
+    const sourceVoltage = primary?.sourceVoltage ?? (source ? parseNumber(source.props?.voltage ?? source.props?.value, 0) : 0);
+    const hasGround = components.some(component => component.type === 'ground');
+    const totalCurrent = pathResults.reduce((sum, path) => sum + path.current, 0);
+    return {
+      source,
+      sources,
+      sourceVoltage,
+      totalResistance: primary?.totalResistance || 0,
+      forwardDrop: primary?.forwardDrop || 0,
+      current: primary?.current || 0,
+      totalCurrent,
+      sourceCurrents,
+      metrics,
+      outputVoltage: primary?.forwardDrop || 0,
+      hasGround,
+      enoughWiring: pathResults.length > 0,
+      shortCircuit: pathResults.some(path => path.noResistance),
+      hasActivePath: pathResults.length > 0,
+      activeWireIds,
+      wireDirections,
+      wireCurrents,
+      partialWireIds,
+      partialWireDirections,
+      partialOpenNodeIds,
+      activeComponentIds,
+      ledVoltages,
+      nodeVoltages,
+      topology: primary?.topology || null,
+      paths: pathResults
+    };
   }
   function analyzeCircuit() {
     const sim = simulation || calculateSimulation();
@@ -1044,6 +1292,8 @@
     if (!sim.hasGround) { issues.push({ type: 'error', title: 'Add a ground reference', text: 'Place GND and connect it to the return side of your circuit so voltages have a shared reference.' }); health -= 30; }
     if (state.wires.length < Math.max(2, state.components.length - 1)) { issues.push({ type: 'info', title: 'Keep wiring the circuit', text: 'Connect the remaining terminals to complete a path from the source through the load and back to ground.' }); health -= 8; }
     if (sim.source && sim.hasGround && state.wires.length >= Math.max(2, state.components.length - 1) && !sim.hasActivePath) { issues.push({ type: 'warn', title: 'No complete conducting path yet', text: 'Fluxa cannot find a path from source positive back to source negative. Check open switches, diode direction and disconnected wires.' }); health -= 18; }
+    const inactiveSources = (sim.sources || []).filter(sourceItem => !(sim.paths || []).some(path => path.source.id === sourceItem.id));
+    if (inactiveSources.length) { issues.push({ type: 'warn', title: 'One or more sources have no complete path', text: `${inactiveSources.map(sourceItem => sourceItem.label).join(', ')} is not connected through a complete conducting loop yet.` }); health -= 12; }
     if (sim.shortCircuit) { issues.push({ type: 'error', title: 'This may be a short circuit', text: 'Power is reaching the loop without enough resistance. Add a resistor before running the circuit again.' }); health -= 55; }
     state.components.filter(c => c.type === 'resistor').forEach(component => {
       const metric = componentMetric(component.id);
@@ -1254,7 +1504,7 @@
     dom.simulateLabel.textContent = state.running ? 'Stop' : 'Simulate';
     dom.circuitStateChip.classList.toggle('running', state.running);
     const analysis = analyzeCircuit();
-    dom.circuitStateChip.querySelector('span').textContent = state.running ? `Live simulation · ${formatCurrent(simulation.current)}` : analysis.health > 75 ? 'Ready to simulate' : 'Review circuit alerts';
+    dom.circuitStateChip.querySelector('span').textContent = state.running ? simulation.hasActivePath ? `Live simulation · ${formatCurrent(simulation.totalCurrent ?? simulation.current)}` : simulation.partialWireIds?.size ? 'Open path preview · 0 A' : 'No conducting path' : analysis.health > 75 ? 'Ready to simulate' : 'Review circuit alerts';
     const helper = wireStart ? 'Drag to a glowing terminal, or click one to finish the wire' : state.tool === 'probe' ? 'Click two terminals to measure between them' : state.wiringEnabled ? 'Drag parts to move · drag empty space to pan · drag from a terminal to wire' : 'Wiring is paused · click a node, wire or component to update Quick Measure';
     dom.canvasHelp.innerHTML = helper.replace(/(W)/, '<kbd>$1</kbd>');
   }
@@ -1401,6 +1651,7 @@
     return { value: formatVoltage(measured), label: state.probeTerminals.length === 2 ? 'Voltage between probe A and B' : 'Reference-to-node measurement' };
   }
   function renderMeasurements() {
+    const sim = simulation;
     const readout = probeReadout();
     const points = state.probeTerminals;
     const pointName = point => { const c = getComponent(point.compId); return c ? `${c.label} · ${getPins(c)[point.pin]?.label || point.pin + 1}` : '—'; };
@@ -1537,6 +1788,46 @@
   }
   function connectionExists(a, b) {
     return state.wires.some(wire => (pinKey(wire.from) === pinKey(a) && pinKey(wire.to) === pinKey(b)) || (pinKey(wire.from) === pinKey(b) && pinKey(wire.to) === pinKey(a)));
+  }
+  function terminalHasWire(point) {
+    return state.wires.some(wire => pinKey(wire.from) === pinKey(point) || pinKey(wire.to) === pinKey(point));
+  }
+  function findNearbyPinPairs(component) {
+    if (!state.wiringEnabled) return [];
+    const threshold = state.snap ? 28 : 20;
+    const usedTargets = new Set();
+    const pairs = [];
+    getPins(component).forEach((_, pinIndex) => {
+      const sourcePoint = { compId: component.id, pin: pinIndex };
+      if (terminalHasWire(sourcePoint)) return;
+      const sourcePosition = getTerminalPosition(component, pinIndex);
+      const candidates = [];
+      state.components.forEach(other => {
+        if (other.id === component.id) return;
+        getPins(other).forEach((__, otherPin) => {
+          const targetPoint = { compId: other.id, pin: otherPin };
+          if (terminalHasWire(targetPoint) || usedTargets.has(pinKey(targetPoint)) || connectionExists(sourcePoint, targetPoint)) return;
+          const targetPosition = getTerminalPosition(other, otherPin);
+          const distance = Math.hypot(sourcePosition.x - targetPosition.x, sourcePosition.y - targetPosition.y);
+          if (distance <= threshold) candidates.push({ point: targetPoint, distance });
+        });
+      });
+      candidates.sort((a, b) => a.distance - b.distance);
+      const nearest = candidates[0];
+      if (!nearest) return;
+      usedTargets.add(pinKey(nearest.point));
+      pairs.push({ from: sourcePoint, to: nearest.point, distance: nearest.distance });
+    });
+    return pairs;
+  }
+  function autoConnectNearbyPins(component, pairs = findNearbyPinPairs(component)) {
+    if (!state.wiringEnabled) return 0;
+    pairs.forEach(pair => {
+      if (!terminalHasWire(pair.from) && !terminalHasWire(pair.to) && !connectionExists(pair.from, pair.to)) {
+        state.wires.push({ id: `w-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 5)}`, from: pair.from, to: pair.to, auto: true });
+      }
+    });
+    return pairs.length;
   }
   function beginWire(point, announce = true) {
     wireStart = point;
@@ -1767,7 +2058,7 @@
     openModal(`<div class="modal-head"><div class="modal-head-icon">✎</div><div><h2>Rename project</h2><p>Give this Fluxa circuit a memorable name.</p></div><button class="modal-close" data-modal-close>×</button></div><div class="modal-body"><div class="modal-field"><label>Project name</label><input id="renameInput" maxlength="48" value="${escapeHTML(state.projectName)}" /></div></div><div class="modal-foot"><button class="button-secondary" data-modal-close>Cancel</button><button class="button-primary" id="renameSave">Save name</button></div>`, modal => { const input = $('#renameInput', modal); setTimeout(() => { input.focus(); input.select(); }, 30); const save = () => { const value = input.value.trim(); if (value) { state.projectName = value; recordHistory(); renderAll(); } closeModal(); }; $('#renameSave', modal).addEventListener('click', save); input.addEventListener('keydown', event => { if (event.key === 'Enter') save(); }); });
   }
   function openAboutModal() {
-    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.1</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
+    openModal(`<div class="about-hero"><div class="about-mark">F</div><div><div class="about-kicker">Circuit Studio</div><h2>Fluxa <span>v1.2</span></h2></div><button class="modal-close" data-modal-close aria-label="Close about dialog">×</button></div><div class="about-body"><p>Fluxa is a browser-based workspace for assembling and exploring electronic circuits.</p><a class="about-github" href="https://github.com/Arvanta/Fluxa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24"><path d="M12 2.8a9.2 9.2 0 0 0-2.9 17.9c.5.1.6-.2.6-.5v-1.8c-2.4.5-2.9-1-2.9-1-.4-1-.9-1.3-.9-1.3-.8-.5.1-.5.1-.5.9.1 1.4 1 1.4 1 .8 1.4 2.1 1 2.6.8.1-.6.3-1 .6-1.2-1.9-.2-3.9-.9-3.9-4.1 0-.9.3-1.6.9-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.3.8a8 8 0 0 1 4.2 0c1.6-1 2.3-.8 2.3-.8.5 1.1.2 1.9.1 2.1.6.6.9 1.3.9 2.2 0 3.2-2 3.9-3.9 4.1.3.3.6.8.6 1.6v2.4c0 .3.2.6.6.5A9.2 9.2 0 0 0 12 2.8Z"/></svg><span><b>github.com/Arvanta/Fluxa</b><small>Open the project repository</small></span><span class="about-external">↗</span></a></div><div class="modal-foot about-foot"><button class="button-secondary" data-modal-close>Close</button></div>`, modal => modal.classList.add('about-modal'));
   }
   function openLearnModal() {
     const cards = LESSONS.map(lesson => `<article class="lesson-card"><div class="lesson-card-top"><span class="lesson-card-icon">${escapeHTML(lesson.icon)}</span><span class="lesson-level">${escapeHTML(lesson.level)}</span></div><h3>${escapeHTML(lesson.title)}</h3><p>${escapeHTML(lesson.summary)}</p><div class="lesson-card-meta"><span>${lesson.steps.length} steps</span><span>${escapeHTML(lesson.duration)}</span></div><button data-lesson-action="start" data-lesson-id="${lesson.id}">Start guided build <span>→</span></button></article>`).join('');
@@ -1991,6 +2282,27 @@
     });
   }
 
+  function updateSelectedPropertyField(element) {
+    const selected = getComponent(state.selectedId);
+    const field = element?.dataset?.componentField;
+    if (!selected || !field) return null;
+    const value = element.value;
+    if (field === 'label') selected.label = value || selected.label;
+    else {
+      const numericFields = ['voltage', 'frequency', 'resistance', 'rating', 'forwardVoltage', 'maxCurrent', 'reverseVoltage', 'zenerVoltage', 'powerRating', 'hfe', 'vceo', 'rds', 'gain'];
+      selected.props[field] = numericFields.includes(field) ? parseNumber(value, selected.props[field]) : value;
+      if (field === 'value') selected.props.value = value;
+      if (field === 'resistance') selected.props.value = formatResistance(selected.props[field]);
+    }
+    return selected;
+  }
+  function commitPendingPropertyChange() {
+    if (!pendingPropertyChange) return false;
+    pendingPropertyChange = false;
+    recordHistory();
+    return true;
+  }
+
   // --- Event bindings ------------------------------------------------------
   function bindEvents() {
     $('#libraryTabs').addEventListener('click', event => {
@@ -2005,8 +2317,9 @@
       const item = event.target.closest('[data-part-type]');
       const type = add?.dataset.addType || item?.dataset.partType;
       if (!type) return;
-      const offset = state.components.length % 5;
-      addComponent(type, 410 + offset * 35, 250 + offset * 34);
+      const centerX = snapCoordinate(viewBox.x + viewBox.w / 2);
+      const centerY = snapCoordinate(viewBox.y + viewBox.h / 2);
+      addComponent(type, centerX, centerY);
     });
     dom.componentList.addEventListener('dragstart', event => {
       const item = event.target.closest('[data-part-type]'); if (!item) return;
@@ -2021,7 +2334,7 @@
     dom.quickMeasureToggle.addEventListener('change', event => { state.quickMeasureVisible = event.target.checked; renderAll(); });
     dom.wiringToggle.addEventListener('change', event => {
       state.wiringEnabled = event.target.checked;
-      if (!state.wiringEnabled) { wireStart = null; wirePointer = null; }
+      if (!state.wiringEnabled) { wireStart = null; wirePointer = null; autoConnectPreview = []; }
       renderAll();
     });
     $('#deleteToolBtn').addEventListener('click', deleteSelected);
@@ -2106,6 +2419,7 @@
     });
 
     dom.canvas.addEventListener('pointerdown', event => {
+      commitPendingPropertyChange();
       const terminalPoint = terminalPointFromElement(event.target);
       if (terminalPoint) {
         event.preventDefault();
@@ -2172,6 +2486,7 @@
         const component = getComponent(dragState.id); if (!component) return;
         const point = toSvgPoint(event);
         component.x = snapCoordinate(point.x - dragState.offsetX); component.y = snapCoordinate(point.y - dragState.offsetY);
+        autoConnectPreview = findNearbyPinPairs(component);
         dragState.moved = true; renderCanvas();
       } else if (panState) {
         const deltaX = (event.clientX - panState.clientX) * panState.scaleX;
@@ -2185,9 +2500,19 @@
     });
     const endPointer = event => {
       if (dragState) {
-        const moved = dragState.moved; dragState = null;
+        const moved = dragState.moved;
+        const component = getComponent(dragState.id);
+        dragState = null;
         try { dom.canvas.releasePointerCapture?.(event.pointerId); } catch (_) {}
-        if (moved) { recordHistory(); renderAll(); }
+        if (moved) {
+          const autoConnections = component ? autoConnectNearbyPins(component, autoConnectPreview) : 0;
+          autoConnectPreview = [];
+          recordHistory();
+          renderAll();
+          if (autoConnections) showToast(`${autoConnections} nearby terminal${autoConnections === 1 ? '' : 's'} auto-connected.`);
+        } else {
+          autoConnectPreview = [];
+        }
         return;
       }
       if (panState) {
@@ -2207,23 +2532,30 @@
     dom.canvas.addEventListener('pointerup', endPointer); dom.canvas.addEventListener('pointercancel', endPointer);
     dom.canvas.addEventListener('wheel', event => { event.preventDefault(); const factor = event.deltaY < 0 ? .9 : 1.11; const point = toSvgPoint(event); const newW = Math.max(550, Math.min(1800, viewBox.w * factor)); const newH = newW * 690 / 1200; const rx = (point.x - viewBox.x) / viewBox.w; const ry = (point.y - viewBox.y) / viewBox.h; setViewBox({ x: point.x - rx * newW, y: point.y - ry * newH, w: newW, h: newH }); }, { passive: false });
 
+    dom.inspectorContent.addEventListener('input', event => {
+      const selected = updateSelectedPropertyField(event.target);
+      if (selected) pendingPropertyChange = true;
+    });
     dom.inspectorContent.addEventListener('change', event => {
       const selected = getComponent(state.selectedId);
       if (!selected) return;
       if (event.target.id === 'componentModel') {
-        const model = event.target.value; selected.model = model; const data = MODEL_DATA[model]; if (data) { Object.assign(selected.props, clone(data.params)); if (data.params.value) selected.props.value = data.params.value; } recordHistory(); renderAll(); showToast(`${model} parameters applied.`); return;
+        const model = event.target.value;
+        selected.model = model;
+        const data = MODEL_DATA[model];
+        if (data) { Object.assign(selected.props, clone(data.params)); if (data.params.value) selected.props.value = data.params.value; }
+        pendingPropertyChange = false;
+        recordHistory();
+        renderAll();
+        showToast(`${model} parameters applied.`);
+        return;
       }
-      const field = event.target.dataset.componentField;
-      if (field) {
-        const value = event.target.value;
-        if (field === 'label') selected.label = value || selected.label;
-        else {
-          const numericFields = ['voltage', 'frequency', 'resistance', 'rating', 'forwardVoltage', 'maxCurrent', 'reverseVoltage', 'zenerVoltage', 'powerRating', 'hfe', 'vceo', 'rds', 'gain'];
-          selected.props[field] = numericFields.includes(field) ? parseNumber(value, selected.props[field]) : value;
-          if (field === 'value') selected.props.value = value;
-          if (field === 'resistance') selected.props.value = formatResistance(selected.props[field]);
-        }
-        recordHistory(); renderAll(); showToast(`${selected.label} updated.`);
+      const updated = updateSelectedPropertyField(event.target);
+      if (updated) {
+        pendingPropertyChange = false;
+        recordHistory();
+        renderAll();
+        showToast(`${updated.label} updated.`);
       }
     });
     dom.inspectorContent.addEventListener('click', event => {
@@ -2241,7 +2573,10 @@
     });
 
     dom.modalBackdrop.addEventListener('click', event => { if (event.target === dom.modalBackdrop || event.target.closest('[data-modal-close]')) closeModal(); });
-    document.addEventListener('pointerdown', event => { if (!dom.exportMenu.contains(event.target) && !event.target.closest('#exportBtn')) dom.exportMenu.classList.add('hidden'); });
+    document.addEventListener('pointerdown', event => {
+      if (pendingPropertyChange && !dom.inspectorContent.contains(event.target)) commitPendingPropertyChange();
+      if (!dom.exportMenu.contains(event.target) && !event.target.closest('#exportBtn')) dom.exportMenu.classList.add('hidden');
+    });
     document.addEventListener('keydown', event => {
       const tag = document.activeElement?.tagName;
       const editing = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
